@@ -721,12 +721,12 @@ function honey_hole_render_deals_table()
                             <div class="deal-content">
                                 <h3 class="deal-title"><?php echo esc_html($deal->post_title); ?></h3>
                                 <div class="deal-pricing">
+                                    <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
                                     <?php if ($original_price > 0): ?>
                                         <span class="original-price">$<?php echo number_format($original_price, 2); ?></span>
                                     <?php endif; ?>
-                                    <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
                                     <?php if ($discount > 0): ?>
-                                        <span class="discount">-<?php echo $discount; ?>%</span>
+                                        <span class="discount discount-high">-<?php echo $discount; ?>% Off</span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="deal-rating">
@@ -1131,12 +1131,12 @@ function honey_hole_deals_shortcode($atts)
                             <div class="deal-content">
                                 <h3 class="deal-title"><?php echo esc_html($deal->post_title); ?></h3>
                                 <div class="deal-pricing">
+                                    <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
                                     <?php if ($original_price > 0): ?>
                                         <span class="original-price">$<?php echo number_format($original_price, 2); ?></span>
                                     <?php endif; ?>
-                                    <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
                                     <?php if ($discount > 0): ?>
-                                        <span class="discount">-<?php echo $discount; ?>%</span>
+                                        <span class="discount discount-high">-<?php echo $discount; ?>% Off</span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="deal-rating">
