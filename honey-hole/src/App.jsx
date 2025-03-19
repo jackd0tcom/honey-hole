@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [deals, setDeals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // This will be replaced with actual WordPress REST API call
+    const fetchDeals = async () => {
+      try {
+        // TODO: Replace with actual WordPress REST API endpoint
+        const response = await fetch("/wp-json/honey-hole/v1/deals");
+        const data = await response.json();
+        setDeals(data);
+      } catch (err) {
+        setError("Failed to fetch deals");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDeals();
+  }, []);
+
+  if (loading) return <div className="loading">Loading deals...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="honey-hole-deals">
+      <h1>Outdoor Gear Deals</h1>
+      <div className="deals-grid">
+        {deals.map((deal) => (
+          <div key={deal.id} className="deal-card">
+            <img src={deal.image_url} alt={deal.title} />
+            <h2>{deal.title}</h2>
+            <p className="price">${deal.price}</p>
+            <p className="description">{deal.description}</p>
+            <div className="deal-meta">
+              <span className="category">{deal.category}</span>
+              <span className="expires">Expires: {deal.expiration_date}</span>
+            </div>
+          </div>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
