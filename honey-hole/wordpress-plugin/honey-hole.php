@@ -54,7 +54,7 @@ function honey_hole_register_post_type()
         'has_archive'         => true,
         'publicly_queryable'  => true,
         'show_ui'             => true,
-        'show_in_menu'        => true,
+        'show_in_menu'        => false,
         'query_var'           => true,
         'rewrite'             => array('slug' => 'deals'),
         'capability_type'     => 'post',
@@ -1146,17 +1146,6 @@ function honey_hole_deals_shortcode($atts)
         ));
         ?>
 
-        <div class="deals-filter">
-            <select id="category-filter" onchange="filterDeals(this.value)">
-                <option value="">All Categories</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?php echo esc_attr($category->slug); ?>" <?php selected($atts['category'], $category->slug); ?>>
-                        <?php echo esc_html($category->name); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
         <?php
         // Get all deals
         $args = array(
@@ -1192,12 +1181,11 @@ function honey_hole_deals_shortcode($atts)
                         $deal_url = get_post_meta($deal->ID, 'deal_url', true);
                         $image_url = get_post_meta($deal->ID, 'deal_image_url', true);
                         $rating = get_post_meta($deal->ID, 'deal_rating', true);
-                        $categories = wp_get_post_terms($deal->ID, 'deal_category', array('fields' => 'slugs'));
 
                         // Calculate discount
                         $discount = $original_price > 0 ? round((($original_price - $sales_price) / $original_price) * 100) : 0;
                     ?>
-                        <div class="deal-card" data-categories='<?php echo esc_attr(json_encode($categories)); ?>'>
+                        <div class="deal-card">
                             <a href="<?php echo esc_url($deal_url); ?>" target="_blank" rel="noopener noreferrer" class="deal-card-link">
                                 <div class="deal-image">
                                     <?php if ($image_url): ?>
@@ -1232,339 +1220,315 @@ function honey_hole_deals_shortcode($atts)
                         </div>
                     <?php endforeach; ?>
                 </div>
-
-                <script>
-                    function filterDeals(category) {
-                        // Update URL with selected category
-                        const url = new URL(window.location.href);
-                        if (category) {
-                            url.searchParams.set('category', category);
-                        } else {
-                            url.searchParams.delete('category');
-                        }
-                        window.history.pushState({}, '', url);
-
-                        // Reload the page to apply the filter
-                        window.location.reload();
-                    }
-
-                    // Set initial filter value based on URL parameter
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const category = urlParams.get('category');
-                        if (category) {
-                            document.getElementById('category-filter').value = category;
-                        }
-                    });
-                </script>
-            <?php
-        endif;
-            ?>
             </div>
         <?php
-        return ob_get_clean();
-    }
-    add_shortcode('honey_hole_deals', 'honey_hole_deals_shortcode');
+        endif;
+        ?>
+    </div>
+<?php
+    return ob_get_clean();
+}
+add_shortcode('honey_hole_deals', 'honey_hole_deals_shortcode');
 
-    // Enqueue frontend styles
-    function honey_hole_enqueue_frontend_styles()
-    {
-        wp_enqueue_style(
-            'honey-hole-frontend',
-            HONEY_HOLE_PLUGIN_URL . 'public/css/frontend.css',
-            array(),
-            HONEY_HOLE_VERSION
-        );
-    }
-    add_action('wp_enqueue_scripts', 'honey_hole_enqueue_frontend_styles');
+// Enqueue frontend styles
+function honey_hole_enqueue_frontend_styles()
+{
+    wp_enqueue_style(
+        'honey-hole-frontend',
+        HONEY_HOLE_PLUGIN_URL . 'public/css/frontend.css',
+        array(),
+        HONEY_HOLE_VERSION
+    );
+}
+add_action('wp_enqueue_scripts', 'honey_hole_enqueue_frontend_styles');
 
-    // Render import deals page
-    function honey_hole_import_page()
-    {
-        // Handle CSV import
-        if (isset($_POST['action']) && $_POST['action'] === 'import_csv' && isset($_FILES['csv_file'])) {
-            if (check_admin_referer('honey_hole_import_csv')) {
-                $file = $_FILES['csv_file'];
+// Render import deals page
+function honey_hole_import_page()
+{
+    // Handle CSV import
+    if (isset($_POST['action']) && $_POST['action'] === 'import_csv' && isset($_FILES['csv_file'])) {
+        if (check_admin_referer('honey_hole_import_csv')) {
+            $file = $_FILES['csv_file'];
 
-                // Check file type
-                if ($file['type'] !== 'text/csv' && $file['type'] !== 'application/vnd.ms-excel') {
-                    echo '<div class="notice notice-error"><p>Please upload a valid CSV file.</p></div>';
-                } else {
-                    // Open the file
-                    $handle = fopen($file['tmp_name'], 'r');
+            // Check file type
+            if ($file['type'] !== 'text/csv' && $file['type'] !== 'application/vnd.ms-excel') {
+                echo '<div class="notice notice-error"><p>Please upload a valid CSV file.</p></div>';
+            } else {
+                // Open the file
+                $handle = fopen($file['tmp_name'], 'r');
 
-                    // Skip header row
-                    $header = fgetcsv($handle);
+                // Skip header row
+                $header = fgetcsv($handle);
 
-                    $imported = 0;
-                    $errors = array();
+                $imported = 0;
+                $errors = array();
 
-                    while (($data = fgetcsv($handle)) !== false) {
-                        // Map CSV columns to deal data
-                        $deal_data = array(
-                            'post_title' => sanitize_text_field($data[0]),
-                            'post_content' => wp_kses_post($data[1]),
-                            'post_status' => 'publish',
-                            'post_type' => 'honey_hole_deal',
-                        );
+                while (($data = fgetcsv($handle)) !== false) {
+                    // Map CSV columns to deal data
+                    $deal_data = array(
+                        'post_title' => sanitize_text_field($data[0]),
+                        'post_content' => wp_kses_post($data[1]),
+                        'post_status' => 'publish',
+                        'post_type' => 'honey_hole_deal',
+                    );
 
-                        // Insert the deal
-                        $post_id = wp_insert_post($deal_data);
+                    // Insert the deal
+                    $post_id = wp_insert_post($deal_data);
 
-                        if (!is_wp_error($post_id)) {
-                            // Update meta fields
-                            update_post_meta($post_id, 'deal_original_price', floatval($data[2]));
-                            update_post_meta($post_id, 'deal_sales_price', floatval($data[3]));
-                            update_post_meta($post_id, 'deal_rating', floatval($data[4]));
-                            update_post_meta($post_id, 'deal_url', esc_url_raw($data[5]));
-                            update_post_meta($post_id, 'deal_original_url', esc_url_raw($data[6]));
-                            update_post_meta($post_id, 'deal_image_url', esc_url_raw($data[7]));
+                    if (!is_wp_error($post_id)) {
+                        // Update meta fields
+                        update_post_meta($post_id, 'deal_original_price', floatval($data[2]));
+                        update_post_meta($post_id, 'deal_sales_price', floatval($data[3]));
+                        update_post_meta($post_id, 'deal_rating', floatval($data[4]));
+                        update_post_meta($post_id, 'deal_url', esc_url_raw($data[5]));
+                        update_post_meta($post_id, 'deal_original_url', esc_url_raw($data[6]));
+                        update_post_meta($post_id, 'deal_image_url', esc_url_raw($data[7]));
 
-                            // Set category
-                            if (!empty($data[8])) {
-                                $category_slug = sanitize_title($data[8]);
-                                $category = get_term_by('slug', $category_slug, 'deal_category');
-                                if ($category) {
-                                    wp_set_object_terms($post_id, $category->term_id, 'deal_category');
-                                } else {
-                                    $errors[] = "Skipped deal '{$data[0]}' - Category with slug '{$category_slug}' does not exist";
-                                    continue; // Skip this deal and move to the next one
-                                }
+                        // Set category
+                        if (!empty($data[8])) {
+                            $category_slug = sanitize_title($data[8]);
+                            $category = get_term_by('slug', $category_slug, 'deal_category');
+                            if ($category) {
+                                wp_set_object_terms($post_id, $category->term_id, 'deal_category');
                             } else {
-                                $errors[] = "Skipped deal '{$data[0]}' - No category specified";
+                                $errors[] = "Skipped deal '{$data[0]}' - Category with slug '{$category_slug}' does not exist";
                                 continue; // Skip this deal and move to the next one
                             }
-
-                            // Set tags
-                            if (!empty($data[9])) {
-                                $tags = array_map('trim', explode(',', sanitize_text_field($data[9])));
-                                wp_set_object_terms($post_id, $tags, 'post_tag');
-                            }
-
-                            $imported++;
                         } else {
-                            $errors[] = "Failed to import deal: {$data[0]}";
+                            $errors[] = "Skipped deal '{$data[0]}' - No category specified";
+                            continue; // Skip this deal and move to the next one
                         }
-                    }
 
-                    fclose($handle);
-
-                    if ($imported > 0) {
-                        echo '<div class="notice notice-success"><p>Successfully imported ' . $imported . ' deals.</p></div>';
-                    }
-
-                    if (!empty($errors)) {
-                        echo '<div class="notice notice-error"><p>Errors occurred while importing some deals:</p><ul>';
-                        foreach ($errors as $error) {
-                            echo '<li>' . esc_html($error) . '</li>';
+                        // Set tags
+                        if (!empty($data[9])) {
+                            $tags = array_map('trim', explode(',', sanitize_text_field($data[9])));
+                            wp_set_object_terms($post_id, $tags, 'post_tag');
                         }
-                        echo '</ul></p></div>';
+
+                        $imported++;
+                    } else {
+                        $errors[] = "Failed to import deal: {$data[0]}";
                     }
+                }
+
+                fclose($handle);
+
+                if ($imported > 0) {
+                    echo '<div class="notice notice-success"><p>Successfully imported ' . $imported . ' deals.</p></div>';
+                }
+
+                if (!empty($errors)) {
+                    echo '<div class="notice notice-error"><p>Errors occurred while importing some deals:</p><ul>';
+                    foreach ($errors as $error) {
+                        echo '<li>' . esc_html($error) . '</li>';
+                    }
+                    echo '</ul></p></div>';
                 }
             }
         }
-        ?>
-            <div class="wrap">
-                <h1>Import Deals</h1>
-                <div class="honey-hole-import-section">
-                    <h2>Import Deals from CSV</h2>
-                    <p>Upload a CSV file containing your deals. The file should have the following columns:</p>
-                    <ol>
-                        <li>Title (required)</li>
-                        <li>Description (optional)</li>
-                        <li>Original Price (required)</li>
-                        <li>Sales Price (required)</li>
-                        <li>Rating (optional, 0-5)</li>
-                        <li>Deal URL (required)</li>
-                        <li>Original URL (required)</li>
-                        <li>Image URL (required)</li>
-                        <li>Category (required)</li>
-                        <li>Tags (optional, comma-separated)</li>
-                    </ol>
+    }
+    ?>
+        <div class="wrap">
+            <h1>Import Deals</h1>
+            <div class="honey-hole-import-section">
+                <h2>Import Deals from CSV</h2>
+                <p>Upload a CSV file containing your deals. The file should have the following columns:</p>
+                <ol>
+                    <li>Title (required)</li>
+                    <li>Description (optional)</li>
+                    <li>Original Price (required)</li>
+                    <li>Sales Price (required)</li>
+                    <li>Rating (optional, 0-5)</li>
+                    <li>Deal URL (required)</li>
+                    <li>Original URL (required)</li>
+                    <li>Image URL (required)</li>
+                    <li>Category (required)</li>
+                    <li>Tags (optional, comma-separated)</li>
+                </ol>
 
-                    <form method="post" action="" enctype="multipart/form-data">
-                        <?php wp_nonce_field('honey_hole_import_csv'); ?>
-                        <input type="hidden" name="action" value="import_csv">
-                        <div class="honey-hole-form-field">
-                            <label for="csv_file">Select CSV File</label>
-                            <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-                            <p class="description">The file should be a CSV with UTF-8 encoding</p>
-                        </div>
-                        <div class="honey-hole-form-actions">
-                            <button type="submit" class="button button-primary">Import Deals</button>
-                        </div>
-                    </form>
+                <form method="post" action="" enctype="multipart/form-data">
+                    <?php wp_nonce_field('honey_hole_import_csv'); ?>
+                    <input type="hidden" name="action" value="import_csv">
+                    <div class="honey-hole-form-field">
+                        <label for="csv_file">Select CSV File</label>
+                        <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                        <p class="description">The file should be a CSV with UTF-8 encoding</p>
+                    </div>
+                    <div class="honey-hole-form-actions">
+                        <button type="submit" class="button button-primary">Import Deals</button>
+                    </div>
+                </form>
 
-                    <div class="honey-hole-sample-csv">
-                        <h3>Sample CSV Format</h3>
-                        <pre>Title,Description,Original Price,Sales Price,Rating,Deal URL,Original URL,Image URL,Category,Tags
+                <div class="honey-hole-sample-csv">
+                    <h3>Sample CSV Format</h3>
+                    <pre>Title,Description,Original Price,Sales Price,Rating,Deal URL,Original URL,Image URL,Category,Tags
 "REI Co-op Flash 22 Pack","Lightweight daypack perfect for day hikes",49.95,29.95,4.5,"https://example.com/deal","https://example.com/original","https://example.com/image.jpg","Backpacks","hiking,daypack,lightweight"
 "Patagonia Nano Puff Jacket","Warm and lightweight synthetic jacket",199.00,149.00,4.8,"https://example.com/deal2","https://example.com/original2","https://example.com/image2.jpg","Jackets","jacket,warm,outdoor"</pre>
-                    </div>
                 </div>
             </div>
-        <?php
+        </div>
+    <?php
+}
+
+// Add this new function to handle image uploads
+function honey_hole_handle_image_upload()
+{
+    if (!isset($_POST['deal_id']) || !isset($_FILES['image'])) {
+        wp_send_json_error('Missing required fields');
     }
 
-    // Add this new function to handle image uploads
-    function honey_hole_handle_image_upload()
-    {
-        if (!isset($_POST['deal_id']) || !isset($_FILES['image'])) {
-            wp_send_json_error('Missing required fields');
-        }
+    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_image_upload')) {
+        wp_send_json_error('Invalid nonce');
+    }
 
-        if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_image_upload')) {
-            wp_send_json_error('Invalid nonce');
-        }
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Insufficient permissions');
+    }
 
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
+    $deal_id = intval($_POST['deal_id']);
+    $file = $_FILES['image'];
 
-        $deal_id = intval($_POST['deal_id']);
-        $file = $_FILES['image'];
+    // Check file type
+    $allowed_types = array('image/jpeg', 'image/png', 'image/gif');
+    if (!in_array($file['type'], $allowed_types)) {
+        wp_send_json_error('Invalid file type. Only JPG, PNG, and GIF files are allowed.');
+    }
 
-        // Check file type
-        $allowed_types = array('image/jpeg', 'image/png', 'image/gif');
-        if (!in_array($file['type'], $allowed_types)) {
-            wp_send_json_error('Invalid file type. Only JPG, PNG, and GIF files are allowed.');
-        }
+    // Upload the file
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . 'wp-admin/includes/media.php');
 
-        // Upload the file
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
-        require_once(ABSPATH . 'wp-admin/includes/media.php');
+    $attachment_id = media_handle_upload('image', 0);
 
-        $attachment_id = media_handle_upload('image', 0);
+    if (is_wp_error($attachment_id)) {
+        wp_send_json_error($attachment_id->get_error_message());
+    }
 
-        if (is_wp_error($attachment_id)) {
-            wp_send_json_error($attachment_id->get_error_message());
-        }
+    // Get the URL of the uploaded image
+    $image_url = wp_get_attachment_url($attachment_id);
 
-        // Get the URL of the uploaded image
-        $image_url = wp_get_attachment_url($attachment_id);
+    // Update the deal's image URL
+    update_post_meta($deal_id, 'deal_image_url', $image_url);
 
-        // Update the deal's image URL
-        update_post_meta($deal_id, 'deal_image_url', $image_url);
+    wp_send_json_success(array(
+        'image_url' => $image_url
+    ));
+}
+add_action('wp_ajax_honey_hole_upload_image', 'honey_hole_handle_image_upload');
 
-        wp_send_json_success(array(
-            'image_url' => $image_url
+// Add AJAX handler for updating deal order
+function honey_hole_update_deal_order()
+{
+    if (!isset($_POST['updates']) || !isset($_POST['nonce'])) {
+        wp_send_json_error('Missing required fields');
+    }
+
+    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_update_order')) {
+        wp_send_json_error('Invalid nonce');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Insufficient permissions');
+    }
+
+    $updates = $_POST['updates'];
+    $success = true;
+
+    foreach ($updates as $update) {
+        $deal_id = intval($update['deal_id']);
+        $new_order = intval($update['new_order']);
+
+        $result = wp_update_post(array(
+            'ID' => $deal_id,
+            'menu_order' => $new_order
         ));
+
+        if (is_wp_error($result)) {
+            $success = false;
+            break;
+        }
     }
-    add_action('wp_ajax_honey_hole_upload_image', 'honey_hole_handle_image_upload');
 
-    // Add AJAX handler for updating deal order
-    function honey_hole_update_deal_order()
-    {
-        if (!isset($_POST['updates']) || !isset($_POST['nonce'])) {
-            wp_send_json_error('Missing required fields');
+    if ($success) {
+        wp_send_json_success();
+    } else {
+        wp_send_json_error('Failed to update some deal orders');
+    }
+}
+add_action('wp_ajax_honey_hole_update_order', 'honey_hole_update_deal_order');
+
+// Add AJAX handler for saving visibility changes
+function honey_hole_save_visibility_changes()
+{
+    if (!isset($_POST['changes']) || !isset($_POST['nonce'])) {
+        wp_send_json_error('Missing required fields');
+    }
+
+    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_bulk_action')) {
+        wp_send_json_error('Invalid nonce');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Insufficient permissions');
+    }
+
+    $changes = $_POST['changes'];
+    $success = true;
+
+    foreach ($changes as $change) {
+        $deal_id = intval($change['deal_id']);
+        $visibility = rest_sanitize_boolean($change['visibility']);
+
+        $result = update_post_meta($deal_id, 'deal_visibility', $visibility);
+        if ($result === false) {
+            $success = false;
+            break;
         }
+    }
 
-        if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_update_order')) {
-            wp_send_json_error('Invalid nonce');
-        }
+    if ($success) {
+        wp_send_json_success();
+    } else {
+        wp_send_json_error('Failed to save some visibility changes');
+    }
+}
+add_action('wp_ajax_honey_hole_save_visibility_changes', 'honey_hole_save_visibility_changes');
 
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
+// Add AJAX handler for bulk deletion
+function honey_hole_handle_bulk_delete()
+{
+    if (!isset($_POST['deal_ids']) || !isset($_POST['nonce'])) {
+        wp_send_json_error('Missing required fields');
+    }
 
-        $updates = $_POST['updates'];
-        $success = true;
+    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_bulk_action')) {
+        wp_send_json_error('Invalid nonce');
+    }
 
-        foreach ($updates as $update) {
-            $deal_id = intval($update['deal_id']);
-            $new_order = intval($update['new_order']);
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Insufficient permissions');
+    }
 
-            $result = wp_update_post(array(
-                'ID' => $deal_id,
-                'menu_order' => $new_order
-            ));
+    $deal_ids = array_map('intval', $_POST['deal_ids']);
+    $success = true;
+    $deleted_count = 0;
 
-            if (is_wp_error($result)) {
-                $success = false;
-                break;
-            }
-        }
-
-        if ($success) {
-            wp_send_json_success();
+    foreach ($deal_ids as $deal_id) {
+        if (wp_delete_post($deal_id, true)) {
+            $deleted_count++;
         } else {
-            wp_send_json_error('Failed to update some deal orders');
+            $success = false;
+            break;
         }
     }
-    add_action('wp_ajax_honey_hole_update_order', 'honey_hole_update_deal_order');
 
-    // Add AJAX handler for saving visibility changes
-    function honey_hole_save_visibility_changes()
-    {
-        if (!isset($_POST['changes']) || !isset($_POST['nonce'])) {
-            wp_send_json_error('Missing required fields');
-        }
-
-        if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_bulk_action')) {
-            wp_send_json_error('Invalid nonce');
-        }
-
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
-
-        $changes = $_POST['changes'];
-        $success = true;
-
-        foreach ($changes as $change) {
-            $deal_id = intval($change['deal_id']);
-            $visibility = rest_sanitize_boolean($change['visibility']);
-
-            $result = update_post_meta($deal_id, 'deal_visibility', $visibility);
-            if ($result === false) {
-                $success = false;
-                break;
-            }
-        }
-
-        if ($success) {
-            wp_send_json_success();
-        } else {
-            wp_send_json_error('Failed to save some visibility changes');
-        }
+    if ($success) {
+        wp_send_json_success(array(
+            'message' => sprintf('%d deals deleted successfully', $deleted_count)
+        ));
+    } else {
+        wp_send_json_error('Failed to delete some deals');
     }
-    add_action('wp_ajax_honey_hole_save_visibility_changes', 'honey_hole_save_visibility_changes');
-
-    // Add AJAX handler for bulk deletion
-    function honey_hole_handle_bulk_delete()
-    {
-        if (!isset($_POST['deal_ids']) || !isset($_POST['nonce'])) {
-            wp_send_json_error('Missing required fields');
-        }
-
-        if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_bulk_action')) {
-            wp_send_json_error('Invalid nonce');
-        }
-
-        if (!current_user_can('manage_options')) {
-            wp_send_json_error('Insufficient permissions');
-        }
-
-        $deal_ids = array_map('intval', $_POST['deal_ids']);
-        $success = true;
-        $deleted_count = 0;
-
-        foreach ($deal_ids as $deal_id) {
-            if (wp_delete_post($deal_id, true)) {
-                $deleted_count++;
-            } else {
-                $success = false;
-                break;
-            }
-        }
-
-        if ($success) {
-            wp_send_json_success(array(
-                'message' => sprintf('%d deals deleted successfully', $deleted_count)
-            ));
-        } else {
-            wp_send_json_error('Failed to delete some deals');
-        }
-    }
-    add_action('wp_ajax_honey_hole_bulk_delete_deals', 'honey_hole_handle_bulk_delete');
+}
+add_action('wp_ajax_honey_hole_bulk_delete_deals', 'honey_hole_handle_bulk_delete');
