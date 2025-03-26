@@ -592,4 +592,34 @@ jQuery(document).ready(function ($) {
       inactiveCountElement.textContent = hiddenDeals;
     }
   }
+
+  // Handle search functionality
+  let searchTimeout;
+  $('#deal-search').on('input', function() {
+    const searchQuery = $(this).val();
+    
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+    
+    // Set new timeout to prevent too many requests
+    searchTimeout = setTimeout(function() {
+      // Update URL with search parameter
+      const currentUrl = new URL(window.location.href);
+      if (searchQuery) {
+        currentUrl.searchParams.set('s', searchQuery);
+      } else {
+        currentUrl.searchParams.delete('s');
+      }
+      
+      // Reload the page with new search parameter
+      window.location.href = currentUrl.toString();
+    }, 500); // Wait 500ms after user stops typing
+  });
+
+  // Set search input value from URL parameter on page load
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('s');
+  if (searchQuery) {
+    $('#deal-search').val(searchQuery);
+  }
 });

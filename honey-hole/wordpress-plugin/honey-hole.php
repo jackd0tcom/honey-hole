@@ -264,6 +264,9 @@ function honey_hole_admin_page()
                 <div class="honey-hole-actions">
                     <a href="<?php echo admin_url('admin.php?page=honey-hole-add-deal'); ?>" class="button button-primary button-hero">Add Deal</a>
                 </div>
+                <div class="honey-hole-search">
+                    <input type="text" id="deal-search" placeholder="Search by title" class="regular-text">
+                </div>
             </div>
             <?php honey_hole_render_deals_table(); ?>
             <div class="honey-hole-danger-zone">
@@ -631,14 +634,24 @@ function honey_hole_render_deals_table()
         'orderby' => 'name',
     ));
 
+    // Get search query
+    $search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
+
     // Get all deals
-    $deals = get_posts(array(
+    $args = array(
         'post_type' => 'honey_hole_deal',
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'orderby' => 'menu_order',
         'order' => 'ASC'
-    ));
+    );
+
+    // Add search query if present
+    if (!empty($search_query)) {
+        $args['s'] = $search_query;
+    }
+
+    $deals = get_posts($args);
 
     // Organize deals by category and tags
     $organized_deals = array();
@@ -689,7 +702,6 @@ function honey_hole_render_deals_table()
                             <div class="deal-card-header">
                                 <input type="checkbox" class="deal-checkbox" value="<?php echo esc_attr($deal->ID); ?>">
                                 <div class="drag-handle">
-                                    <span class="dashicons dashicons-menu"></span>
                                 </div>
                                 <div class="deal-visibility">
                                     <label class="visibility-toggle">
