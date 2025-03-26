@@ -258,7 +258,7 @@ jQuery(document).ready(function ($) {
       data: {
         action: "honey_hole_save_visibility_changes",
         changes: changes,
-        nonce: honeyHoleAdmin.bulk_nonce,
+        nonce: honeyHoleAdmin.visibility_nonce,
       },
       success: function (response) {
         if (response.success) {
@@ -497,19 +497,26 @@ jQuery(document).ready(function ($) {
     $("#cb-select-all-1").prop("checked", allTablesChecked);
   });
 
+  // Create and append the order changes popup
+  const orderChangesPopup = $(
+    '<div class="honey-hole-save-popup order-changes-popup"><span class="save-message">Confirm New Order?</span><div class="button-group"><button type="button" class="button button-primary">Save Changes</button><button type="button" class="button cancel">Cancel</button></div></div>'
+  );
+  $("body").append(orderChangesPopup);
+
   // Initialize sortable for each category's deals grid
   $(".honey-hole-deals-grid").sortable({
     handle: ".drag-handle",
     placeholder: "ui-sortable-placeholder",
     helper: "clone",
     update: function (event, ui) {
-      // Show the save button when order changes
-      $("#save-order").show();
+      // Show the popup when order changes
+      orderChangesPopup.addClass("visible");
+      $("body").addClass("has-sticky-save");
     },
   });
 
-  // Handle save order button click
-  $("#save-order").on("click", function () {
+  // Handle save order button click in popup
+  orderChangesPopup.find("button.button-primary").on("click", function () {
     const $button = $(this);
     $button.prop("disabled", true).text("Saving...");
 
@@ -540,7 +547,8 @@ jQuery(document).ready(function ($) {
       success: function (response) {
         if (response.success) {
           showNotification("Deal order saved successfully", 3000);
-          $button.hide();
+          orderChangesPopup.removeClass("visible");
+          $("body").removeClass("has-sticky-save");
         } else {
           showNotification("Error saving deal order: " + response.data, 5000);
         }
@@ -549,9 +557,15 @@ jQuery(document).ready(function ($) {
         showNotification("Error saving deal order. Please try again.", 5000);
       },
       complete: function () {
-        $button.prop("disabled", false).text("Save Order Changes");
+        $button.prop("disabled", false).text("Save Changes");
       },
     });
+  });
+
+  // Handle cancel button for order changes popup
+  orderChangesPopup.find("button.cancel").on("click", function () {
+    // Revert the order changes by reloading the page
+    window.location.reload();
   });
 
   // Function to update deal counts

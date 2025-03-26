@@ -180,7 +180,8 @@ function honey_hole_admin_enqueue_scripts($hook)
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('honey_hole_image_upload'),
         'bulk_nonce' => wp_create_nonce('honey_hole_bulk_action'),
-        'order_nonce' => wp_create_nonce('honey_hole_update_order')
+        'order_nonce' => wp_create_nonce('honey_hole_update_order'),
+        'visibility_nonce' => wp_create_nonce('honey_hole_visibility_toggle')
     ));
 }
 add_action('admin_enqueue_scripts', 'honey_hole_admin_enqueue_scripts');
@@ -262,17 +263,6 @@ function honey_hole_admin_page()
             <div class="honey-hole-menu-container">
                 <div class="honey-hole-actions">
                     <a href="<?php echo admin_url('admin.php?page=honey-hole-add-deal'); ?>" class="button button-primary button-hero">Add Deal</a>
-                    <button type="button" id="save-order" class="button button-primary" style="display: none;">Save Order Changes</button>
-                </div>
-                <div class="honey-hole-stats">
-                    <div class="stat-box">
-                        <span class="stat-label">Active Deals</span>
-                        <span class="stat-value"><?php echo honey_hole_get_active_deals_count(); ?></span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">Hidden Deals</span>
-                        <span class="stat-value"><?php echo honey_hole_get_hidden_deals_count(); ?></span>
-                    </div>
                 </div>
             </div>
             <?php honey_hole_render_deals_table(); ?>
@@ -1465,7 +1455,7 @@ function honey_hole_save_visibility_changes()
         wp_send_json_error('Missing required fields');
     }
 
-    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_bulk_action')) {
+    if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_visibility_toggle')) {
         wp_send_json_error('Invalid nonce');
     }
 

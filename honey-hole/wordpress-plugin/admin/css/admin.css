@@ -1027,7 +1027,7 @@ body.has-sticky-save {
 /* Save Popup */
 .honey-hole-save-popup {
   position: fixed;
-  top: 32px;
+  top: 4%;
   left: 50%;
   transform: translateX(-50%);
   background: #fff;
@@ -1056,54 +1056,53 @@ body.has-sticky-save {
   gap: 8px;
 }
 
-/* Visibility Popup */
-.honey-hole-save-popup.visibility-popup {
-  background: #fff;
-}
-
-.honey-hole-save-popup.visibility-popup .button-primary {
-  background: #2271b1;
-  border-color: #2271b1;
+.honey-hole-save-popup .button-group .button-primary {
+  background: #3fb122;
+  border-color: #3fb122;
   color: #fff;
 }
-
-.honey-hole-save-popup.visibility-popup .button-primary:hover {
-  background: #135e96;
-  border-color: #135e96;
+.honey-hole-save-popup .button-group .button-primary:hover {
+  background: #287316;
+  border-color: #287316;
 }
 
-/* Bulk Delete Popup */
-.honey-hole-save-popup.bulk-delete-popup {
-  background: #fff;
-  border-color: #d63638;
+.honey-hole-save-popup .button-group button {
+  border-radius: 3px !important;
+  border: unset;
 }
 
-.honey-hole-save-popup.bulk-delete-popup .save-message {
-  color: #d63638;
+.honey-hole-save-popup .button {
+  margin: 0;
 }
 
-.honey-hole-save-popup.bulk-delete-popup .button-link-delete {
-  color: #d63638;
-  border-color: #d63638;
+.honey-hole-save-popup .button.cancel {
+  color: #666;
 }
 
-.honey-hole-save-popup.bulk-delete-popup .button-link-delete:hover {
-  background: #d63638;
-  color: #fff;
+.honey-hole-save-popup .button.cancel:hover {
+  color: #000;
 }
 
 /* Mobile admin bar adjustment */
 @media screen and (max-width: 782px) {
-  .honey-hole-bulk-actions-float,
   .honey-hole-save-popup {
     top: 46px;
   }
 }
+
 .honey-hole-menu-container {
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.honey-hole-menu-container .button-hero {
+  margin-right: 10px;
+}
+
+.honey-hole-menu-container .honey-hole-actions {
+  margin-bottom: 0;
 }
 
 .honey-hole-actions {
