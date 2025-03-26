@@ -733,14 +733,13 @@ function honey_hole_render_deals_table()
                                         <span class="discount discount-high">-<?php echo $discount; ?>% Off</span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="deal-rating">
-                                    <div class="rating-stars">
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <span class="star <?php echo $i <= $rating ? 'filled' : ''; ?>">★</span>
-                                        <?php endfor; ?>
+                                <?php if ($rating > 0): ?>
+                                    <div class="deal-rating" data-rating="<?php echo $rating; ?>">
+                                        <div class="rating-scale">
+                                            <div class="scale-point" style="width: <?php echo ($rating / 5) * 100; ?>%"></div>
+                                        </div>
                                     </div>
-                                    <span class="rating-value"><?php echo number_format($rating, 1); ?></span>
-                                </div>
+                                <?php endif; ?>
                                 <div class="deal-tags">
                                     <?php echo esc_html(implode(', ', $deal_tags)); ?>
                                 </div>
@@ -978,18 +977,17 @@ function honey_hole_edit_deal_page()
                         </div>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-rating">Rating</label>
+                        <label for="deal-rating">Rating (1-5)</label>
                         <div class="rating-input">
-                            <input type="number" id="deal-rating" name="deal_rating" min="0" max="5" step="0.5" value="<?php echo esc_attr($rating); ?>">
-                            <div class="rating-stars">
-                                <span class="star" data-value="1">★</span>
-                                <span class="star" data-value="2">★</span>
-                                <span class="star" data-value="3">★</span>
-                                <span class="star" data-value="4">★</span>
-                                <span class="star" data-value="5">★</span>
+                            <input type="number" id="deal-rating" name="deal_rating" min="1" max="5" step="1" value="<?php echo esc_attr($rating); ?>">
+                            <div class="rating-scale">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <input type="radio" id="rating_<?php echo $i; ?>" name="deal_rating" value="<?php echo $i; ?>" <?php checked($rating, $i); ?>>
+                                    <label for="rating_<?php echo $i; ?>"></label>
+                                <?php endfor; ?>
                             </div>
                         </div>
-                        <p class="description">Rate the deal from 0 to 5 stars</p>
+                        <p class="description">Rate the deal from 1 to 5</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-url">Deal URL *</label>
@@ -1119,13 +1117,10 @@ function honey_hole_deals_shortcode($atts)
                                         <?php endif; ?>
                                     </div>
                                     <?php if ($rating > 0): ?>
-                                        <div class="deal-rating">
-                                            <div class="rating-stars">
-                                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                    <span class="star <?php echo $i <= $rating ? 'filled' : ''; ?>">★</span>
-                                                <?php endfor; ?>
+                                        <div class="deal-rating" data-rating="<?php echo $rating; ?>">
+                                            <div class="rating-scale">
+                                                <div class="scale-point" style="width: <?php echo ($rating / 5) * 100; ?>%"></div>
                                             </div>
-                                            <span class="rating-value"><?php echo number_format($rating, 1); ?></span>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -1206,13 +1201,10 @@ function honey_hole_deals_shortcode($atts)
                                         <?php endif; ?>
                                     </div>
                                     <?php if ($rating > 0): ?>
-                                        <div class="deal-rating">
-                                            <div class="rating-stars">
-                                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                    <span class="star <?php echo $i <= $rating ? 'filled' : ''; ?>">★</span>
-                                                <?php endfor; ?>
+                                        <div class="deal-rating" data-rating="<?php echo $rating; ?>">
+                                            <div class="rating-scale">
+                                                <div class="scale-point" style="width: <?php echo ($rating / 5) * 100; ?>%"></div>
                                             </div>
-                                            <span class="rating-value"><?php echo number_format($rating, 1); ?></span>
                                         </div>
                                     <?php endif; ?>
                                 </div>
