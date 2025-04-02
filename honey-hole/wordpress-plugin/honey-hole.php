@@ -1136,6 +1136,64 @@ function honey_hole_deals_shortcode($atts)
                     <?php endforeach; ?>
                 </div>
             </div>
+            <div id="hh-email-section">
+                <div class="hh-email-wrapper">
+                            <div class="hh-email-container-one">
+                                <div class="hh-email-image"></div>
+                                <div class="hh-email-content">
+                                <h2>Get the Best Deals and Win Free Gear!
+</h2>
+                            <form method="post" class="af-form-wrapper" accept-charset="UTF-8" action="https://www.aweber.com/scripts/addlead.pl"  >
+                                <div style="display: none;">
+                                <input type="hidden" name="meta_web_form_id" value="894900673" />
+                                <input type="hidden" name="meta_split_id" value="" />
+                                <input type="hidden" name="listname" value="awlist6324539" />
+                                <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text" id="redirect_cd2ba281398d0235b1cee22fa0e1695f" />
+
+                                <input type="hidden" name="meta_adtracking" value="Honey_Hole_unstyled_form" />
+                                <input type="hidden" name="meta_message" value="1" />
+                                <input type="hidden" name="meta_required" value="name,email" />
+
+                                <input type="hidden" name="meta_tooltip" value="" />
+                                </div>
+                                <div id="af-form-894900673" class="af-form"><div id="af-header-894900673" class="af-header" style="display: none;"><div class="bodyText"><p>&nbsp;</p></div></div><div id="af-body-894900673" class="af-body af-standards">
+                                <div class="af-element">
+                                <div class="af-textWrap">
+                                <input placeholder="Name" id="awf_field-117998941" type="text" name="name" class="text" value="" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';} " tabindex="500" />
+                                </div>
+                                <div class="af-clear"></div>
+                                </div><div class="af-element buttonContainer">
+                                <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Subscribe" tabindex="502" />
+                                <div class="af-clear"></div>
+                                </div>
+                                </div>
+                                <div id="af-footer-894900673" style="display: none;" class="af-footer"><div class="bodyText"><p>&nbsp;</p></div></div></div>
+                                <div style="display: none;"><img src="https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM" alt="" /></div>
+                            </form>
+                            <p id="hh-email-disclaimer">We only email every other week. Unsubscribe at any time.</p>
+                                </div>
+                            </div>
+                            <div class="hh-email-container-two-wrapper">
+                                <div class="hh-email-container-two">
+                                <h4>Outdoor Gear. Epic Deals. Free Giveaways.</h4>
+                                <p>Love camping, hiking, hunting, or fishing? The Honey Hole email newsletter is your go-to for:
+
+</p>
+                                <ul>
+                                    <li>Exclusive outdoor gear deals you won’t find anywhere else.
+                                    </li>
+                                    <li>Weekly gear giveaways because who doesn’t love free gear?
+                                    </li>
+                                        <li>Raw, honest reviews and testing insights.
+                                        </li>
+                                        <li>Fun stories and tips for your next adventure.
+                                        </li>
+                                    </ul>
+                                    <p>Join thousands of outdoor enthusiasts who love saving money and discovering the best gear.</p>
+                                </div>
+                            </div>
+                        </div>
+                </div>
         <?php
         endif;
 
