@@ -21,6 +21,9 @@
 }
 .honey-hole-hero {
   background: url("https://outdoorempire.com/wp-content/uploads/2025/02/dirk-von-loen-wagner-Hrmayke-v8g-unsplash.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 40px;
   margin-bottom: 40px;
 }
@@ -296,6 +299,21 @@
 
 /* Responsive Design */
 @media screen and (max-width: 1000px) {
+  .honey-hole-hero {
+    padding: 20px;
+  }
+  .honey-hole-hero-content {
+    padding: 20px;
+  }
+  .honey-hole-hero-content h2 {
+    font-size: 1.5rem;
+  }
+  .honey-hole-hero-image img {
+    height: 180px;
+  }
+  .hh-email-image {
+    height: 25vh;
+  }
   .deals-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -308,6 +326,40 @@
 }
 
 @media screen and (max-width: 480px) {
+  .honey-hole-deals {
+    padding: 0px;
+  }
+  .honey-hole-hero {
+    padding: 20px;
+  }
+  .honey-hole-hero-content {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .honey-hole-hero-image {
+    width: 100%;
+  }
+  .honey-hole-hero-copy {
+    width: 100%;
+  }
+  .honey-hole-hero-copy h2 {
+    font-size: 1.5rem;
+  }
+  .honey-hole-hero-image img {
+    height: auto;
+  }
+  .hh-email-wrapper {
+    flex-direction: column;
+  }
+  .hh-email-container-one {
+    width: 100%;
+  }
+  .hh-email-container-two {
+    width: 100%;
+  }
+  .hh-email-container-two-wrapper {
+    width: 100%;
+  }
   .deals-grid {
     grid-template-columns: 1fr;
   }

@@ -2,9 +2,9 @@
 
 /**
  * Plugin Name: Honey Hole
- * Description: A plugin for managing and displaying outdoor gear deals
+ * Description: A plugin for managing and displaying deals on the Honey Hole
  * Version: 1.0.0
- * Author: Your Name
+ * Author: Jack Ball
  * Text Domain: honey-hole
  */
 
@@ -201,57 +201,71 @@ function honey_hole_deactivate()
 }
 register_deactivation_hook(__FILE__, 'honey_hole_deactivate');
 
-// Add admin menu
-function honey_hole_add_admin_menu()
+// Add menu items
+function honey_hole_admin_menu()
 {
+    // Get the icon URL
+    $icon_url = plugins_url('admin/images/honey-hole-icon.svg', __FILE__);
+    
+    // Add main menu
     add_menu_page(
-        'Honey Hole Deals', // Page title
-        'Honey Hole', // Menu title
-        'manage_options', // Capability required
-        'honey-hole', // Menu slug
-        'honey_hole_admin_page', // Function to render the page
-        'dashicons-tag', // Icon
-        30 // Position
+        'Honey Hole Deals',
+        'Honey Hole',
+        'manage_options',
+        'honey-hole',
+        'honey_hole_admin_page',
+        $icon_url,
+        30
+    );
+
+    // Add submenu items
+    add_submenu_page(
+        'honey-hole',
+        'All Deals',
+        'All Deals',
+        'manage_options',
+        'honey-hole',
+        'honey_hole_admin_page'
     );
 
     add_submenu_page(
-        'honey-hole', // Parent slug
-        'Add New Deal', // Page title
-        'Add New Deal', // Menu title
-        'manage_options', // Capability required
-        'honey-hole-add-deal', // Menu slug
-        'honey_hole_add_deal_page' // Function to render the page
+        'honey-hole',
+        'Add New Deal',
+        'Add New',
+        'manage_options',
+        'honey-hole-add-deal',
+        'honey_hole_add_deal_page'
     );
 
     add_submenu_page(
-        'honey-hole', // Parent slug
-        'Manage Categories', // Page title
-        'Categories', // Menu title
-        'manage_options', // Capability required
-        'honey-hole-categories', // Menu slug
-        'honey_hole_categories_page' // Function to render the page
+        'honey-hole',
+        'Manage Categories',
+        'Categories',
+        'manage_options',
+        'honey-hole-categories',
+        'honey_hole_categories_page'
     );
 
     // Add hidden submenu for edit page
     add_submenu_page(
         null, // Parent slug (null makes it hidden)
-        'Edit Deal', // Page title
-        'Edit Deal', // Menu title
-        'manage_options', // Capability required
-        'honey-hole-edit-deal', // Menu slug
-        'honey_hole_edit_deal_page' // Function to render the page
+        'Edit Deal',
+        'Edit Deal',
+        'manage_options',
+        'honey-hole-edit-deal',
+        'honey_hole_edit_deal_page'
     );
 
     add_submenu_page(
-        'honey-hole', // Parent slug
-        'Import Deals', // Page title
-        'Import Deals', // Menu title
-        'manage_options', // Capability required
-        'honey-hole-import', // Menu slug
-        'honey_hole_import_page' // Function to render the page
+        'honey-hole',
+        'Import Deals',
+        'Import Deals',
+        'manage_options',
+        'honey-hole-import',
+        'honey_hole_import_page'
     );
 }
-add_action('admin_menu', 'honey_hole_add_admin_menu');
+add_action('admin_menu', 'honey_hole_admin_menu');
 
 // Render main admin page
 function honey_hole_admin_page()
@@ -1097,8 +1111,23 @@ function honey_hole_deals_shortcode($atts)
                         $image_url = get_post_meta($deal->ID, 'deal_image_url', true);
                         $rating = get_post_meta($deal->ID, 'deal_rating', true);
 
-                        // Calculate discount
-                        $discount = $original_price > 0 ? round((($original_price - $sales_price) / $original_price) * 100) : 0;
+                        // Calculate discount with error handling
+                        $discount = 0;
+                        if (is_numeric($original_price) && is_numeric($sales_price) && $original_price > 0) {
+                            $discount = round((($original_price - $sales_price) / $original_price) * 100);
+                        }
+
+                        // Format prices with error handling
+                        $formatted_sales_price = '';
+                        $formatted_original_price = '';
+                        
+                        if (is_numeric($sales_price) && $sales_price !== '') {
+                            $formatted_sales_price = number_format((float)$sales_price, 2);
+                        }
+                        
+                        if (is_numeric($original_price) && $original_price !== '') {
+                            $formatted_original_price = number_format((float)$original_price, 2);
+                        }
                     ?>
                         <div class="deal-card">
                             <a href="<?php echo esc_url($deal_url); ?>" target="_blank" rel="noopener noreferrer" class="deal-card-link">
@@ -1112,9 +1141,11 @@ function honey_hole_deals_shortcode($atts)
                                 <div class="deal-content">
                                     <h3 class="deal-title"><?php echo esc_html($deal->post_title); ?></h3>
                                     <div class="deal-pricing">
-                                        <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
-                                        <?php if ($original_price > 0): ?>
-                                            <span class="original-price">$<?php echo number_format($original_price, 2); ?></span>
+                                        <?php if ($formatted_sales_price !== ''): ?>
+                                            <span class="sales-price">$<?php echo esc_html($formatted_sales_price); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($formatted_original_price !== ''): ?>
+                                            <span class="original-price">$<?php echo esc_html($formatted_original_price); ?></span>
                                             <?php if ($discount > 0): ?>
                                                 <span class="discount discount-<?php echo $discount >= 50 ? 'high' : ($discount >= 25 ? 'medium' : 'low'); ?>"><?php echo $discount; ?>% Off</span>
                                             <?php endif; ?>
@@ -1142,58 +1173,58 @@ function honey_hole_deals_shortcode($atts)
                                 <div class="hh-email-image"></div>
                                 <div class="hh-email-content">
                                 <h2>Get the Best Deals and Win Free Gear!
-</h2>
-                            <form method="post" class="af-form-wrapper" accept-charset="UTF-8" action="https://www.aweber.com/scripts/addlead.pl"  >
-                                <div style="display: none;">
-                                <input type="hidden" name="meta_web_form_id" value="894900673" />
-                                <input type="hidden" name="meta_split_id" value="" />
-                                <input type="hidden" name="listname" value="awlist6324539" />
-                                <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text" id="redirect_cd2ba281398d0235b1cee22fa0e1695f" />
+                                </h2>
+                                <form method="post" class="af-form-wrapper" accept-charset="UTF-8" action="https://www.aweber.com/scripts/addlead.pl"  >
+                                    <div style="display: none;">
+                                    <input type="hidden" name="meta_web_form_id" value="894900673" />
+                                    <input type="hidden" name="meta_split_id" value="" />
+                                    <input type="hidden" name="listname" value="awlist6324539" />
+                                    <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text" id="redirect_cd2ba281398d0235b1cee22fa0e1695f" />
 
-                                <input type="hidden" name="meta_adtracking" value="Honey_Hole_unstyled_form" />
-                                <input type="hidden" name="meta_message" value="1" />
-                                <input type="hidden" name="meta_required" value="name,email" />
+                                    <input type="hidden" name="meta_adtracking" value="Honey_Hole_unstyled_form" />
+                                    <input type="hidden" name="meta_message" value="1" />
+                                    <input type="hidden" name="meta_required" value="name,email" />
 
-                                <input type="hidden" name="meta_tooltip" value="" />
+                                    <input type="hidden" name="meta_tooltip" value="" />
+                                    </div>
+                                    <div id="af-form-894900673" class="af-form"><div id="af-header-894900673" class="af-header" style="display: none;"><div class="bodyText"><p>&nbsp;</p></div></div><div id="af-body-894900673" class="af-body af-standards">
+                                    <div class="af-element">
+                                    <div class="af-textWrap">
+                                    <input placeholder="Name" id="awf_field-117998941" type="text" name="name" class="text" value="" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';} " tabindex="500" />
+                                    </div>
+                                    <div class="af-clear"></div>
+                                    </div><div class="af-element buttonContainer">
+                                    <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Subscribe" tabindex="502" />
+                                    <div class="af-clear"></div>
+                                    </div>
+                                    </div>
+                                    <div id="af-footer-894900673" style="display: none;" class="af-footer"><div class="bodyText"><p>&nbsp;</p></div></div></div>
+                                    <div style="display: none;"><img src="https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM" alt="" /></div>
+                                </form>
+                                <p id="hh-email-disclaimer">We only email every other week. Unsubscribe at any time.</p>
+                                    </div>
                                 </div>
-                                <div id="af-form-894900673" class="af-form"><div id="af-header-894900673" class="af-header" style="display: none;"><div class="bodyText"><p>&nbsp;</p></div></div><div id="af-body-894900673" class="af-body af-standards">
-                                <div class="af-element">
-                                <div class="af-textWrap">
-                                <input placeholder="Name" id="awf_field-117998941" type="text" name="name" class="text" value="" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';} " tabindex="500" />
-                                </div>
-                                <div class="af-clear"></div>
-                                </div><div class="af-element buttonContainer">
-                                <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Subscribe" tabindex="502" />
-                                <div class="af-clear"></div>
-                                </div>
-                                </div>
-                                <div id="af-footer-894900673" style="display: none;" class="af-footer"><div class="bodyText"><p>&nbsp;</p></div></div></div>
-                                <div style="display: none;"><img src="https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM" alt="" /></div>
-                            </form>
-                            <p id="hh-email-disclaimer">We only email every other week. Unsubscribe at any time.</p>
+                                <div class="hh-email-container-two-wrapper">
+                                    <div class="hh-email-container-two">
+                                    <h4>Outdoor Gear. Epic Deals. Free Giveaways.</h4>
+                                    <p>Love camping, hiking, hunting, or fishing? The Honey Hole email newsletter is your go-to for:
+
+                                    </p>
+                                    <ul>
+                                        <li>Exclusive outdoor gear deals you won't find anywhere else.
+                                        </li>
+                                        <li>Weekly gear giveaways because who doesn't love free gear?
+                                        </li>
+                                            <li>Raw, honest reviews and testing insights.
+                                            </li>
+                                            <li>Fun stories and tips for your next adventure.
+                                            </li>
+                                        </ul>
+                                        <p>Join thousands of outdoor enthusiasts who love saving money and discovering the best gear.</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="hh-email-container-two-wrapper">
-                                <div class="hh-email-container-two">
-                                <h4>Outdoor Gear. Epic Deals. Free Giveaways.</h4>
-                                <p>Love camping, hiking, hunting, or fishing? The Honey Hole email newsletter is your go-to for:
-
-</p>
-                                <ul>
-                                    <li>Exclusive outdoor gear deals you won’t find anywhere else.
-                                    </li>
-                                    <li>Weekly gear giveaways because who doesn’t love free gear?
-                                    </li>
-                                        <li>Raw, honest reviews and testing insights.
-                                        </li>
-                                        <li>Fun stories and tips for your next adventure.
-                                        </li>
-                                    </ul>
-                                    <p>Join thousands of outdoor enthusiasts who love saving money and discovering the best gear.</p>
-                                </div>
-                            </div>
-                        </div>
-                </div>
+                    </div>
         <?php
         endif;
 
@@ -1242,8 +1273,23 @@ function honey_hole_deals_shortcode($atts)
                         $image_url = get_post_meta($deal->ID, 'deal_image_url', true);
                         $rating = get_post_meta($deal->ID, 'deal_rating', true);
 
-                        // Calculate discount
-                        $discount = $original_price > 0 ? round((($original_price - $sales_price) / $original_price) * 100) : 0;
+                        // Calculate discount with error handling
+                        $discount = 0;
+                        if (is_numeric($original_price) && is_numeric($sales_price) && $original_price > 0) {
+                            $discount = round((($original_price - $sales_price) / $original_price) * 100);
+                        }
+
+                        // Format prices with error handling
+                        $formatted_sales_price = '';
+                        $formatted_original_price = '';
+                        
+                        if (is_numeric($sales_price) && $sales_price !== '') {
+                            $formatted_sales_price = number_format((float)$sales_price, 2);
+                        }
+                        
+                        if (is_numeric($original_price) && $original_price !== '') {
+                            $formatted_original_price = number_format((float)$original_price, 2);
+                        }
                     ?>
                         <div class="deal-card">
                             <a href="<?php echo esc_url($deal_url); ?>" target="_blank" rel="noopener noreferrer" class="deal-card-link">
@@ -1257,9 +1303,11 @@ function honey_hole_deals_shortcode($atts)
                                 <div class="deal-content">
                                     <h3 class="deal-title"><?php echo esc_html($deal->post_title); ?></h3>
                                     <div class="deal-pricing">
-                                        <span class="sales-price">$<?php echo number_format($sales_price, 2); ?></span>
-                                        <?php if ($original_price > 0): ?>
-                                            <span class="original-price">$<?php echo number_format($original_price, 2); ?></span>
+                                        <?php if ($formatted_sales_price !== ''): ?>
+                                            <span class="sales-price">$<?php echo esc_html($formatted_sales_price); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($formatted_original_price !== ''): ?>
+                                            <span class="original-price">$<?php echo esc_html($formatted_original_price); ?></span>
                                             <?php if ($discount > 0): ?>
                                                 <span class="discount discount-<?php echo $discount >= 50 ? 'high' : ($discount >= 25 ? 'medium' : 'low'); ?>"><?php echo $discount; ?>% Off</span>
                                             <?php endif; ?>
