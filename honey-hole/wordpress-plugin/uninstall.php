@@ -1,5 +1,5 @@
 <?php
-// If uninstall is not called from WordPress, exit
+// If uninstall not called from WordPress, exit
 if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
@@ -12,44 +12,55 @@ $deals = get_posts(array(
 ));
 
 foreach ($deals as $deal) {
-    // Delete associated image
-    $image_id = get_post_meta($deal->ID, '_honey_hole_image_id', true);
-    if ($image_id) {
-        wp_delete_attachment($image_id, true);
+    // Delete all post meta
+    $meta_keys = array(
+        'deal_url',
+        'deal_normal_link',
+        'deal_image_url',
+        'deal_sales_price',
+        'deal_original_price',
+        'deal_rating',
+        'deal_category'
+    );
+    
+    foreach ($meta_keys as $meta_key) {
+        delete_post_meta($deal->ID, $meta_key);
     }
     
-    // Delete the deal post
+    // Delete the post
     wp_delete_post($deal->ID, true);
 }
 
-// Delete plugin options
-delete_option('honey_hole_settings');
+// Delete all plugin options
+$options = array(
+    'honey_hole_settings',
+    'honey_hole_version',
+    'honey_hole_installed'
+);
 
-// Delete plugin transients
-delete_transient('honey_hole_deals_cache');
-
-// Delete user meta for visibility preferences
-$users = get_users();
-foreach ($users as $user) {
-    delete_user_meta($user->ID, 'honey_hole_deal_visibility');
+foreach ($options as $option) {
+    delete_option($option);
 }
 
-// Delete plugin capabilities from roles
-$roles = array('administrator', 'editor', 'author');
-foreach ($roles as $role) {
-    $role_obj = get_role($role);
-    if ($role_obj) {
-        $role_obj->remove_cap('manage_honey_hole');
-        $role_obj->remove_cap('edit_honey_hole_deal');
-        $role_obj->remove_cap('edit_others_honey_hole_deal');
-        $role_obj->remove_cap('publish_honey_hole_deal');
-        $role_obj->remove_cap('read_honey_hole_deal');
-        $role_obj->remove_cap('read_private_honey_hole_deal');
-        $role_obj->remove_cap('delete_honey_hole_deal');
-        $role_obj->remove_cap('delete_private_honey_hole_deal');
-        $role_obj->remove_cap('delete_published_honey_hole_deal');
-        $role_obj->remove_cap('delete_others_honey_hole_deal');
-    }
+// Delete all transients
+global $wpdb;
+$wpdb->query("DELETE FROM $wpdb->options WHERE option_name LIKE '%honey_hole_%'");
+
+// Delete all user meta
+$wpdb->query("DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%honey_hole_%'");
+
+// Delete the custom post type and its data
+$wpdb->query("DELETE FROM $wpdb->posts WHERE post_type = 'honey_hole_deal'");
+$wpdb->query("DELETE FROM $wpdb->postmeta WHERE post_id NOT IN (SELECT id FROM $wpdb->posts)");
+
+// Delete the taxonomy and its terms
+$terms = get_terms(array(
+    'taxonomy' => 'deal_category',
+    'hide_empty' => false
+));
+
+foreach ($terms as $term) {
+    wp_delete_term($term->term_id, 'deal_category');
 }
 
 // Flush rewrite rules to clean up custom post type rules

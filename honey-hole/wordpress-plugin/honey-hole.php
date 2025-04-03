@@ -37,7 +37,7 @@ function honey_hole_register_post_type()
     $labels = array(
         'name'               => 'Deals',
         'singular_name'      => 'Deal',
-        'menu_name'          => 'Deals',
+        'menu_name'          => 'Honey Hole',
         'add_new'            => 'Add New',
         'add_new_item'       => 'Add New Deal',
         'edit_item'          => 'Edit Deal',
@@ -53,16 +53,14 @@ function honey_hole_register_post_type()
         'public'              => true,
         'has_archive'         => true,
         'publicly_queryable'  => true,
-        'show_ui'             => true,
-        'show_in_menu'        => false,
         'query_var'           => true,
         'rewrite'             => array('slug' => 'deals'),
         'capability_type'     => 'post',
         'hierarchical'        => false,
+        'supports'            => array('title', 'editor', 'thumbnail'),
         'menu_position'       => 5,
-        'menu_icon'           => 'dashicons-tag',
-        'supports'            => array('title', 'editor', 'thumbnail', 'excerpt', 'page-attributes'),
-        'show_in_rest'        => true, // Enable Gutenberg editor
+        'menu_icon'           => 'dashicons-money-alt',
+        'show_in_rest'        => true,
     );
 
     register_post_type('honey_hole_deal', $args);
@@ -1179,26 +1177,24 @@ function honey_hole_deals_shortcode($atts)
                                     <input type="hidden" name="meta_web_form_id" value="894900673" />
                                     <input type="hidden" name="meta_split_id" value="" />
                                     <input type="hidden" name="listname" value="awlist6324539" />
-                                    <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text" id="redirect_cd2ba281398d0235b1cee22fa0e1695f" />
+                                    <input type="hidden" name="redirect" value="https://www.aweber.com/thankyou-coi.htm?m=text" id="redirect_8e911f903751383335eaae138e94c2b8" />
 
                                     <input type="hidden" name="meta_adtracking" value="Honey_Hole_unstyled_form" />
                                     <input type="hidden" name="meta_message" value="1" />
-                                    <input type="hidden" name="meta_required" value="name,email" />
+                                    <input type="hidden" name="meta_required" value="email" />
 
                                     <input type="hidden" name="meta_tooltip" value="" />
                                     </div>
-                                    <div id="af-form-894900673" class="af-form"><div id="af-header-894900673" class="af-header" style="display: none;"><div class="bodyText"><p>&nbsp;</p></div></div><div id="af-body-894900673" class="af-body af-standards">
+                                    <div id="af-form-894900673" class="af-form"><div id="af-body-894900673" class="af-body af-standards">
                                     <div class="af-element">
-                                    <div class="af-textWrap">
-                                    <input placeholder="Name" id="awf_field-117998941" type="text" name="name" class="text" value="" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';} " tabindex="500" />
-                                    </div>
-                                    <div class="af-clear"></div>
+                                    <div class="af-textWrap"><input placeholder="Email" class="text" id="awf_field-118013225" type="email" name="email" value="" tabindex="500" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';}" />
+                                    </div><div class="af-clear"></div>
                                     </div><div class="af-element buttonContainer">
-                                    <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Subscribe" tabindex="502" />
+                                    <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Submit" tabindex="501" />
                                     <div class="af-clear"></div>
                                     </div>
                                     </div>
-                                    <div id="af-footer-894900673" style="display: none;" class="af-footer"><div class="bodyText"><p>&nbsp;</p></div></div></div>
+                                    </div>
                                     <div style="display: none;"><img src="https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM" alt="" /></div>
                                 </form>
                                 <p id="hh-email-disclaimer">We only email every other week. Unsubscribe at any time.</p>
@@ -1371,6 +1367,28 @@ function honey_hole_handle_csv_import()
         return;
     }
 
+    // Check memory limit
+    $memory_limit = ini_get('memory_limit');
+    $memory_limit_bytes = wp_convert_hr_to_bytes($memory_limit);
+    $memory_usage = memory_get_usage(true);
+    $memory_available = $memory_limit_bytes - $memory_usage;
+
+    if ($memory_available < 10 * 1024 * 1024) { // Less than 10MB available
+        add_settings_error(
+            'honey_hole_import',
+            'memory_error',
+            'Not enough memory available for import. Please try with a smaller file or contact your hosting provider.',
+            'error'
+        );
+        return;
+    }
+
+    // Set execution time limit
+    $max_execution_time = ini_get('max_execution_time');
+    if ($max_execution_time < 300) { // Less than 5 minutes
+        set_time_limit(300); // Try to set to 5 minutes
+    }
+
     $file = $_FILES['csv_file']['tmp_name'];
     $handle = fopen($file, 'r');
 
@@ -1407,8 +1425,7 @@ function honey_hole_handle_csv_import()
         'Deal URL' => 'deal_url',
         'Normal Link' => 'deal_normal_link',
         'Image URL' => 'deal_image_url',
-        'Category' => 'deal_category',
-        'Date Found' => 'post_date'
+        'Category' => 'deal_category'
     );
 
     // Map CSV headers to required fields (case-insensitive)
@@ -1426,7 +1443,7 @@ function honey_hole_handle_csv_import()
     // Verify all required fields are present
     $missing_fields = array();
     foreach ($required_fields as $field => $meta_key) {
-        if ($field !== 'Date Found' && !isset($field_map[$field])) {
+        if (!isset($field_map[$field])) {
             $missing_fields[] = $field;
         }
     }
@@ -1446,6 +1463,9 @@ function honey_hole_handle_csv_import()
     $skipped = 0;
     $errors = array();
     $row_number = 1; // Start at 1 to account for header row
+    $batch_size = 20; // Process 20 rows at a time
+    $batch = array();
+    $start_time = microtime(true);
 
     while (($data = fgetcsv($handle)) !== false) {
         $row_number++;
@@ -1453,7 +1473,7 @@ function honey_hole_handle_csv_import()
         // Check if all required fields have values
         $missing_data = false;
         foreach ($field_map as $field => $index) {
-            if ($field !== 'Date Found' && (!isset($data[$index]) || trim($data[$index]) === '')) {
+            if (!isset($data[$index]) || trim($data[$index]) === '') {
                 $missing_data = true;
                 break;
             }
@@ -1464,6 +1484,70 @@ function honey_hole_handle_csv_import()
             continue;
         }
 
+        // Add row to batch
+        $batch[] = array(
+            'data' => $data,
+            'field_map' => $field_map
+        );
+
+        // Process batch when it reaches the batch size
+        if (count($batch) >= $batch_size) {
+            $result = honey_hole_process_import_batch($batch, $imported, $errors, $row_number);
+            $imported = $result['imported'];
+            $errors = $result['errors'];
+            $batch = array();
+
+            // Check if we're approaching time limit
+            if (microtime(true) - $start_time > 25) { // Leave 5 seconds buffer
+                add_settings_error(
+                    'honey_hole_import',
+                    'time_limit',
+                    sprintf(
+                        'Import partially completed. Successfully imported %d deals. Skipped %d rows. Some rows may not have been processed due to time constraints. Please try importing the remaining rows.',
+                        $imported,
+                        $skipped
+                    ),
+                    'warning'
+                );
+                break;
+            }
+        }
+    }
+
+    // Process any remaining rows
+    if (!empty($batch)) {
+        $result = honey_hole_process_import_batch($batch, $imported, $errors, $row_number);
+        $imported = $result['imported'];
+        $errors = $result['errors'];
+    }
+
+    fclose($handle);
+
+    // Prepare success message
+    $message = sprintf(
+        'Import completed. Successfully imported %d deals. Skipped %d incomplete rows.',
+        $imported,
+        $skipped
+    );
+
+    if (!empty($errors)) {
+        $message .= ' Errors: ' . implode('; ', $errors);
+    }
+
+    add_settings_error(
+        'honey_hole_import',
+        'import_success',
+        $message,
+        'success'
+    );
+}
+
+// Helper function to process a batch of rows
+function honey_hole_process_import_batch($batch, $imported, $errors, $row_number) {
+    foreach ($batch as $row) {
+        $data = $row['data'];
+        $field_map = $row['field_map'];
+
         // Prepare post data
         $post_data = array(
             'post_title' => sanitize_text_field($data[$field_map['Title']]),
@@ -1471,19 +1555,6 @@ function honey_hole_handle_csv_import()
             'post_status' => 'publish',
             'post_type' => 'honey_hole_deal'
         );
-
-        // Set post date if Date Found field exists
-        if (isset($field_map['Date Found']) && isset($data[$field_map['Date Found']]) && !empty(trim($data[$field_map['Date Found']]))) {
-            $date_found = trim($data[$field_map['Date Found']]);
-            
-            // Try to parse the date in various formats
-            $timestamp = strtotime($date_found);
-            
-            if ($timestamp !== false) {
-                $post_data['post_date'] = date('Y-m-d H:i:s', $timestamp);
-                $post_data['post_date_gmt'] = get_gmt_from_date($post_data['post_date']);
-            }
-        }
 
         // Insert the post
         $post_id = wp_insert_post($post_data);
@@ -1508,24 +1579,9 @@ function honey_hole_handle_csv_import()
         $imported++;
     }
 
-    fclose($handle);
-
-    // Prepare success message
-    $message = sprintf(
-        'Import completed. Successfully imported %d deals. Skipped %d incomplete rows.',
-        $imported,
-        $skipped
-    );
-
-    if (!empty($errors)) {
-        $message .= ' Errors: ' . implode('; ', $errors);
-    }
-
-    add_settings_error(
-        'honey_hole_import',
-        'import_success',
-        $message,
-        'success'
+    return array(
+        'imported' => $imported,
+        'errors' => $errors
     );
 }
 
@@ -1552,11 +1608,10 @@ function honey_hole_import_page()
                 <li><strong>Normal Link</strong> - The original product URL (required)</li>
                 <li><strong>Image URL</strong> - URL to the product image (required)</li>
                 <li><strong>Category</strong> - The deal category (required)</li>
-                <li><strong>Date Found</strong> - The date the deal was found (optional, will set the post creation date)</li>
             </ul>
             <p><em>Note: Rows with missing required fields will be skipped automatically. Any additional columns in the CSV will be ignored.</em></p>
 
-            <form method="post" action="" enctype="multipart/form-data">
+            <form method="post" action="" enctype="multipart/form-data" id="honey-hole-import-form">
                 <?php wp_nonce_field('honey_hole_import_csv'); ?>
                 <input type="hidden" name="honey_hole_import_csv" value="1">
                 <div class="honey-hole-form-field">
@@ -1565,20 +1620,262 @@ function honey_hole_import_page()
                     <p class="description">The file should be a CSV with UTF-8 encoding</p>
                 </div>
                 <div class="honey-hole-form-actions">
-                    <button type="submit" class="button button-primary">Import Deals</button>
+                    <button type="submit" class="button button-primary" id="import-button">Import Deals</button>
                 </div>
             </form>
 
+            <div id="import-progress" style="display: none;">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">0%</div>
+                </div>
+                <div class="progress-status">Preparing import...</div>
+                <div class="progress-details">
+                    <p>Imported: <span id="imported-count">0</span></p>
+                    <p>Skipped: <span id="skipped-count">0</span></p>
+                    <p>Errors: <span id="error-count">0</span></p>
+                </div>
+            </div>
+
             <div class="honey-hole-sample-csv">
                 <h3>Sample CSV Format</h3>
-                <pre>Title,Description,Original Price,Sales Price,Rating,Deal URL,Normal Link,Image URL,Category,Date Found
-"REI Co-op Flash 22 Pack","Great daypack for hiking",49.95,29.95,4.5,"https://example.com/affiliate","https://example.com/product","https://example.com/image.jpg","Backpacks","2023-04-15"
-"Patagonia Nano Puff Jacket","Lightweight insulated jacket",199.00,149.00,4.8,"https://example.com/affiliate2","https://example.com/product2","https://example.com/image2.jpg","Jackets","2023-04-16"</pre>
+                <pre>title,description,original_price,sales_price,rating,deal_url,normal_link,image_url,category
+"REI Co-op Flash 22 Pack","Great daypack for hiking",49.95,29.95,4.5,"https://example.com/affiliate","https://example.com/product","https://example.com/image.jpg","Backpacks"
+"Patagonia Nano Puff Jacket","Lightweight insulated jacket",199.00,149.00,4.8,"https://example.com/affiliate2","https://example.com/product2","https://example.com/image2.jpg","Jackets"</pre>
             </div>
         </div>
     </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+        $('#honey-hole-import-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(this);
+            var $progress = $('#import-progress');
+            var $progressFill = $('.progress-fill');
+            var $progressText = $('.progress-text');
+            var $progressStatus = $('.progress-status');
+            var $importedCount = $('#imported-count');
+            var $skippedCount = $('#skipped-count');
+            var $errorCount = $('#error-count');
+            var $importButton = $('#import-button');
+            
+            // Show progress bar
+            $progress.show();
+            $importButton.prop('disabled', true).text('Importing...');
+            
+            // Add action for progress tracking
+            formData.append('action', 'honey_hole_import_csv_ajax');
+            
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            var percent = Math.round((e.loaded / e.total) * 100);
+                            $progressFill.css('width', percent + '%');
+                            $progressText.text(percent + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $progressStatus.text('Import completed successfully!');
+                        $importedCount.text(response.data.imported);
+                        $skippedCount.text(response.data.skipped);
+                        $errorCount.text(response.data.errors.length);
+                        
+                        // Reload page after 2 seconds to show the imported deals
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        $progressStatus.text('Import failed: ' + response.data);
+                        $importButton.prop('disabled', false).text('Import Deals');
+                    }
+                },
+                error: function() {
+                    $progressStatus.text('Import failed. Please try again.');
+                    $importButton.prop('disabled', false).text('Import Deals');
+                }
+            });
+        });
+    });
+    </script>
     <?php
 }
+
+// Add AJAX handler for CSV import with progress tracking
+function honey_hole_import_csv_ajax() {
+    if (!isset($_POST['honey_hole_import_csv']) || !check_admin_referer('honey_hole_import_csv')) {
+        wp_send_json_error('Invalid nonce');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized access');
+    }
+
+    if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+        wp_send_json_error('Error uploading file. Please try again.');
+    }
+
+    // Check memory limit
+    $memory_limit = ini_get('memory_limit');
+    $memory_limit_bytes = wp_convert_hr_to_bytes($memory_limit);
+    $memory_usage = memory_get_usage(true);
+    $memory_available = $memory_limit_bytes - $memory_usage;
+
+    if ($memory_available < 10 * 1024 * 1024) { // Less than 10MB available
+        wp_send_json_error('Not enough memory available for import. Please try with a smaller file or contact your hosting provider.');
+    }
+
+    // Set execution time limit
+    $max_execution_time = ini_get('max_execution_time');
+    if ($max_execution_time < 300) { // Less than 5 minutes
+        set_time_limit(300); // Try to set to 5 minutes
+    }
+
+    $file = $_FILES['csv_file']['tmp_name'];
+    $handle = fopen($file, 'r');
+
+    if ($handle === false) {
+        wp_send_json_error('Error opening file. Please try again.');
+    }
+
+    // Read headers
+    $headers = fgetcsv($handle);
+    if ($headers === false) {
+        fclose($handle);
+        wp_send_json_error('Error reading CSV headers. Please check the file format.');
+    }
+
+    // Define required fields and their corresponding meta keys
+    $required_fields = array(
+        'Title' => 'post_title',
+        'Description' => 'post_content',
+        'Original Price' => 'deal_original_price',
+        'Sales Price' => 'deal_sales_price',
+        'Rating' => 'deal_rating',
+        'Deal URL' => 'deal_url',
+        'Normal Link' => 'deal_normal_link',
+        'Image URL' => 'deal_image_url',
+        'Category' => 'deal_category'
+    );
+
+    // Map CSV headers to required fields (case-insensitive)
+    $field_map = array();
+    foreach ($headers as $index => $header) {
+        $header = trim($header); // Remove any whitespace but keep case
+        foreach ($required_fields as $field => $meta_key) {
+            if (strcasecmp($header, $field) === 0) { // Case-insensitive comparison
+                $field_map[$field] = $index;
+                break;
+            }
+        }
+    }
+
+    // Verify all required fields are present
+    $missing_fields = array();
+    foreach ($required_fields as $field => $meta_key) {
+        if (!isset($field_map[$field])) {
+            $missing_fields[] = $field;
+        }
+    }
+
+    if (!empty($missing_fields)) {
+        fclose($handle);
+        wp_send_json_error('Missing required fields: ' . implode(', ', $missing_fields));
+    }
+
+    // Count total rows for progress calculation
+    $total_rows = 0;
+    $temp_handle = fopen($file, 'r');
+    fgetcsv($temp_handle); // Skip header
+    while (fgetcsv($temp_handle) !== false) {
+        $total_rows++;
+    }
+    fclose($temp_handle);
+
+    $imported = 0;
+    $skipped = 0;
+    $errors = array();
+    $row_number = 1; // Start at 1 to account for header row
+    $batch_size = 20; // Process 20 rows at a time
+    $batch = array();
+    $start_time = microtime(true);
+
+    while (($data = fgetcsv($handle)) !== false) {
+        $row_number++;
+        
+        // Check if all required fields have values
+        $missing_data = false;
+        foreach ($field_map as $field => $index) {
+            if (!isset($data[$index]) || trim($data[$index]) === '') {
+                $missing_data = true;
+                break;
+            }
+        }
+
+        if ($missing_data) {
+            $skipped++;
+            continue;
+        }
+
+        // Add row to batch
+        $batch[] = array(
+            'data' => $data,
+            'field_map' => $field_map
+        );
+
+        // Process batch when it reaches the batch size
+        if (count($batch) >= $batch_size) {
+            $result = honey_hole_process_import_batch($batch, $imported, $errors, $row_number);
+            $imported = $result['imported'];
+            $errors = $result['errors'];
+            $batch = array();
+
+            // Check if we're approaching time limit
+            if (microtime(true) - $start_time > 25) { // Leave 5 seconds buffer
+                wp_send_json_error(sprintf(
+                    'Import partially completed. Successfully imported %d deals. Skipped %d rows. Some rows may not have been processed due to time constraints. Please try importing the remaining rows.',
+                    $imported,
+                    $skipped
+                ));
+                break;
+            }
+        }
+    }
+
+    // Process any remaining rows
+    if (!empty($batch)) {
+        $result = honey_hole_process_import_batch($batch, $imported, $errors, $row_number);
+        $imported = $result['imported'];
+        $errors = $result['errors'];
+    }
+
+    fclose($handle);
+
+    wp_send_json_success(array(
+        'imported' => $imported,
+        'skipped' => $skipped,
+        'errors' => $errors,
+        'message' => sprintf(
+            'Import completed. Successfully imported %d deals. Skipped %d incomplete rows.',
+            $imported,
+            $skipped
+        )
+    ));
+}
+add_action('wp_ajax_honey_hole_import_csv_ajax', 'honey_hole_import_csv_ajax');
 
 // Add this new function to handle image uploads
 function honey_hole_handle_image_upload()
@@ -1742,3 +2039,125 @@ function honey_hole_handle_bulk_delete()
     }
 }
 add_action('wp_ajax_honey_hole_bulk_delete_deals', 'honey_hole_handle_bulk_delete');
+
+// Add meta boxes
+function honey_hole_add_meta_boxes() {
+    add_meta_box(
+        'honey_hole_deal_details',
+        'Deal Details',
+        'honey_hole_deal_details_callback',
+        'honey_hole_deal',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'honey_hole_add_meta_boxes');
+add_action('save_post_honey_hole_deal', 'honey_hole_save_deal_details');
+
+// Render meta box content
+function honey_hole_deal_details_callback($post) {
+    // Add nonce for security
+    wp_nonce_field('honey_hole_save_deal_details', 'honey_hole_deal_details_nonce');
+    
+    // Get saved values
+    $price = get_post_meta($post->ID, '_honey_hole_price', true);
+    $original_price = get_post_meta($post->ID, '_honey_hole_original_price', true);
+    $store = get_post_meta($post->ID, '_honey_hole_store', true);
+    $url = get_post_meta($post->ID, '_honey_hole_url', true);
+    $original_url = get_post_meta($post->ID, '_honey_hole_original_url', true);
+    $image_url = get_post_meta($post->ID, '_honey_hole_image_url', true);
+    $date_found = get_post_meta($post->ID, '_honey_hole_date_found', true);
+    
+    // If date_found is empty, use current date
+    if (empty($date_found)) {
+        $date_found = current_time('Y-m-d');
+    }
+    
+    // Output the form fields
+    ?>
+    <div class="honey-hole-meta-box">
+        <p>
+            <label for="honey_hole_price">Price ($):</label>
+            <input type="text" id="honey_hole_price" name="honey_hole_price" value="<?php echo esc_attr($price); ?>" />
+        </p>
+        <p>
+            <label for="honey_hole_original_price">Original Price ($):</label>
+            <input type="text" id="honey_hole_original_price" name="honey_hole_original_price" value="<?php echo esc_attr($original_price); ?>" />
+        </p>
+        <p>
+            <label for="honey_hole_store">Store:</label>
+            <input type="text" id="honey_hole_store" name="honey_hole_store" value="<?php echo esc_attr($store); ?>" />
+        </p>
+        <p>
+            <label for="honey_hole_url">Deal URL:</label>
+            <input type="url" id="honey_hole_url" name="honey_hole_url" value="<?php echo esc_url($url); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="honey_hole_original_url">Original URL:</label>
+            <input type="url" id="honey_hole_original_url" name="honey_hole_original_url" value="<?php echo esc_url($original_url); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="honey_hole_image_url">Image URL:</label>
+            <input type="url" id="honey_hole_image_url" name="honey_hole_image_url" value="<?php echo esc_url($image_url); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="honey_hole_date_found">Date Found:</label>
+            <input type="date" id="honey_hole_date_found" name="honey_hole_date_found" value="<?php echo esc_attr($date_found); ?>" />
+        </p>
+    </div>
+    <?php
+}
+
+// Save meta box data
+function honey_hole_save_deal_details($post_id) {
+    // Check if our nonce is set
+    if (!isset($_POST['honey_hole_deal_details_nonce'])) {
+        return;
+    }
+    
+    // Verify that the nonce is valid
+    if (!wp_verify_nonce($_POST['honey_hole_deal_details_nonce'], 'honey_hole_save_deal_details')) {
+        return;
+    }
+    
+    // If this is an autosave, our form has not been submitted, so we don't want to do anything
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Check the user's permissions
+    if (isset($_POST['post_type']) && 'honey_hole_deal' == $_POST['post_type']) {
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+    }
+    
+    // Save the meta box data
+    if (isset($_POST['honey_hole_price'])) {
+        update_post_meta($post_id, '_honey_hole_price', sanitize_text_field($_POST['honey_hole_price']));
+    }
+    
+    if (isset($_POST['honey_hole_original_price'])) {
+        update_post_meta($post_id, '_honey_hole_original_price', sanitize_text_field($_POST['honey_hole_original_price']));
+    }
+    
+    if (isset($_POST['honey_hole_store'])) {
+        update_post_meta($post_id, '_honey_hole_store', sanitize_text_field($_POST['honey_hole_store']));
+    }
+    
+    if (isset($_POST['honey_hole_url'])) {
+        update_post_meta($post_id, '_honey_hole_url', esc_url_raw($_POST['honey_hole_url']));
+    }
+    
+    if (isset($_POST['honey_hole_original_url'])) {
+        update_post_meta($post_id, '_honey_hole_original_url', esc_url_raw($_POST['honey_hole_original_url']));
+    }
+    
+    if (isset($_POST['honey_hole_image_url'])) {
+        update_post_meta($post_id, '_honey_hole_image_url', esc_url_raw($_POST['honey_hole_image_url']));
+    }
+    
+    if (isset($_POST['honey_hole_date_found'])) {
+        update_post_meta($post_id, '_honey_hole_date_found', sanitize_text_field($_POST['honey_hole_date_found']));
+    }
+}
