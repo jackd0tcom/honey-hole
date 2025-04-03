@@ -1350,131 +1350,233 @@ function honey_hole_enqueue_frontend_styles()
 }
 add_action('wp_enqueue_scripts', 'honey_hole_enqueue_frontend_styles');
 
-// Render import deals page
-function honey_hole_import_page()
+// Handle CSV import
+function honey_hole_handle_csv_import()
 {
-    // Handle CSV import
-    if (isset($_POST['action']) && $_POST['action'] === 'import_csv' && isset($_FILES['csv_file'])) {
-        if (check_admin_referer('honey_hole_import_csv')) {
-            $file = $_FILES['csv_file'];
+    if (!isset($_POST['honey_hole_import_csv']) || !check_admin_referer('honey_hole_import_csv')) {
+        return;
+    }
 
-            // Check file type
-            if ($file['type'] !== 'text/csv' && $file['type'] !== 'application/vnd.ms-excel') {
-                echo '<div class="notice notice-error"><p>Please upload a valid CSV file.</p></div>';
-            } else {
-                // Open the file
-                $handle = fopen($file['tmp_name'], 'r');
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized access');
+    }
 
-                // Skip header row
-                $header = fgetcsv($handle);
+    if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+        add_settings_error(
+            'honey_hole_import',
+            'upload_error',
+            'Error uploading file. Please try again.',
+            'error'
+        );
+        return;
+    }
 
-                $imported = 0;
-                $errors = array();
+    $file = $_FILES['csv_file']['tmp_name'];
+    $handle = fopen($file, 'r');
 
-                while (($data = fgetcsv($handle)) !== false) {
-                    // Map CSV columns to deal data
-                    $deal_data = array(
-                        'post_title' => sanitize_text_field($data[0]),
-                        'post_content' => wp_kses_post($data[1]),
-                        'post_status' => 'publish',
-                        'post_type' => 'honey_hole_deal',
-                    );
+    if ($handle === false) {
+        add_settings_error(
+            'honey_hole_import',
+            'file_error',
+            'Error opening file. Please try again.',
+            'error'
+        );
+        return;
+    }
 
-                    // Insert the deal
-                    $post_id = wp_insert_post($deal_data);
+    // Read headers
+    $headers = fgetcsv($handle);
+    if ($headers === false) {
+        fclose($handle);
+        add_settings_error(
+            'honey_hole_import',
+            'header_error',
+            'Error reading CSV headers. Please check the file format.',
+            'error'
+        );
+        return;
+    }
 
-                    if (!is_wp_error($post_id)) {
-                        // Update meta fields
-                        update_post_meta($post_id, 'deal_original_price', floatval($data[2]));
-                        update_post_meta($post_id, 'deal_sales_price', floatval($data[3]));
-                        update_post_meta($post_id, 'deal_rating', floatval($data[4]));
-                        update_post_meta($post_id, 'deal_url', esc_url_raw($data[5]));
-                        update_post_meta($post_id, 'deal_original_url', esc_url_raw($data[6]));
-                        update_post_meta($post_id, 'deal_image_url', esc_url_raw($data[7]));
+    // Define required fields and their corresponding meta keys
+    $required_fields = array(
+        'Title' => 'post_title',
+        'Description' => 'post_content',
+        'Original Price' => 'deal_original_price',
+        'Sales Price' => 'deal_sales_price',
+        'Rating' => 'deal_rating',
+        'Deal URL' => 'deal_url',
+        'Normal Link' => 'deal_normal_link',
+        'Image URL' => 'deal_image_url',
+        'Category' => 'deal_category',
+        'Date Found' => 'post_date'
+    );
 
-                        // Set category
-                        if (!empty($data[8])) {
-                            $category_slug = sanitize_title($data[8]);
-                            $category = get_term_by('slug', $category_slug, 'deal_category');
-                            if ($category) {
-                                wp_set_object_terms($post_id, $category->term_id, 'deal_category');
-                            } else {
-                                $errors[] = "Skipped deal '{$data[0]}' - Category with slug '{$category_slug}' does not exist";
-                                continue; // Skip this deal and move to the next one
-                            }
-                        } else {
-                            $errors[] = "Skipped deal '{$data[0]}' - No category specified";
-                            continue; // Skip this deal and move to the next one
-                        }
-
-                        // Set tags
-                        if (!empty($data[9])) {
-                            $tags = array_map('trim', explode(',', sanitize_text_field($data[9])));
-                            wp_set_object_terms($post_id, $tags, 'post_tag');
-                        }
-
-                        $imported++;
-                    } else {
-                        $errors[] = "Failed to import deal: {$data[0]}";
-                    }
-                }
-
-                fclose($handle);
-
-                if ($imported > 0) {
-                    echo '<div class="notice notice-success"><p>Successfully imported ' . $imported . ' deals.</p></div>';
-                }
-
-                if (!empty($errors)) {
-                    echo '<div class="notice notice-error"><p>Errors occurred while importing some deals:</p><ul>';
-                    foreach ($errors as $error) {
-                        echo '<li>' . esc_html($error) . '</li>';
-                    }
-                    echo '</ul></p></div>';
-                }
+    // Map CSV headers to required fields (case-insensitive)
+    $field_map = array();
+    foreach ($headers as $index => $header) {
+        $header = trim($header); // Remove any whitespace but keep case
+        foreach ($required_fields as $field => $meta_key) {
+            if (strcasecmp($header, $field) === 0) { // Case-insensitive comparison
+                $field_map[$field] = $index;
+                break;
             }
         }
     }
+
+    // Verify all required fields are present
+    $missing_fields = array();
+    foreach ($required_fields as $field => $meta_key) {
+        if ($field !== 'Date Found' && !isset($field_map[$field])) {
+            $missing_fields[] = $field;
+        }
+    }
+
+    if (!empty($missing_fields)) {
+        fclose($handle);
+        add_settings_error(
+            'honey_hole_import',
+            'missing_fields',
+            'Missing required fields: ' . implode(', ', $missing_fields),
+            'error'
+        );
+        return;
+    }
+
+    $imported = 0;
+    $skipped = 0;
+    $errors = array();
+    $row_number = 1; // Start at 1 to account for header row
+
+    while (($data = fgetcsv($handle)) !== false) {
+        $row_number++;
+        
+        // Check if all required fields have values
+        $missing_data = false;
+        foreach ($field_map as $field => $index) {
+            if ($field !== 'Date Found' && (!isset($data[$index]) || trim($data[$index]) === '')) {
+                $missing_data = true;
+                break;
+            }
+        }
+
+        if ($missing_data) {
+            $skipped++;
+            continue;
+        }
+
+        // Prepare post data
+        $post_data = array(
+            'post_title' => sanitize_text_field($data[$field_map['Title']]),
+            'post_content' => wp_kses_post($data[$field_map['Description']]),
+            'post_status' => 'publish',
+            'post_type' => 'honey_hole_deal'
+        );
+
+        // Set post date if Date Found field exists
+        if (isset($field_map['Date Found']) && isset($data[$field_map['Date Found']]) && !empty(trim($data[$field_map['Date Found']]))) {
+            $date_found = trim($data[$field_map['Date Found']]);
+            
+            // Try to parse the date in various formats
+            $timestamp = strtotime($date_found);
+            
+            if ($timestamp !== false) {
+                $post_data['post_date'] = date('Y-m-d H:i:s', $timestamp);
+                $post_data['post_date_gmt'] = get_gmt_from_date($post_data['post_date']);
+            }
+        }
+
+        // Insert the post
+        $post_id = wp_insert_post($post_data);
+
+        if (is_wp_error($post_id)) {
+            $errors[] = "Row {$row_number}: " . $post_id->get_error_message();
+            continue;
+        }
+
+        // Add meta data
+        update_post_meta($post_id, 'deal_original_price', sanitize_text_field($data[$field_map['Original Price']]));
+        update_post_meta($post_id, 'deal_sales_price', sanitize_text_field($data[$field_map['Sales Price']]));
+        update_post_meta($post_id, 'deal_rating', sanitize_text_field($data[$field_map['Rating']]));
+        update_post_meta($post_id, 'deal_url', esc_url_raw($data[$field_map['Deal URL']]));
+        update_post_meta($post_id, 'deal_normal_link', esc_url_raw($data[$field_map['Normal Link']]));
+        update_post_meta($post_id, 'deal_image_url', esc_url_raw($data[$field_map['Image URL']]));
+
+        // Set category
+        $category = sanitize_text_field($data[$field_map['Category']]);
+        wp_set_object_terms($post_id, $category, 'deal_category');
+
+        $imported++;
+    }
+
+    fclose($handle);
+
+    // Prepare success message
+    $message = sprintf(
+        'Import completed. Successfully imported %d deals. Skipped %d incomplete rows.',
+        $imported,
+        $skipped
+    );
+
+    if (!empty($errors)) {
+        $message .= ' Errors: ' . implode('; ', $errors);
+    }
+
+    add_settings_error(
+        'honey_hole_import',
+        'import_success',
+        $message,
+        'success'
+    );
+}
+
+// Render import page
+function honey_hole_import_page()
+{
+    // Handle the import
+    honey_hole_handle_csv_import();
     ?>
-        <div class="wrap">
-            <h1>Import Deals</h1>
-            <div class="honey-hole-import-section">
-                <h2>Import Deals from CSV</h2>
-                <p>Upload a CSV file containing your deals. The file should have the following columns:</p>
-                <ol>
-                    <li>Title (required)</li>
-                    <li>Description (optional)</li>
-                    <li>Original Price (required)</li>
-                    <li>Sales Price (required)</li>
-                    <li>Rating (optional, 0-5)</li>
-                    <li>Deal URL (required)</li>
-                    <li>Original URL (required)</li>
-                    <li>Image URL (required)</li>
-                    <li>Category (required)</li>
-                    <li>Tags (optional, comma-separated)</li>
-                </ol>
+    <div class="wrap">
+        <h1>Import Deals</h1>
+        <?php settings_errors('honey_hole_import'); ?>
+        
+        <div class="honey-hole-import-section">
+            <h2>Import Deals from CSV</h2>
+            <p>Upload a CSV file containing your deals. The file should have the following columns (column names are case-insensitive):</p>
+            <ul>
+                <li><strong>Title</strong> - The deal title (required)</li>
+                <li><strong>Description</strong> - The deal description (required)</li>
+                <li><strong>Original Price</strong> - The original price (required)</li>
+                <li><strong>Sales Price</strong> - The sale price (required)</li>
+                <li><strong>Rating</strong> - The deal rating (required)</li>
+                <li><strong>Deal URL</strong> - The affiliate deal URL (required)</li>
+                <li><strong>Normal Link</strong> - The original product URL (required)</li>
+                <li><strong>Image URL</strong> - URL to the product image (required)</li>
+                <li><strong>Category</strong> - The deal category (required)</li>
+                <li><strong>Date Found</strong> - The date the deal was found (optional, will set the post creation date)</li>
+            </ul>
+            <p><em>Note: Rows with missing required fields will be skipped automatically. Any additional columns in the CSV will be ignored.</em></p>
 
-                <form method="post" action="" enctype="multipart/form-data">
-                    <?php wp_nonce_field('honey_hole_import_csv'); ?>
-                    <input type="hidden" name="action" value="import_csv">
-                    <div class="honey-hole-form-field">
-                        <label for="csv_file">Select CSV File</label>
-                        <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-                        <p class="description">The file should be a CSV with UTF-8 encoding</p>
-                    </div>
-                    <div class="honey-hole-form-actions">
-                        <button type="submit" class="button button-primary">Import Deals</button>
-                    </div>
-                </form>
-
-                <div class="honey-hole-sample-csv">
-                    <h3>Sample CSV Format</h3>
-                    <pre>Title,Description,Original Price,Sales Price,Rating,Deal URL,Original URL,Image URL,Category,Tags
-"REI Co-op Flash 22 Pack","Lightweight daypack perfect for day hikes",49.95,29.95,4.5,"https://example.com/deal","https://example.com/original","https://example.com/image.jpg","Backpacks","hiking,daypack,lightweight"
-"Patagonia Nano Puff Jacket","Warm and lightweight synthetic jacket",199.00,149.00,4.8,"https://example.com/deal2","https://example.com/original2","https://example.com/image2.jpg","Jackets","jacket,warm,outdoor"</pre>
+            <form method="post" action="" enctype="multipart/form-data">
+                <?php wp_nonce_field('honey_hole_import_csv'); ?>
+                <input type="hidden" name="honey_hole_import_csv" value="1">
+                <div class="honey-hole-form-field">
+                    <label for="csv_file">Select CSV File</label>
+                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                    <p class="description">The file should be a CSV with UTF-8 encoding</p>
                 </div>
+                <div class="honey-hole-form-actions">
+                    <button type="submit" class="button button-primary">Import Deals</button>
+                </div>
+            </form>
+
+            <div class="honey-hole-sample-csv">
+                <h3>Sample CSV Format</h3>
+                <pre>Title,Description,Original Price,Sales Price,Rating,Deal URL,Normal Link,Image URL,Category,Date Found
+"REI Co-op Flash 22 Pack","Great daypack for hiking",49.95,29.95,4.5,"https://example.com/affiliate","https://example.com/product","https://example.com/image.jpg","Backpacks","2023-04-15"
+"Patagonia Nano Puff Jacket","Lightweight insulated jacket",199.00,149.00,4.8,"https://example.com/affiliate2","https://example.com/product2","https://example.com/image2.jpg","Jackets","2023-04-16"</pre>
             </div>
         </div>
+    </div>
     <?php
 }
 
