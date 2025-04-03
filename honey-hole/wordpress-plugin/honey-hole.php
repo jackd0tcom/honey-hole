@@ -61,6 +61,7 @@ function honey_hole_register_post_type()
         'menu_position'       => 5,
         'menu_icon'           => 'dashicons-money-alt',
         'show_in_rest'        => true,
+        'show_in_menu'        => false, // Hide the default menu item
     );
 
     register_post_type('honey_hole_deal', $args);
@@ -1095,7 +1096,7 @@ function honey_hole_deals_shortcode($atts)
                         <h2>We Find the Best Outdoor Gear Deals to Save You Time and Money!</h2>
                         <p>We manually crawl catalogs, ads, and websites of top outdoor gear brands and retailers in search of discounted outdoor gear to create this curated list that will save you hours of shopping around.
                         </p>
-                        <p id="honey-hole-updated">Last Updated: February 11, 2025</p>
+                        <p id="honey-hole-updated">Last Updated: <?php echo date('F j, Y'); ?></p>
                     </div>
                 </div>
             </div>
