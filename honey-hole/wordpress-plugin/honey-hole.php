@@ -1096,11 +1096,16 @@ function honey_hole_deals_shortcode($atts)
                         <h2>We Find the Best Outdoor Gear Deals to Save You Time and Money!</h2>
                         <p>We manually crawl catalogs, ads, and websites of top outdoor gear brands and retailers in search of discounted outdoor gear to create this curated list that will save you hours of shopping around.
                         </p>
+                        <p>We update this page all the time with the best deals we find on gear for camping, hiking, backpacking, hunting, fishing, and more.
+                        </p>
+                        <p>Bookmark this page and check back often!</p>
+                        <p>Deal prices are valid at time of posting, but could change at any moment.</p>
                         <p id="honey-hole-updated">Last Updated: <?php echo date('F j, Y'); ?></p>
                     </div>
                 </div>
             </div>
             <div class="category-section">
+                <p id="hh-affiliate-disclaimer">DISCLAIMER: Outdoor Empire does not sell the products on this page. Some or all links are affiliate links which means we may earn a small commission if you make a purchase, at no cost to you. As an Amazon Associate I earn from qualifying purchases. Discounts and availability are not guaranteed. Verify all information at respective retailers before making a purchase. <a href="https://outdoorempire.com/affiliate-disclaimer/" target="_blank" rel="noopener noreferrer">Learn More</a></p>
                 <h2>Just Added</h2>
                 <div class="deals-grid">
                     <?php foreach ($recent_deals as $deal):
@@ -1186,37 +1191,28 @@ function honey_hole_deals_shortcode($atts)
 
                                     <input type="hidden" name="meta_tooltip" value="" />
                                     </div>
-                                    <div id="af-form-894900673" class="af-form"><div id="af-body-894900673" class="af-body af-standards">
+                                    <div id="af-form-894900673" class="af-form"><div id="hh-input-wrapper" class="af-body af-standards">
                                     <div class="af-element">
                                     <div class="af-textWrap"><input placeholder="Email" class="text" id="awf_field-118013225" type="email" name="email" value="" tabindex="500" onfocus=" if (this.value == '') { this.value = ''; }" onblur="if (this.value == '') { this.value='';}" />
                                     </div><div class="af-clear"></div>
                                     </div><div class="af-element buttonContainer">
-                                    <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Submit" tabindex="501" />
+                                    <input id="hh-email-submit" name="submit" class="submit" type="submit" value="Subscribe" tabindex="501" />
                                     <div class="af-clear"></div>
                                     </div>
                                     </div>
                                     </div>
                                     <div style="display: none;"><img src="https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM" alt="" /></div>
                                 </form>
-                                <p id="hh-email-disclaimer">We only email every other week. Unsubscribe at any time.</p>
+                                <p class="hh-email-disclaimer">We email once per week, sometimes more. Unsubscribe at any time.</p>
+                                <p class="hh-email-disclaimer">We respect your <a id="hh-email-disclaimer-link" href="https://www.aweber.com/privacy.htm" target="_blank" rel="noopener noreferrer">email privacy</a></p>
                                     </div>
                                 </div>
                                 <div class="hh-email-container-two-wrapper">
                                     <div class="hh-email-container-two">
-                                    <h4>Outdoor Gear. Epic Deals. Free Giveaways.</h4>
-                                    <p>Love camping, hiking, hunting, or fishing? The Honey Hole email newsletter is your go-to for:
-
+                                        <h4>Get Sweet Outdoor Gear Deals in Your Inbox 🤑🏕️🔥
+                                </h4>
+                                    <p>Receive outdoor stories, tips, and deal alerts. Plus, be entered into our weekly gear giveaway when you sign up for <span style="font-style: italic;">The Honey Hole</span> email newsletter!
                                     </p>
-                                    <ul>
-                                        <li>Exclusive outdoor gear deals you won't find anywhere else.
-                                        </li>
-                                        <li>Weekly gear giveaways because who doesn't love free gear?
-                                        </li>
-                                            <li>Raw, honest reviews and testing insights.
-                                            </li>
-                                            <li>Fun stories and tips for your next adventure.
-                                            </li>
-                                        </ul>
                                         <p>Join thousands of outdoor enthusiasts who love saving money and discovering the best gear.</p>
                                     </div>
                                 </div>
@@ -1261,7 +1257,7 @@ function honey_hole_deals_shortcode($atts)
         if (!empty($deals)) :
         ?>
             <div class="category-section">
-                <h2>All Deals</h2>
+                <h2>Outdoor Gear Deals</h2>
                 <div class="deals-grid">
                     <?php foreach ($deals as $deal):
                         $original_price = get_post_meta($deal->ID, 'deal_original_price', true);
@@ -1432,9 +1428,9 @@ function honey_hole_handle_csv_import()
     // Map CSV headers to required fields (case-insensitive)
     $field_map = array();
     foreach ($headers as $index => $header) {
-        $header = trim($header); // Remove any whitespace but keep case
+        $header = trim($header);
         foreach ($required_fields as $field => $meta_key) {
-            if (strcasecmp($header, $field) === 0) { // Case-insensitive comparison
+            if (strcasecmp($header, $field) === 0) {
                 $field_map[$field] = $index;
                 break;
             }
@@ -1460,13 +1456,26 @@ function honey_hole_handle_csv_import()
         return;
     }
 
+    // Count total rows for progress calculation
+    $total_rows = 0;
+    $temp_handle = fopen($file, 'r');
+    fgetcsv($temp_handle); // Skip header
+    while (fgetcsv($temp_handle) !== false) {
+        $total_rows++;
+    }
+    fclose($temp_handle);
+
     $imported = 0;
     $skipped = 0;
     $errors = array();
     $row_number = 1; // Start at 1 to account for header row
-    $batch_size = 20; // Process 20 rows at a time
+    $batch_size = 5; // Process 5 rows at a time to avoid memory issues
     $batch = array();
     $start_time = microtime(true);
+
+    // Reset file pointer
+    rewind($handle);
+    fgetcsv($handle); // Skip header row
 
     while (($data = fgetcsv($handle)) !== false) {
         $row_number++;
@@ -1497,6 +1506,10 @@ function honey_hole_handle_csv_import()
             $imported = $result['imported'];
             $errors = $result['errors'];
             $batch = array();
+
+            // Clear memory
+            wp_cache_flush();
+            gc_collect_cycles();
 
             // Check if we're approaching time limit
             if (microtime(true) - $start_time > 25) { // Leave 5 seconds buffer
@@ -1545,39 +1558,66 @@ function honey_hole_handle_csv_import()
 
 // Helper function to process a batch of rows
 function honey_hole_process_import_batch($batch, $imported, $errors, $row_number) {
+    global $wpdb;
+
     foreach ($batch as $row) {
         $data = $row['data'];
         $field_map = $row['field_map'];
 
-        // Prepare post data
-        $post_data = array(
-            'post_title' => sanitize_text_field($data[$field_map['Title']]),
-            'post_content' => wp_kses_post($data[$field_map['Description']]),
-            'post_status' => 'publish',
-            'post_type' => 'honey_hole_deal'
-        );
+        // Start transaction
+        $wpdb->query('START TRANSACTION');
 
-        // Insert the post
-        $post_id = wp_insert_post($post_data);
+        try {
+            // Prepare post data
+            $post_data = array(
+                'post_title' => sanitize_text_field($data[$field_map['Title']]),
+                'post_content' => wp_kses_post($data[$field_map['Description']]),
+                'post_status' => 'publish',
+                'post_type' => 'honey_hole_deal'
+            );
 
-        if (is_wp_error($post_id)) {
-            $errors[] = "Row {$row_number}: " . $post_id->get_error_message();
-            continue;
+            // Insert the post
+            $post_id = wp_insert_post($post_data);
+
+            if (is_wp_error($post_id)) {
+                throw new Exception($post_id->get_error_message());
+            }
+
+            // Add meta data using direct SQL to avoid large queries
+            $meta_updates = array(
+                'deal_original_price' => sanitize_text_field($data[$field_map['Original Price']]),
+                'deal_sales_price' => sanitize_text_field($data[$field_map['Sales Price']]),
+                'deal_rating' => sanitize_text_field($data[$field_map['Rating']]),
+                'deal_url' => esc_url_raw($data[$field_map['Deal URL']]),
+                'deal_normal_link' => esc_url_raw($data[$field_map['Normal Link']]),
+                'deal_image_url' => esc_url_raw($data[$field_map['Image URL']])
+            );
+
+            foreach ($meta_updates as $meta_key => $meta_value) {
+                $wpdb->insert(
+                    $wpdb->postmeta,
+                    array(
+                        'post_id' => $post_id,
+                        'meta_key' => $meta_key,
+                        'meta_value' => $meta_value
+                    ),
+                    array('%d', '%s', '%s')
+                );
+            }
+
+            // Set category
+            $category = sanitize_text_field($data[$field_map['Category']]);
+            wp_set_object_terms($post_id, $category, 'deal_category');
+
+            // Commit transaction
+            $wpdb->query('COMMIT');
+            $imported++;
+
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $wpdb->query('ROLLBACK');
+            $errors[] = "Row {$row_number}: " . $e->getMessage();
         }
-
-        // Add meta data
-        update_post_meta($post_id, 'deal_original_price', sanitize_text_field($data[$field_map['Original Price']]));
-        update_post_meta($post_id, 'deal_sales_price', sanitize_text_field($data[$field_map['Sales Price']]));
-        update_post_meta($post_id, 'deal_rating', sanitize_text_field($data[$field_map['Rating']]));
-        update_post_meta($post_id, 'deal_url', esc_url_raw($data[$field_map['Deal URL']]));
-        update_post_meta($post_id, 'deal_normal_link', esc_url_raw($data[$field_map['Normal Link']]));
-        update_post_meta($post_id, 'deal_image_url', esc_url_raw($data[$field_map['Image URL']]));
-
-        // Set category
-        $category = sanitize_text_field($data[$field_map['Category']]);
-        wp_set_object_terms($post_id, $category, 'deal_category');
-
-        $imported++;
     }
 
     return array(
