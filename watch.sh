@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Path to your WordPress plugin directory
-WP_PLUGIN_DIR="/Users/jackball/Local Sites/honey-hole/app/public/wp-content/plugins/honey-hole"
+WP_PLUGIN_DIR="/Users/jackball/Local Sites/honey-hole-2/app/public/wp-content/plugins/honey-hole-v2"
 
 # Path to your development plugin directory
-DEV_PLUGIN_DIR="wordpress-plugin"
+DEV_PLUGIN_DIR="/Users/jackball/Desktop/Web Dev Projects/honey-hole-v2"
 
 # Function to sync files
 sync_files() {
