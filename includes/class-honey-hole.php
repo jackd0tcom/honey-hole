@@ -99,8 +99,16 @@ class Honey_Hole {
 	 */
 	private function load_dependencies() {
 
+		/**
+		 * The class responsible for registering post types and taxonomies.
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-post-types.php';
+
+		/**
+		 * The class responsible for adding meta boxes to the post type.
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-meta-boxes.php';
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -155,6 +163,14 @@ class Honey_Hole {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Honey_Hole_Admin( $this->get_plugin_name(), $this->get_version() );
+
+		$post_types = new Honey_Hole_Post_Types();
+		$meta_boxes = new Honey_Hole_Meta_Boxes();
+
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
+		$this->loader->add_action( 'init', $post_types, 'register_post_types' );
+		$this->loader->add_action( 'add_meta_boxes', $meta_boxes, 'add_meta_boxes' );
+		$this->loader->add_action( 'save_post', $meta_boxes, 'save_meta_box_data' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

@@ -20,7 +20,78 @@
  * @subpackage Honey_Hole/admin
  * @author     Jack Ball <jackballdev@gmail.com>
  */
-class Honey_Hole_Admin {
+
+ class Honey_Hole_Admin {
+	   /**
+     * Add the admin menu items.
+     */
+    public function add_admin_menu()
+    {
+        add_menu_page(
+            'Honey Hole Deals',
+            'Honey Hole',
+            'manage_options',
+            'honey-hole',
+            array($this, 'honey_hole_admin_page'),
+            'dashicons-money-alt',
+            30
+        );
+
+        //add_submenu_page(
+        //    'honey-hole',
+        //    'Import Deals',
+        //    'Import Deals',
+        //    'manage_options',
+        //    'honey-hole-import',
+        //    array($this, 'display_import_page')
+        //);
+	
+		// add_submenu_page(
+		// 	'honey-hole',
+		// 	'All Deals',
+		// 	'All Deals',
+		// 	'manage_options',
+		// 	'honey-hole',
+		// 	'honey_hole_admin_page'
+		// );
+	
+		// add_submenu_page(
+		// 	'honey-hole',
+		// 	'Add New Deal',
+		// 	'Add New',
+		// 	'manage_options',
+		// 	'honey-hole-add-deal',
+		// 	'honey_hole_add_deal_page'
+		// );
+	
+		// add_submenu_page(
+		// 	'honey-hole',
+		// 	'Manage Categories',
+		// 	'Categories',
+		// 	'manage_options',
+		// 	'honey-hole-categories',
+		// 	'honey_hole_categories_page'
+		// );
+	
+		// // Add hidden submenu for edit page
+		// add_submenu_page(
+		// 	null, // Parent slug (null makes it hidden)
+		// 	'Edit Deal',
+		// 	'Edit Deal',
+		// 	'manage_options',
+		// 	'honey-hole-edit-deal',
+		// 	'honey_hole_edit_deal_page'
+		// );
+	
+		// add_submenu_page(
+		// 	'honey-hole',
+		// 	'Import Deals',
+		// 	'Import Deals',
+		// 	'manage_options',
+		// 	'honey-hole-import',
+		// 	'honey_hole_import_page'
+		// );
+    }
 
 	/**
 	 * The ID of this plugin.
@@ -98,6 +169,24 @@ class Honey_Hole_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/honey-hole-admin.js', array( 'jquery' ), $this->version, false );
 
+	}
+
+	/**
+	 * Display the main admin page.
+	 *
+	 * @since    2.0.0
+	 */
+	public function honey_hole_admin_page() {
+		// Check if the current user has the necessary capabilities
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have sufficient permissions to access this page.'));
+		}
+		
+		// Include the admin display partial
+		require_once plugin_dir_path(__FILE__) . 'partials/honey-hole-admin-display.php';
+		
+		// Call the display function
+		honey_hole_render_deals_table();
 	}
 
 }
