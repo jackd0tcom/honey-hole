@@ -191,3 +191,37 @@ function honey_hole_render_deals_table()
         </div>
     </div>
 <?php
+
+// Add handler for delete all deals
+function honey_hole_handle_delete_all_deals()
+{
+    if (!isset($_POST['action']) || $_POST['action'] !== 'delete_all_deals') {
+        return;
+    }
+
+    if (!isset($_POST['honey_hole_nonce']) || !wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_delete_all')) {
+        wp_die('Invalid nonce');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_die('Insufficient permissions');
+    }
+
+    // Get all deals
+    $deals = get_posts(array(
+        'post_type' => 'honey_hole_deal',
+        'post_status' => 'publish',
+        'posts_per_page' => -1
+    ));
+
+    $deleted_count = 0;
+    foreach ($deals as $deal) {
+        if (wp_delete_post($deal->ID, true)) {
+            $deleted_count++;
+        }
+    }
+
+    wp_redirect(add_query_arg('message', 'all_deals_deleted', admin_url('admin.php?page=honey-hole')));
+    exit;
+}
+add_action('admin_init', 'honey_hole_handle_delete_all_deals');

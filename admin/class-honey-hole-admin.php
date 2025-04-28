@@ -67,14 +67,14 @@
 			array($this, 'honey_hole_add_deal_page')
 		);
 	
-		// add_submenu_page(
-		// 	'honey-hole',
-		// 	'Manage Categories',
-		// 	'Categories',
-		// 	'manage_options',
-		// 	'honey-hole-categories',
-		// 	'honey_hole_categories_page'
-		// );
+		add_submenu_page(
+			'honey-hole',
+			'Manage Categories',
+			'Categories',
+			'manage_options',
+			'honey-hole-categories',
+			array($this, 'honey_hole_categories_page')
+		);
 	
 		// // Add hidden submenu for edit page
 		// add_submenu_page(
@@ -157,21 +157,26 @@
 	 * @since    2.0.0
 	 */
 	public function enqueue_scripts() {
+		wp_enqueue_script( 
+			$this->plugin_name, 
+			plugin_dir_url( __FILE__ ) . 'js/honey-hole-admin-modern.js', 
+			array(), 
+			$this->version, 
+			false 
+		);
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Honey_Hole_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Honey_Hole_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/honey-hole-admin.js', array( 'jquery' ), $this->version, false );
-
+		// Add any necessary data for the script
+		wp_localize_script(
+			$this->plugin_name,
+			'honeyHoleAdmin',
+			array(
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('honey_hole_nonce'),
+				'visibility_nonce' => wp_create_nonce('honey_hole_visibility'),
+				'bulk_nonce' => wp_create_nonce('honey_hole_bulk'),
+				'order_nonce' => wp_create_nonce('honey_hole_order')
+			)
+		);
 	}
 
 	/**
@@ -203,11 +208,78 @@
 			wp_die(__('You do not have sufficient permissions to access this page.'));
 		}
 
-		// Include the admin display partial
-		require_once plugin_dir_path(__FILE__) . './partials/honey-hole-add-deal-page.php';
+		// Handle form submission
+		if (isset($_POST['action']) && $_POST['action'] === 'add_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_add_deal')) {
+			// Sanitize and validate input
+			$title = sanitize_text_field($_POST['deal_title']);
+			$original_price = floatval($_POST['deal_original_price']);
+			$sales_price = floatval($_POST['deal_sales_price']);
+			$rating = floatval($_POST['deal_rating']);
+			$deal_url = esc_url_raw($_POST['deal_url']);
+			$description = sanitize_textarea_field($_POST['deal_description']);
+			$category_id = intval($_POST['deal_category']);
+			$image_url = esc_url_raw($_POST['deal_image_url']);
+			$tags = sanitize_text_field($_POST['deal_tags']);
 
+			// Create the deal post
+			$deal_data = array(
+				'post_title'    => $title,
+				'post_content'  => $description,
+				'post_status'   => 'publish',
+				'post_type'     => 'honey_hole_deal'
+			);
+
+			// Insert the post
+			$deal_id = wp_insert_post($deal_data);
+
+			if (!is_wp_error($deal_id)) {
+				// Set the category
+				wp_set_object_terms($deal_id, $category_id, 'deal_category');
+
+				// Set the tags
+				if (!empty($tags)) {
+					$tag_array = array_map('trim', explode(',', $tags));
+					wp_set_object_terms($deal_id, $tag_array, 'post_tag');
+				}
+
+				// Save the meta data
+				update_post_meta($deal_id, 'deal_original_price', $original_price);
+				update_post_meta($deal_id, 'deal_sales_price', $sales_price);
+				update_post_meta($deal_id, 'deal_rating', $rating);
+				update_post_meta($deal_id, 'deal_url', $deal_url);
+				update_post_meta($deal_id, 'deal_image_url', $image_url);
+
+				// Redirect to the deals list with a success message
+				wp_redirect(admin_url('admin.php?page=honey-hole&message=deal_added'));
+				exit;
+			} else {
+				// Handle error
+				$error_message = $deal_id->get_error_message();
+				add_action('admin_notices', function() use ($error_message) {
+					echo '<div class="notice notice-error"><p>Error adding deal: ' . esc_html($error_message) . '</p></div>';
+				});
+			}
+		}
+
+		// Include the admin display partial
+		require_once plugin_dir_path(__FILE__) . 'partials/honey-hole-add-deal-page.php';
+		
 		// Call the display function
 		honey_hole_add_deal_page();
+	}
+
+	/**
+	 * Display the categories page.
+	 *
+	 * @since    2.0.0
+	 */
+	public function honey_hole_categories_page() {
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have sufficient permissions to access this page.'));
+		}
+		require_once plugin_dir_path(__FILE__) . './partials/honey-hole-categories-page.php';
+		
+		honey_hole_categories_page();
 	}
 
 }

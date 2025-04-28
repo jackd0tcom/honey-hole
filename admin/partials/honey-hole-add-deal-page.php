@@ -16,6 +16,7 @@ function honey_hole_add_deal_page()
         <h1>Add New Deal</h1>
         <form id="honey-hole-deal-form" method="post" action="">
             <?php wp_nonce_field('honey_hole_add_deal', 'honey_hole_nonce'); ?>
+            <input type="hidden" name="action" value="add_deal">
             <div class="honey-hole-form-container">
                 <div class="honey-hole-form-section">
                     <h2>Deal Information</h2>
