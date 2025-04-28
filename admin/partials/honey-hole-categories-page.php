@@ -12,6 +12,12 @@
 
 function honey_hole_categories_page()
 {
+    // Check for success message
+    if (get_transient('honey_hole_deal_added')) {
+        delete_transient('honey_hole_deal_added');
+        echo '<div class="notice notice-success is-dismissible"><p>Deal added successfully!</p></div>';
+    }
+
     // Handle category actions
     if (isset($_POST['action']) && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_categories')) {
         if ($_POST['action'] === 'add_category') {

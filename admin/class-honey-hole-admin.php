@@ -122,10 +122,40 @@
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Add action for delete all deals
+		add_action('admin_init', array($this, 'handle_delete_all_deals'));
+	}
+
+	/**
+	 * Handle delete all deals action.
+	 *
+	 * @since    2.0.0
+	 */
+	public function handle_delete_all_deals() {
+		if (isset($_POST['action']) && $_POST['action'] === 'delete_all_deals' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_delete_all')) {
+			// Get all deals
+			$deals = get_posts(array(
+				'post_type' => 'honey_hole_deal',
+				'post_status' => 'any',
+				'posts_per_page' => -1,
+				'fields' => 'ids'
+			));
+
+			// Delete each deal
+			foreach ($deals as $deal_id) {
+				wp_delete_post($deal_id, true); // true means force delete
+			}
+
+			// Set transient for success message
+			set_transient('honey_hole_deals_deleted', true, 45);
+			
+			// Redirect back to the deals page
+			wp_redirect(admin_url('admin.php?page=honey-hole'));
+			exit;
+		}
 	}
 
 	/**
@@ -194,7 +224,7 @@
 		require_once plugin_dir_path(__FILE__) . 'partials/honey-hole-admin-display.php';
 		
 		// Call the display function
-		honey_hole_render_deals_table();
+		honey_hole_admin_page();
 	}
 
 	/**
@@ -249,8 +279,11 @@
 				update_post_meta($deal_id, 'deal_url', $deal_url);
 				update_post_meta($deal_id, 'deal_image_url', $image_url);
 
-				// Redirect to the deals list with a success message
-				wp_redirect(admin_url('admin.php?page=honey-hole&message=deal_added'));
+				// Set transient for success message
+				set_transient('honey_hole_deal_added', true, 45);
+				
+				// Use JavaScript to redirect
+				echo '<script>window.location.href = "' . admin_url('admin.php?page=honey-hole') . '";</script>';
 				exit;
 			} else {
 				// Handle error

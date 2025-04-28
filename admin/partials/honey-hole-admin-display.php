@@ -20,6 +20,19 @@
 if (!current_user_can('manage_options')) {
     wp_die(__('You do not have sufficient permissions to access this page.'));
 }
+
+// Check for success message
+if (get_transient('honey_hole_deal_added')) {
+    delete_transient('honey_hole_deal_added');
+    echo '<div class="notice notice-success is-dismissible"><p>Deal added successfully!</p></div>';
+}
+
+// Check for delete all success message
+if (get_transient('honey_hole_deals_deleted')) {
+    delete_transient('honey_hole_deals_deleted');
+    echo '<div class="notice notice-success is-dismissible"><p>All deals have been deleted successfully!</p></div>';
+}
+
 function honey_hole_render_deals_table()
 {
     // Get all categories
@@ -166,8 +179,9 @@ function honey_hole_render_deals_table()
     <?php
     }
 }
-?>
 
+function honey_hole_admin_page() {
+?>
 <div class="wrap">
         <h1>Honey Hole Deals</h1>
         <div class="honey-hole-admin">
@@ -191,6 +205,7 @@ function honey_hole_render_deals_table()
         </div>
     </div>
 <?php
+}
 
 // Add handler for delete all deals
 function honey_hole_handle_delete_all_deals()
