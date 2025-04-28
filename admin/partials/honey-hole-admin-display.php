@@ -149,13 +149,13 @@ function honey_hole_render_deals_table()
                                         <a href="<?php echo esc_url($original_url); ?>" target="_blank">Original URL: <?php echo esc_html(substr($original_url, 0, 30) . '...'); ?></a>
                                     </div>
                                 <?php endif; ?>
-                                <!--<div class="deal-actions">
+                                <div class="deal-actions">
                                     <a href="<?php echo admin_url('admin.php?page=honey-hole-edit-deal&deal_id=' . $deal->ID); ?>" class="button button-small">Edit</a>
                                     <a href="<?php echo get_delete_post_link($deal->ID); ?>" class="button button-small" onclick="return confirm('Are you sure you want to delete this deal?')">Delete</a>
                                     <?php if ($deal_url) : ?>
                                         <a href="<?php echo esc_url($deal_url); ?>" target="_blank" class="button button-small affiliate-link">View Deal</a>
                                     <?php endif; ?>
-                                </div>-->
+                                </div>
                             </div>
                         </div>
                 <?php endforeach;
@@ -172,9 +172,9 @@ function honey_hole_render_deals_table()
         <h1>Honey Hole Deals</h1>
         <div class="honey-hole-admin">
             <div class="honey-hole-menu-container">
-                <!--<div class="honey-hole-actions">
+                <div class="honey-hole-actions">
                     <a href="<?php echo admin_url('admin.php?page=honey-hole-add-deal'); ?>" class="button button-primary button-hero">Add Deal</a>
-                </div>-->
+                </div>
                 <div class="honey-hole-search">
                     <input type="text" id="deal-search" placeholder="Search by title" class="regular-text">
                 </div>
