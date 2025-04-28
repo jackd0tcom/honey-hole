@@ -33,6 +33,12 @@ if (get_transient('honey_hole_deals_deleted')) {
     echo '<div class="notice notice-success is-dismissible"><p>All deals have been deleted successfully!</p></div>';
 }
 
+// Check for edit success message
+if (get_transient('honey_hole_deal_updated')) {
+    delete_transient('honey_hole_deal_updated');
+    echo '<div class="notice notice-success is-dismissible"><p>Deal updated successfully!</p></div>';
+}
+
 function honey_hole_render_deals_table()
 {
     // Get all categories

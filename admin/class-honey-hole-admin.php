@@ -76,15 +76,15 @@
 			array($this, 'honey_hole_categories_page')
 		);
 	
-		// // Add hidden submenu for edit page
-		// add_submenu_page(
-		// 	null, // Parent slug (null makes it hidden)
-		// 	'Edit Deal',
-		// 	'Edit Deal',
-		// 	'manage_options',
-		// 	'honey-hole-edit-deal',
-		// 	'honey_hole_edit_deal_page'
-		// );
+		// Add hidden submenu for edit page
+		add_submenu_page(
+			null, // Parent slug (null makes it hidden)
+			'Edit Deal',
+			'Edit Deal',
+			'manage_options',
+			'honey-hole-edit-deal',
+			array($this, 'honey_hole_edit_deal_page')
+		);
 	
 		// add_submenu_page(
 		// 	'honey-hole',
@@ -127,35 +127,8 @@
 
 		// Add action for delete all deals
 		add_action('admin_init', array($this, 'handle_delete_all_deals'));
-	}
-
-	/**
-	 * Handle delete all deals action.
-	 *
-	 * @since    2.0.0
-	 */
-	public function handle_delete_all_deals() {
-		if (isset($_POST['action']) && $_POST['action'] === 'delete_all_deals' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_delete_all')) {
-			// Get all deals
-			$deals = get_posts(array(
-				'post_type' => 'honey_hole_deal',
-				'post_status' => 'any',
-				'posts_per_page' => -1,
-				'fields' => 'ids'
-			));
-
-			// Delete each deal
-			foreach ($deals as $deal_id) {
-				wp_delete_post($deal_id, true); // true means force delete
-			}
-
-			// Set transient for success message
-			set_transient('honey_hole_deals_deleted', true, 45);
-			
-			// Redirect back to the deals page
-			wp_redirect(admin_url('admin.php?page=honey-hole'));
-			exit;
-		}
+		// Add action for edit deal
+		add_action('admin_init', array($this, 'handle_edit_deal'));
 	}
 
 	/**
@@ -313,6 +286,93 @@
 		require_once plugin_dir_path(__FILE__) . './partials/honey-hole-categories-page.php';
 		
 		honey_hole_categories_page();
+	}
+		/**
+	 * Handle delete all deals action.
+	 *
+	 * @since    2.0.0
+	 */
+	public function handle_delete_all_deals() {
+		if (isset($_POST['action']) && $_POST['action'] === 'delete_all_deals' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_delete_all')) {
+			// Get all deals
+			$deals = get_posts(array(
+				'post_type' => 'honey_hole_deal',
+				'post_status' => 'any',
+				'posts_per_page' => -1,
+				'fields' => 'ids'
+			));
+
+			// Delete each deal
+			foreach ($deals as $deal_id) {
+				wp_delete_post($deal_id, true); // true means force delete
+			}
+
+			// Set transient for success message
+			set_transient('honey_hole_deals_deleted', true, 45);
+			
+			// Redirect back to the deals page
+			wp_redirect(admin_url('admin.php?page=honey-hole'));
+			exit;
+		}
+	}
+
+	/**
+	 * Display the edit deal page.
+	 *
+	 * @since    2.0.0
+	 */
+	public function honey_hole_edit_deal_page() {
+		// Check if the current user has the necessary capabilities
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have sufficient permissions to access this page.'));
+		}
+
+		// Include the admin display partial	
+		require_once plugin_dir_path(__FILE__) . 'partials/honey-hole-edit-deal-page.php';
+
+		// Call the display function
+		honey_hole_edit_deal_page();
+	}
+
+	/**
+	 * Handle edit deal action.
+	 *
+	 * @since    2.0.0
+	 */
+	public function handle_edit_deal() {
+		if (isset($_POST['action']) && $_POST['action'] === 'edit_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_edit_deal')) {
+			$deal_id = intval($_POST['deal_id']);
+			
+			// Update post
+			wp_update_post(array(
+				'ID' => $deal_id,
+				'post_title' => sanitize_text_field($_POST['deal_title']),
+				'post_content' => sanitize_textarea_field($_POST['deal_description'])
+			));
+
+			// Update meta
+			update_post_meta($deal_id, 'deal_original_price', floatval($_POST['deal_original_price']));
+			update_post_meta($deal_id, 'deal_sales_price', floatval($_POST['deal_sales_price']));
+			update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
+			update_post_meta($deal_id, 'deal_url', esc_url_raw($_POST['deal_url']));
+			update_post_meta($deal_id, 'deal_image_url', esc_url_raw($_POST['deal_image_url']));
+
+			// Update category
+			wp_set_object_terms($deal_id, intval($_POST['deal_category']), 'deal_category');
+
+			// Update tags
+			if (!empty($_POST['deal_tags'])) {
+				$tags = array_map('trim', explode(',', $_POST['deal_tags']));
+				wp_set_object_terms($deal_id, $tags, 'post_tag');
+			}
+
+			// Set success message
+			set_transient('honey_hole_deal_updated', true, 45);
+			
+			// Redirect back to deals list
+			wp_redirect(admin_url('admin.php?page=honey-hole'));
+			exit;
+		}
 	}
 
 }
