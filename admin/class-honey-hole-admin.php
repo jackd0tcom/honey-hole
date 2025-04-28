@@ -27,13 +27,16 @@
      */
     public function add_admin_menu()
     {
+
+		$hh_icon = plugins_url('images/honey-hole-icon.svg', __FILE__);	
+
         add_menu_page(
             'Honey Hole Deals',
             'Honey Hole',
             'manage_options',
             'honey-hole',
             array($this, 'honey_hole_admin_page'),
-            'dashicons-money-alt',
+            $hh_icon,
             30
         );
 
@@ -46,23 +49,23 @@
         //    array($this, 'display_import_page')
         //);
 	
-		// add_submenu_page(
-		// 	'honey-hole',
-		// 	'All Deals',
-		// 	'All Deals',
-		// 	'manage_options',
-		// 	'honey-hole',
-		// 	'honey_hole_admin_page'
-		// );
+		add_submenu_page(
+			'honey-hole',
+			'All Deals',
+			'All Deals',
+			'manage_options',
+			'honey-hole',
+			array($this, 'honey_hole_admin_page')
+		);
 	
-		// add_submenu_page(
-		// 	'honey-hole',
-		// 	'Add New Deal',
-		// 	'Add New',
-		// 	'manage_options',
-		// 	'honey-hole-add-deal',
-		// 	'honey_hole_add_deal_page'
-		// );
+		add_submenu_page(
+			'honey-hole',
+			'Add New Deal',
+			'Add New Deal',
+			'manage_options',
+			'honey-hole-add-deal',
+			array($this, 'honey_hole_add_deal_page')
+		);
 	
 		// add_submenu_page(
 		// 	'honey-hole',
@@ -187,6 +190,24 @@
 		
 		// Call the display function
 		honey_hole_render_deals_table();
+	}
+
+	/**
+	 * Display the add deal page.
+	 *
+	 * @since    2.0.0
+	 */
+	public function honey_hole_add_deal_page() {
+		// Check if the current user has the necessary capabilities
+		if (!current_user_can('manage_options')) {
+			wp_die(__('You do not have sufficient permissions to access this page.'));
+		}
+
+		// Include the admin display partial
+		require_once plugin_dir_path(__FILE__) . './partials/honey-hole-add-deal-page.php';
+
+		// Call the display function
+		honey_hole_add_deal_page();
 	}
 
 }
