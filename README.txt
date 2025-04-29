@@ -29,4 +29,4 @@ Honey Hole plugin for Outdoor Empire. Built for the purpose of managing and disp
 Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
 
 = 2.0 =
-Migration to multiple files - deal add, edit, delete all works. next up is importer, and frontend stuff.
+Migration to multiple files - everything migrated.
