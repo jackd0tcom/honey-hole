@@ -29,4 +29,34 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	// Category filter functionality
+	$('.category-button').on('click', function() {
+		const selectedCategory = $(this).data('category');
+		
+		// Update active button
+		$('.category-button').removeClass('active');
+		$(this).addClass('active');
+		
+		// Show loading state
+		$('.deals-grid').addClass('loading');
+		
+		// Make AJAX request
+		$.ajax({
+			url: honeyHolePublic.ajaxurl,
+			type: 'POST',
+			data: {
+				action: 'honey_hole_filter_deals',
+				category: selectedCategory
+			},
+			success: function(response) {
+				if (response.success) {
+					$('.deals-grid').html(response.data.html);
+				}
+			},
+			complete: function() {
+				$('.deals-grid').removeClass('loading');
+			}
+		});
+	});
+
 })( jQuery );

@@ -23,10 +23,14 @@ Honey Hole plugin for Outdoor Empire. Built for the purpose of managing and disp
 * Users can see and clickthrough deals on the page
 * PHP rendered frontend
 
+= 2.0 =
+* Under the Hood
+- Migration to multiple files - everything migrated successfully
+
+* New Features
+- 
+
 == Upgrade Notice ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
 
-= 2.0 =
-Migration to multiple files - everything migrated.
+
