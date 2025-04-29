@@ -119,12 +119,21 @@ class Honey_Hole_Admin
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Include helper functions
+		require_once plugin_dir_path(__FILE__) . 'honey-hole-admin-helper-functions.php';
+
 		// Add action for delete all deals
 		add_action('admin_init', array($this, 'handle_delete_all_deals'));
 		// Add action for edit deal
 		add_action('admin_init', array($this, 'handle_edit_deal'));
 		// Add AJAX handler for CSV import
 		add_action('wp_ajax_honey_hole_import_csv_ajax', array($this, 'honey_hole_import_csv_ajax'));
+		// Add AJAX handler for image upload
+		add_action('wp_ajax_honey_hole_upload_image', 'honey_hole_handle_image_upload');
+		// Add AJAX handler for deal order updates
+		add_action('wp_ajax_honey_hole_update_order', 'honey_hole_update_deal_order');
+		// Add AJAX handler for visibility changes
+		add_action('wp_ajax_honey_hole_save_visibility_changes', 'honey_hole_save_visibility_changes');
 	}
 
 	/**
@@ -160,7 +169,7 @@ class Honey_Hole_Admin
 		wp_enqueue_script(
 			$this->plugin_name,
 			plugin_dir_url(__FILE__) . 'js/honey-hole-admin-modern.js',
-			array(),
+			array('jquery'),
 			$this->version,
 			false
 		);
@@ -172,9 +181,10 @@ class Honey_Hole_Admin
 			array(
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('honey_hole_nonce'),
-				'visibility_nonce' => wp_create_nonce('honey_hole_visibility'),
+				'visibility_nonce' => wp_create_nonce('honey_hole_visibility_toggle'),
 				'bulk_nonce' => wp_create_nonce('honey_hole_bulk'),
-				'order_nonce' => wp_create_nonce('honey_hole_order')
+				'order_nonce' => wp_create_nonce('honey_hole_update_order'),
+				'image_upload_nonce' => wp_create_nonce('honey_hole_image_upload')
 			)
 		);
 	}
@@ -671,5 +681,40 @@ class Honey_Hole_Admin
 				$skipped
 			)
 		));
+	}
+	// Add AJAX handler for saving visibility changes
+	function honey_hole_save_visibility_changes()
+	{
+		if (!isset($_POST['changes']) || !isset($_POST['nonce'])) {
+			wp_send_json_error('Missing required fields');
+		}
+
+		if (!wp_verify_nonce($_POST['nonce'], 'honey_hole_visibility_toggle')) {
+			wp_send_json_error('Invalid nonce');
+		}
+
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error('Insufficient permissions');
+		}
+
+		$changes = $_POST['changes'];
+		$success = true;
+
+		foreach ($changes as $change) {
+			$deal_id = intval($change['deal_id']);
+			$visibility = rest_sanitize_boolean($change['visibility']);
+
+			$result = update_post_meta($deal_id, 'deal_visibility', $visibility);
+			if ($result === false) {
+				$success = false;
+				break;
+			}
+		}
+
+		if ($success) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error('Failed to save some visibility changes');
+		}
 	}
 }

@@ -92,9 +92,16 @@ function honey_hole_add_deal_page()
                         <p class="description">Enter tags separated by commas (e.g., camping, hiking, backpacking)</p>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-image">Deal Image URL *</label>
-                        <input type="url" id="deal-image-url" name="deal_image_url" placeholder="Enter image URL" required>
-                        <p class="description">Enter the direct URL to the product image</p>
+                        <label for="deal-image">Deal Image *</label>
+                        <div class="image-upload-container">
+                            <input type="url" id="deal-image-url" name="deal_image_url" required>
+                            <input type="file" id="deal-image-upload" accept="image/*" style="display: none;">
+                            <button type="button" class="button" id="upload-image-button">Upload Image</button>
+                        </div>
+                        <div class="image-preview-container">
+                            <div class="no-image">No image selected</div>
+                        </div>
+                        <p class="description">Upload an image or enter the direct URL to the product image</p>
                     </div>
                 </div>
             </div>

@@ -232,8 +232,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Notification system
     function showNotification(message, duration = 3000) {
-        const notification = document.querySelector('.honey-hole-notification');
-        if (!notification) return;
+        let notification = document.querySelector('.honey-hole-notification');
+        
+        // Create notification element if it doesn't exist
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.className = 'honey-hole-notification';
+            document.body.appendChild(notification);
+        }
 
         notification.textContent = message;
         notification.classList.add('visible');
@@ -281,5 +287,187 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             return false;
         }
+    }
+
+    // Handle image upload in grid view
+    document.querySelectorAll('.upload-image-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const dealId = button.dataset.dealId;
+            document.querySelector(`.deal-image-upload[data-deal-id="${dealId}"]`).click();
+        });
+    });
+
+    document.querySelectorAll('.deal-image-upload').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const dealId = input.dataset.dealId;
+            const formData = new FormData();
+            formData.append('action', 'honey_hole_upload_image');
+            formData.append('nonce', honeyHoleAdmin.image_upload_nonce);
+            formData.append('deal_id', dealId);
+            formData.append('image', file);
+
+            fetch(honeyHoleAdmin.ajaxurl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the image in the grid
+                    const dealCard = document.querySelector(`.honey-hole-deal-card[data-deal-id="${dealId}"]`);
+                    const imageContainer = dealCard.querySelector('.deal-image');
+                    imageContainer.innerHTML = `
+                        <img src="${data.data.image_url}" alt="Deal Image" class="deal-thumbnail-image">
+                        <div class="image-overlay">
+                            <button type="button" class="button upload-image-button" data-deal-id="${dealId}">Replace Image</button>
+                        </div>
+                        <input type="file" class="deal-image-upload" data-deal-id="${dealId}" accept="image/*" style="display: none;">
+                    `;
+                } else {
+                    alert('Error uploading image: ' + data.data);
+                }
+            })
+            .catch(error => {
+                alert('Error uploading image. Please try again.');
+            });
+        });
+    });
+
+    // Drag and drop functionality for deal ordering
+    const dealsGrid = document.querySelector('.honey-hole-deals-grid');
+    if (dealsGrid) {
+        let draggedItem = null;
+        let draggedIndex = null;
+        let originalOrder = [];
+
+        // Load initial order from database
+        fetch(honeyHoleAdmin.ajaxurl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'honey_hole_get_order',
+                nonce: honeyHoleAdmin.order_nonce
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Sort cards based on the order from database
+                const cards = Array.from(dealsGrid.children);
+                data.data.forEach(deal => {
+                    const card = cards.find(c => c.dataset.dealId === deal.id.toString());
+                    if (card) {
+                        dealsGrid.appendChild(card);
+                    }
+                });
+                
+                // Update originalOrder array
+                originalOrder = Array.from(dealsGrid.children).map(card => card.dataset.dealId);
+            }
+        })
+        .catch(error => {
+            showNotification('Error loading deal order. Please try again.', 5000);
+        });
+
+        // Initialize drag and drop
+        document.querySelectorAll('.honey-hole-deal-card').forEach((card, index) => {
+            card.setAttribute('draggable', 'true');
+            card.dataset.order = index;
+        });
+
+        // Drag start
+        dealsGrid.addEventListener('dragstart', (e) => {
+            if (!e.target.classList.contains('honey-hole-deal-card')) return;
+            
+            draggedItem = e.target;
+            draggedIndex = Array.from(dealsGrid.children).indexOf(draggedItem);
+            e.target.classList.add('dragging');
+            dealsGrid.classList.add('sorting');
+        });
+
+        // Drag end
+        dealsGrid.addEventListener('dragend', (e) => {
+            if (!e.target.classList.contains('honey-hole-deal-card')) return;
+            
+            e.target.classList.remove('dragging');
+            dealsGrid.classList.remove('sorting');
+            
+            // Get new order
+            const newOrder = Array.from(dealsGrid.children).map(card => card.dataset.dealId);
+            
+            // Check if order changed
+            if (JSON.stringify(newOrder) !== JSON.stringify(originalOrder)) {
+                // Create updates array
+                const updates = newOrder.map((dealId, index) => ({
+                    deal_id: dealId,
+                    new_order: index
+                }));
+
+                // Send AJAX request to update order
+                fetch(honeyHoleAdmin.ajaxurl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'honey_hole_update_order',
+                        nonce: honeyHoleAdmin.order_nonce,
+                        updates: JSON.stringify(updates)
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        showNotification('Error updating deal order: ' + data.data, 5000);
+                        // Revert to original order
+                        originalOrder.forEach((dealId, index) => {
+                            const card = document.querySelector(`.honey-hole-deal-card[data-deal-id="${dealId}"]`);
+                            if (card) {
+                                card.dataset.order = index;
+                                dealsGrid.appendChild(card);
+                            }
+                        });
+                    } else {
+                        // Update original order
+                        originalOrder = newOrder;
+                        showNotification('Deal order updated successfully!');
+                    }
+                })
+                .catch(error => {
+                    showNotification('Error updating deal order. Please try again.', 5000);
+                    // Revert to original order
+                    originalOrder.forEach((dealId, index) => {
+                        const card = document.querySelector(`.honey-hole-deal-card[data-deal-id="${dealId}"]`);
+                        if (card) {
+                            card.dataset.order = index;
+                            dealsGrid.appendChild(card);
+                        }
+                    });
+                });
+            }
+        });
+
+        // Drag over
+        dealsGrid.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const card = e.target.closest('.honey-hole-deal-card');
+            if (!card || card === draggedItem) return;
+
+            const cards = Array.from(dealsGrid.children);
+            const draggedRect = draggedItem.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            const draggedCenter = draggedRect.top + draggedRect.height / 2;
+            const cardCenter = cardRect.top + cardRect.height / 2;
+
+            if (draggedCenter < cardCenter) {
+                card.parentNode.insertBefore(draggedItem, card);
+            } else {
+                card.parentNode.insertBefore(draggedItem, card.nextSibling);
+            }
+        });
     }
 }); 
