@@ -20,7 +20,8 @@
  * @subpackage Honey_Hole/public
  * @author     Jack Ball <jackballdev@gmail.com>
  */
-class Honey_Hole_Public {
+class Honey_Hole_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,14 @@ class Honey_Hole_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// Register shortcode
+		add_shortcode('honey_hole_deals', array($this, 'render_deals_shortcode'));
 	}
 
 	/**
@@ -59,7 +63,8 @@ class Honey_Hole_Public {
 	 *
 	 * @since    2.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +78,7 @@ class Honey_Hole_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/honey-hole-public.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/honey-hole-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +86,8 @@ class Honey_Hole_Public {
 	 *
 	 * @since    2.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +101,22 @@ class Honey_Hole_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/honey-hole-public.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/honey-hole-public.js', array('jquery'), $this->version, false);
 	}
 
+	/**
+	 * Render the deals shortcode
+	 *
+	 * @since    2.0.0
+	 * @param    array    $atts    Shortcode attributes
+	 * @return   string   The rendered shortcode output
+	 */
+	public function render_deals_shortcode($atts)
+	{
+		// Include the shortcode function file
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/honey-hole-shortcode.php';
+
+		// Call the shortcode function with the attributes
+		return honey_hole_deals_shortcode($atts);
+	}
 }
