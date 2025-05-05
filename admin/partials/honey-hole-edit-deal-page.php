@@ -86,7 +86,7 @@ function honey_hole_edit_deal_page()
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-url">Deal URL *</label>
-                        <input type="url" id="deal-url" name="deal_url" value="<?php echo esc_attr($original_url); ?>" required>
+                        <input type="url" id="deal-url" name="deal_url" value="<?php echo esc_attr($deal_url); ?>" required>
                     </div>
                 </div>
 

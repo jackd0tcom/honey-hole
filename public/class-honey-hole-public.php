@@ -52,9 +52,6 @@ class Honey_Hole_Public
 	{
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
-		// Register shortcode
-		add_shortcode('honey_hole_deals', array($this, 'render_deals_shortcode'));
 	}
 
 	/**
@@ -64,7 +61,13 @@ class Honey_Hole_Public
 	 */
 	public function enqueue_styles()
 	{
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/honey-hole-public.css', array(), $this->version, 'all');
+		wp_enqueue_style(
+			'honey-hole-public',
+			plugin_dir_url(__FILE__) . 'css/honey-hole-public.css',
+			array(),
+			$this->version,
+			'all'
+		);
 	}
 
 	/**
@@ -74,7 +77,27 @@ class Honey_Hole_Public
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/honey-hole-public.js', array('jquery'), $this->version, false);
+		// Enqueue WordPress element first
+		wp_enqueue_script('wp-element');
+
+		// Enqueue React app script
+		wp_enqueue_script(
+			'honey-hole-app',
+			plugin_dir_url(__FILE__) . 'js/honey-hole-app.js',
+			array('wp-element'),
+			$this->version,
+			true
+		);
+
+		// Localize the script with the REST API URL
+		wp_localize_script(
+			'honey-hole-app',
+			'honeyHoleData',
+			array(
+				'apiUrl' => rest_url('honey-hole/v1/deals'),
+				'nonce' => wp_create_nonce('wp_rest')
+			)
+		);
 	}
 
 	/**

@@ -6,6 +6,14 @@ WP_PLUGIN_DIR="/Users/jackball/Local Sites/honey-hole-2/app/public/wp-content/pl
 # Path to your development plugin directory
 DEV_PLUGIN_DIR="/Users/jackball/Desktop/Web Dev Projects/honey-hole-v2"
 
+# Kill any existing watch processes
+pkill -f "wp-scripts start"
+
+# Start the wp-scripts watch process in the background
+echo "Starting React compilation..."
+npm run watch &
+WP_PID=$!
+
 # Function to sync files
 sync_files() {
     echo "Syncing files to WordPress..."
@@ -17,6 +25,10 @@ sync_files() {
 sync_files
 
 # Watch for changes and sync
+echo "Watching for changes..."
 fswatch -o "$DEV_PLUGIN_DIR" | while read f; do
     sync_files
-done 
+done
+
+# Cleanup on exit
+trap "kill $WP_PID" EXIT 
