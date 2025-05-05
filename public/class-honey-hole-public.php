@@ -50,12 +50,8 @@ class Honey_Hole_Public
 	 */
 	public function __construct($plugin_name, $version)
 	{
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
-		// Register shortcode
-		add_shortcode('honey_hole_deals', array($this, 'render_deals_shortcode'));
 	}
 
 	/**
@@ -65,20 +61,13 @@ class Honey_Hole_Public
 	 */
 	public function enqueue_styles()
 	{
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Honey_Hole_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Honey_Hole_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/honey-hole-public.css', array(), $this->version, 'all');
+		wp_enqueue_style(
+			'honey-hole-public',
+			plugin_dir_url(__FILE__) . 'css/honey-hole-public.css',
+			array(),
+			$this->version,
+			'all'
+		);
 	}
 
 	/**
@@ -88,20 +77,27 @@ class Honey_Hole_Public
 	 */
 	public function enqueue_scripts()
 	{
+		// Enqueue WordPress element first
+		wp_enqueue_script('wp-element');
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Honey_Hole_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Honey_Hole_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+		// Enqueue React app script
+		wp_enqueue_script(
+			'honey-hole-app',
+			plugin_dir_url(__FILE__) . 'js/honey-hole-app.js',
+			array('wp-element'),
+			$this->version,
+			true
+		);
 
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/honey-hole-public.js', array('jquery'), $this->version, false);
+		// Localize the script with the REST API URL
+		wp_localize_script(
+			'honey-hole-app',
+			'honeyHoleData',
+			array(
+				'apiUrl' => rest_url('honey-hole/v1/deals'),
+				'nonce' => wp_create_nonce('wp_rest')
+			)
+		);
 	}
 
 	/**

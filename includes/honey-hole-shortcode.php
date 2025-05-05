@@ -4,7 +4,6 @@ function honey_hole_deals_shortcode($atts)
 {
     // Parse attributes
     $atts = shortcode_atts(array(
-        'category' => '',
         'count' => -1,
         'columns' => 3
     ), $atts);
@@ -163,16 +162,6 @@ function honey_hole_deals_shortcode($atts)
         <?php
         endif;
 
-        // Get all categories for the filter
-        $categories = get_terms(array(
-            'taxonomy' => 'deal_category',
-            'hide_empty' => true,
-            'orderby' => 'name',
-            'order' => 'ASC'
-        ));
-        ?>
-
-        <?php
         // Get all deals
         $args = array(
             'post_type' => 'honey_hole_deal',
@@ -181,17 +170,6 @@ function honey_hole_deals_shortcode($atts)
             'orderby' => 'menu_order',
             'order' => 'ASC'
         );
-
-        // Add category filter if specified
-        if (!empty($atts['category'])) {
-            $args['tax_query'] = array(
-                array(
-                    'taxonomy' => 'deal_category',
-                    'field' => 'slug',
-                    'terms' => $atts['category']
-                )
-            );
-        }
 
         $query = new WP_Query($args);
         $deals = $query->posts;

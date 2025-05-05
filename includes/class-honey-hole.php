@@ -110,6 +110,16 @@ class Honey_Hole {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-meta-boxes.php';
 
 		/**
+		 * The class responsible for REST API endpoints.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-rest-api.php';
+
+		/**
+		 * The class responsible for shortcode functionality.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-shortcode.php';
+
+		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
@@ -187,9 +197,12 @@ class Honey_Hole {
 	private function define_public_hooks() {
 
 		$plugin_public = new Honey_Hole_Public( $this->get_plugin_name(), $this->get_version() );
+		$rest_api = new Honey_Hole_REST_API();
+		$shortcode = new Honey_Hole_Shortcode();
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'rest_api_init', $rest_api, 'register_routes' );
 
 	}
 
