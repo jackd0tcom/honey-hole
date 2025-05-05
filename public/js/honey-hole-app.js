@@ -17,7 +17,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DealGrid_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealGrid.jsx */ "./src/components/DealGrid.jsx");
 /* harmony import */ var _FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FilterBar.jsx */ "./src/components/FilterBar.jsx");
 /* harmony import */ var _SearchBar_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SearchBar.jsx */ "./src/components/SearchBar.jsx");
-/* harmony import */ var _Hero_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Hero.jsx */ "./src/components/Hero.jsx");
+/* harmony import */ var _EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./EmailSignup.jsx */ "./src/components/EmailSignup.jsx");
+/* harmony import */ var _LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./LatestDeals.jsx */ "./src/components/LatestDeals.jsx");
+/* harmony import */ var _Hero_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Hero.jsx */ "./src/components/Hero.jsx");
 function _typeof(o) {
   "@babel/helpers - typeof";
 
@@ -377,6 +379,8 @@ function _arrayWithHoles(r) {
 
 
 
+
+
 var App = function App() {
   var _useState = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
@@ -391,9 +395,9 @@ var App = function App() {
     error = _useState6[0],
     setError = _useState6[1];
   var _useState7 = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
-      category: '',
-      sortBy: 'date',
-      searchQuery: ''
+      category: "",
+      sortBy: "date",
+      searchQuery: ""
     }),
     _useState8 = _slicedToArray(_useState7, 2),
     filters = _useState8[0],
@@ -412,7 +416,7 @@ var App = function App() {
             _context.next = 4;
             return fetch(honeyHoleData.apiUrl, {
               headers: {
-                'X-WP-Nonce': honeyHoleData.nonce
+                "X-WP-Nonce": honeyHoleData.nonce
               }
             });
           case 4:
@@ -421,7 +425,7 @@ var App = function App() {
               _context.next = 7;
               break;
             }
-            throw new Error('Failed to fetch deals');
+            throw new Error("Failed to fetch deals");
           case 7:
             _context.next = 9;
             return response.json();
@@ -448,12 +452,9 @@ var App = function App() {
   }();
   return /*#__PURE__*/React.createElement("div", {
     className: "honey-hole-deals"
-  }, /*#__PURE__*/React.createElement(_Hero_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null), /*#__PURE__*/React.createElement("div", {
-    className: "deals-filter"
-  }, /*#__PURE__*/React.createElement(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    filters: filters,
-    onFilterChange: setFilters
-  })), error && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(_Hero_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], null), /*#__PURE__*/React.createElement(_LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    deals: deals
+  }), /*#__PURE__*/React.createElement(_EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null), error && /*#__PURE__*/React.createElement("div", {
     className: "honey-hole-error"
   }, error), loading ? /*#__PURE__*/React.createElement("div", {
     className: "honey-hole-loading"
@@ -552,25 +553,222 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _DealCard_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DealCard.jsx */ "./src/components/DealCard.jsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealCard.jsx */ "./src/components/DealCard.jsx");
+/* harmony import */ var _FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FilterBar.jsx */ "./src/components/FilterBar.jsx");
+function _slicedToArray(r, e) {
+  return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+}
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
+}
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
+    } finally {
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
+}
+
+
+
 
 var DealGrid = function DealGrid(_ref) {
   var deals = _ref.deals;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("all"),
+    _useState2 = _slicedToArray(_useState, 2),
+    categories = _useState2[0],
+    setCategories = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals),
+    _useState4 = _slicedToArray(_useState3, 2),
+    dealsArray = _useState4[0],
+    setDealsArray = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals),
+    _useState6 = _slicedToArray(_useState5, 2),
+    originalArray = _useState6[0],
+    setOriginalArray = _useState6[1];
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (categories === "all") {
+      setDealsArray(deals);
+    } else setDealsArray(deals.filter(function (deal) {
+      return deal.categories[0] === categories;
+    }));
+  }, [categories]);
   if (!deals || deals.length === 0) {
     return /*#__PURE__*/React.createElement("div", {
       className: "honey-hole-empty"
     }, "No deals found");
   }
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    categories: categories,
+    setCategories: setCategories
+  }), /*#__PURE__*/React.createElement("div", {
     className: "deals-grid"
-  }, deals.map(function (deal) {
-    return /*#__PURE__*/React.createElement(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_0__["default"], {
+  }, dealsArray.map(function (deal) {
+    return /*#__PURE__*/React.createElement(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: deal.id,
-      deal: deal
+      deal: deal,
+      categories: categories
     });
-  }));
+  })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealGrid);
+
+/***/ }),
+
+/***/ "./src/components/EmailSignup.jsx":
+/*!****************************************!*\
+  !*** ./src/components/EmailSignup.jsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var EmailSignup = function EmailSignup() {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    id: "hh-email-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-wrapper"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-container-one"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-image"
+  }), /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-content"
+  }, /*#__PURE__*/React.createElement("h2", null, "Get the Best Deals and Win Free Gear!"), /*#__PURE__*/React.createElement("form", {
+    method: "post",
+    "class": "af-form-wrapper",
+    "accept-charset": "UTF-8",
+    action: "https://www.aweber.com/scripts/addlead.pl"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hidden"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_web_form_id",
+    value: "894900673"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_split_id",
+    value: ""
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "listname",
+    value: "awlist6324539"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "redirect",
+    value: "https://www.aweber.com/thankyou-coi.htm?m=text",
+    id: "redirect_8e911f903751383335eaae138e94c2b8"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_adtracking",
+    value: "Honey_Hole_unstyled_form"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_message",
+    value: "1"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_required",
+    value: "email"
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "meta_tooltip",
+    value: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    id: "af-form-894900673",
+    "class": "af-form"
+  }, /*#__PURE__*/React.createElement("div", {
+    id: "hh-input-wrapper",
+    "class": "af-body af-standards"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "af-element"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "af-textWrap"
+  }, /*#__PURE__*/React.createElement("input", {
+    placeholder: "Email",
+    "class": "text",
+    id: "awf_field-118013225",
+    type: "email",
+    name: "email",
+    value: "",
+    tabindex: "500",
+    onfocus: " if (this.value == '') { this.value = ''; }",
+    onblur: "if (this.value == '') { this.value='';}"
+  })), /*#__PURE__*/React.createElement("div", {
+    "class": "af-clear"
+  })), /*#__PURE__*/React.createElement("div", {
+    "class": "af-element buttonContainer"
+  }, /*#__PURE__*/React.createElement("input", {
+    id: "hh-email-submit",
+    name: "submit",
+    "class": "submit",
+    type: "submit",
+    value: "Subscribe",
+    tabindex: "501"
+  }), /*#__PURE__*/React.createElement("div", {
+    "class": "af-clear"
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "hidden"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM",
+    alt: ""
+  }))), /*#__PURE__*/React.createElement("p", {
+    "class": "hh-email-disclaimer"
+  }, "We email once per week, sometimes more. Unsubscribe at any time."), /*#__PURE__*/React.createElement("p", {
+    "class": "hh-email-disclaimer"
+  }, "We respect your", " ", /*#__PURE__*/React.createElement("a", {
+    id: "hh-email-disclaimer-link",
+    href: "https://www.aweber.com/privacy.htm",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "email privacy")))), /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-container-two-wrapper"
+  }, /*#__PURE__*/React.createElement("div", {
+    "class": "hh-email-container-two"
+  }, /*#__PURE__*/React.createElement("h4", null, "Get Sweet Outdoor Gear Deals in Your Inbox \uD83E\uDD11\uD83C\uDFD5\uFE0F\uD83D\uDD25"), /*#__PURE__*/React.createElement("p", null, "Receive outdoor stories, tips, and deal alerts. Plus, be entered into our weekly gear giveaway when you sign up for", " ", /*#__PURE__*/React.createElement("span", {
+    className: "italic"
+  }, "The Honey Hole"), " email newsletter!"), /*#__PURE__*/React.createElement("p", null, "Join thousands of outdoor enthusiasts who love saving money and discovering the best gear."))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EmailSignup);
 
 /***/ }),
 
@@ -584,117 +782,94 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _typeof(o) {
-  "@babel/helpers - typeof";
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _slicedToArray(r, e) {
+  return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+}
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
+}
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
+    } finally {
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
+}
 
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
-function ownKeys(e, r) {
-  var t = Object.keys(e);
-  if (Object.getOwnPropertySymbols) {
-    var o = Object.getOwnPropertySymbols(e);
-    r && (o = o.filter(function (r) {
-      return Object.getOwnPropertyDescriptor(e, r).enumerable;
-    })), t.push.apply(t, o);
-  }
-  return t;
-}
-function _objectSpread(e) {
-  for (var r = 1; r < arguments.length; r++) {
-    var t = null != arguments[r] ? arguments[r] : {};
-    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
-      _defineProperty(e, r, t[r]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
-      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
-    });
-  }
-  return e;
-}
-function _defineProperty(e, r, t) {
-  return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-    value: t,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : e[r] = t, e;
-}
-function _toPropertyKey(t) {
-  var i = _toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : i + "";
-}
-function _toPrimitive(t, r) {
-  if ("object" != _typeof(t) || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r || "default");
-    if ("object" != _typeof(i)) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
 var FilterBar = function FilterBar(_ref) {
-  var filters = _ref.filters,
-    onFilterChange = _ref.onFilterChange;
-  var handleCategoryChange = function handleCategoryChange(category) {
-    onFilterChange(function (prev) {
-      return _objectSpread(_objectSpread({}, prev), {}, {
-        category: category
-      });
-    });
-  };
-  var handleSortChange = function handleSortChange(sortBy) {
-    onFilterChange(function (prev) {
-      return _objectSpread(_objectSpread({}, prev), {}, {
-        sortBy: sortBy
-      });
-    });
-  };
+  var categories = _ref.categories,
+    setCategories = _ref.setCategories;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""),
+    _useState2 = _slicedToArray(_useState, 2),
+    active = _useState2[0],
+    setActive = _useState2[1];
   return /*#__PURE__*/React.createElement("div", {
     className: "honey-hole-filter-bar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "honey-hole-categories"
   }, /*#__PURE__*/React.createElement("button", {
-    className: "honey-hole-category ".concat(filters.category === '' ? 'active' : ''),
     onClick: function onClick() {
-      return handleCategoryChange('');
+      setCategories("all");
+      console.log("all");
     }
   }, "All"), /*#__PURE__*/React.createElement("button", {
-    className: "honey-hole-category ".concat(filters.category === 'clothing' ? 'active' : ''),
     onClick: function onClick() {
-      return handleCategoryChange('clothing');
+      setCategories("camping-gear");
     }
-  }, "Clothing"), /*#__PURE__*/React.createElement("button", {
-    className: "honey-hole-category ".concat(filters.category === 'footwear' ? 'active' : ''),
+  }, "Camping Gear"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return handleCategoryChange('footwear');
+      setCategories("fishing-gear");
     }
-  }, "Footwear"), /*#__PURE__*/React.createElement("button", {
-    className: "honey-hole-category ".concat(filters.category === 'equipment' ? 'active' : ''),
+  }, "Fishing Gear"), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
-      return handleCategoryChange('equipment');
+      setCategories("hiking-gear");
     }
-  }, "Equipment")), /*#__PURE__*/React.createElement("div", {
-    className: "honey-hole-sort"
-  }, /*#__PURE__*/React.createElement("select", {
-    value: filters.sortBy,
-    onChange: function onChange(e) {
-      return handleSortChange(e.target.value);
+  }, "Hiking Gear"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setCategories("hunting-gear");
     }
-  }, /*#__PURE__*/React.createElement("option", {
-    value: "date"
-  }, "Newest"), /*#__PURE__*/React.createElement("option", {
-    value: "price_asc"
-  }, "Price: Low to High"), /*#__PURE__*/React.createElement("option", {
-    value: "price_desc"
-  }, "Price: High to Low"), /*#__PURE__*/React.createElement("option", {
-    value: "discount"
-  }, "Highest Discount"), /*#__PURE__*/React.createElement("option", {
-    value: "rating"
-  }, "Highest Rated"))));
+  }, "Hunting Gear"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setCategories("outdoor-gear");
+    }
+  }, "Outdoor Gear")));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterBar);
 
@@ -712,12 +887,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 var Hero = function Hero() {
   var date = new Date();
-  var formattedDate = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  var formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
   });
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     "class": "honey-hole-hero"
   }, /*#__PURE__*/React.createElement("div", {
     "class": "honey-hole-hero-content"
@@ -730,9 +905,103 @@ var Hero = function Hero() {
     "class": "honey-hole-hero-copy"
   }, /*#__PURE__*/React.createElement("h2", null, "We Find the Best Outdoor Gear Deals to Save You Time and Money!"), /*#__PURE__*/React.createElement("p", null, "We manually crawl catalogs, ads, and websites of top outdoor gear brands and retailers in search of discounted outdoor gear to create this curated list that will save you hours of shopping around."), /*#__PURE__*/React.createElement("p", null, "We update this page all the time with the best deals we find on gear for camping, hiking, backpacking, hunting, fishing, and more."), /*#__PURE__*/React.createElement("p", null, "Bookmark this page and check back often!"), /*#__PURE__*/React.createElement("p", null, "Deal prices are valid at time of posting, but could change at any moment."), /*#__PURE__*/React.createElement("p", {
     id: "honey-hole-updated"
-  }, "Last Updated: ", formattedDate))));
+  }, "Last Updated: ", formattedDate)))), /*#__PURE__*/React.createElement("div", {
+    "class": "category-section"
+  }, /*#__PURE__*/React.createElement("p", {
+    id: "hh-affiliate-disclaimer"
+  }, "DISCLAIMER: Outdoor Empire does not sell the products on this page. Some or all links are affiliate links which means we may earn a small commission if you make a purchase, at no cost to you. As an Amazon Associate I earn from qualifying purchases. Discounts and availability are not guaranteed. Verify all information at respective retailers before making a purchase.", " ", /*#__PURE__*/React.createElement("a", {
+    href: "https://outdoorempire.com/affiliate-disclaimer/",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "Learn More"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
+
+/***/ }),
+
+/***/ "./src/components/LatestDeals.jsx":
+/*!****************************************!*\
+  !*** ./src/components/LatestDeals.jsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealCard.jsx */ "./src/components/DealCard.jsx");
+function _slicedToArray(r, e) {
+  return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+}
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return _arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+  }
+}
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
+}
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
+    } finally {
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
+}
+
+
+
+var LatestDeals = function LatestDeals(_ref) {
+  var deals = _ref.deals;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState2 = _slicedToArray(_useState, 2),
+    sortedDeals = _useState2[0],
+    setSortedDeals = _useState2[1];
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    setSortedDeals(deals.slice(0, 4));
+  }, [deals]);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "Just Added"), /*#__PURE__*/React.createElement("div", {
+    className: "deals-grid"
+  }, sortedDeals.map(function (deal) {
+    return /*#__PURE__*/React.createElement(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      key: deal.id,
+      deal: deal
+    });
+  })));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LatestDeals);
 
 /***/ }),
 
@@ -772,6 +1041,16 @@ var SearchBar = function SearchBar(_ref) {
 /***/ ((module) => {
 
 module.exports = window["wp"]["element"];
+
+/***/ }),
+
+/***/ "react":
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+/***/ ((module) => {
+
+module.exports = window["React"];
 
 /***/ })
 

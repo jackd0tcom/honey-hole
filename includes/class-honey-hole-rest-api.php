@@ -7,7 +7,8 @@
  * @subpackage Honey_Hole/includes
  */
 
-class Honey_Hole_REST_API {
+class Honey_Hole_REST_API
+{
 
     /**
      * The namespace for our REST API endpoints
@@ -17,7 +18,8 @@ class Honey_Hole_REST_API {
     /**
      * Initialize the class and set up hooks
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Register our REST API routes
         add_action('rest_api_init', array($this, 'register_routes'));
     }
@@ -25,8 +27,8 @@ class Honey_Hole_REST_API {
     /**
      * Register the routes for our REST API endpoints
      */
-    public function register_routes() {
-        // TODO: We'll add the route registration here
+    public function register_routes()
+    {
         register_rest_route($this->namespace, '/deals', array(
             'methods' => 'GET',
             'callback' => array($this, 'get_deals'),
@@ -45,7 +47,8 @@ class Honey_Hole_REST_API {
      * @param WP_REST_Request $request The request object
      * @return WP_REST_Response
      */
-    public function get_deals($request) {
+    public function get_deals($request)
+    {
         $args = array(
             'post_type' => 'honey_hole_deal',
             'posts_per_page' => -1,
@@ -70,9 +73,9 @@ class Honey_Hole_REST_API {
                     'rating' => get_post_meta($post_id, 'deal_rating', true),
                     'image_url' => get_post_meta($post_id, 'deal_image_url', true),
                     'product_url' => get_post_meta($post_id, 'deal_url', true),
-                    'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'names')),
-                    'date_added' => get_post_meta($post_id, 'deal_date_added', true),
-                    'date_updated' => get_post_meta($post_id, 'deal_date_updated', true),
+                    'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'slugs')),
+                    'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
+                    'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),
                 );
 
                 $deals[] = $deal;
