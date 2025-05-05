@@ -39,23 +39,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div class="category-section">
-        <p id="hh-affiliate-disclaimer">
-          DISCLAIMER: Outdoor Empire does not sell the products on this page.
-          Some or all links are affiliate links which means we may earn a small
-          commission if you make a purchase, at no cost to you. As an Amazon
-          Associate I earn from qualifying purchases. Discounts and availability
-          are not guaranteed. Verify all information at respective retailers
-          before making a purchase.{" "}
-          <a
-            href="https://outdoorempire.com/affiliate-disclaimer/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn More
-          </a>
-        </p>
-      </div>
     </>
   );
 };

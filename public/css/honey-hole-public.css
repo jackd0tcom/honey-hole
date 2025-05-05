@@ -321,6 +321,27 @@
 .italic {
   font-style: italic;
 }
+.hh-filter-bar {
+  margin: 4rem 0px;
+}
+.hh-categories {
+  display: flex;
+  column-gap: 10px;
+}
+.hh-categories button {
+  background-color: unset;
+  border: 1px solid #476a44;
+  border-radius: 30px;
+  color: black;
+  padding: 7px 15px;
+}
+.hh-categories button:hover {
+  background-color: #476a44;
+}
+#hh-active-category {
+  background-color: #476a44 !important;
+  color: white !important;
+}
 
 /* Responsive Design */
 @media screen and (max-width: 1000px) {

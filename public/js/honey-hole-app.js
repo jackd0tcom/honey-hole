@@ -836,37 +836,48 @@ function _arrayWithHoles(r) {
 var FilterBar = function FilterBar(_ref) {
   var categories = _ref.categories,
     setCategories = _ref.setCategories;
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
     _useState2 = _slicedToArray(_useState, 2),
-    active = _useState2[0],
-    setActive = _useState2[1];
+    activeCategory = _useState2[0],
+    setActiveCategory = _useState2[1];
   return /*#__PURE__*/React.createElement("div", {
-    className: "honey-hole-filter-bar"
+    className: "hh-filter-bar"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "honey-hole-categories"
+    className: "hh-categories"
   }, /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 0 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(0);
       setCategories("all");
-      console.log("all");
     }
-  }, "All"), /*#__PURE__*/React.createElement("button", {
+  }, "All Gear Deals"), /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 1 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(1);
       setCategories("camping-gear");
     }
   }, "Camping Gear"), /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 2 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(2);
       setCategories("fishing-gear");
     }
   }, "Fishing Gear"), /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 3 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(3);
       setCategories("hiking-gear");
     }
   }, "Hiking Gear"), /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 4 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(4);
       setCategories("hunting-gear");
     }
   }, "Hunting Gear"), /*#__PURE__*/React.createElement("button", {
+    id: activeCategory === 5 ? "hh-active-category" : "",
     onClick: function onClick() {
+      setActiveCategory(5);
       setCategories("outdoor-gear");
     }
   }, "Outdoor Gear")));
@@ -905,15 +916,7 @@ var Hero = function Hero() {
     "class": "honey-hole-hero-copy"
   }, /*#__PURE__*/React.createElement("h2", null, "We Find the Best Outdoor Gear Deals to Save You Time and Money!"), /*#__PURE__*/React.createElement("p", null, "We manually crawl catalogs, ads, and websites of top outdoor gear brands and retailers in search of discounted outdoor gear to create this curated list that will save you hours of shopping around."), /*#__PURE__*/React.createElement("p", null, "We update this page all the time with the best deals we find on gear for camping, hiking, backpacking, hunting, fishing, and more."), /*#__PURE__*/React.createElement("p", null, "Bookmark this page and check back often!"), /*#__PURE__*/React.createElement("p", null, "Deal prices are valid at time of posting, but could change at any moment."), /*#__PURE__*/React.createElement("p", {
     id: "honey-hole-updated"
-  }, "Last Updated: ", formattedDate)))), /*#__PURE__*/React.createElement("div", {
-    "class": "category-section"
-  }, /*#__PURE__*/React.createElement("p", {
-    id: "hh-affiliate-disclaimer"
-  }, "DISCLAIMER: Outdoor Empire does not sell the products on this page. Some or all links are affiliate links which means we may earn a small commission if you make a purchase, at no cost to you. As an Amazon Associate I earn from qualifying purchases. Discounts and availability are not guaranteed. Verify all information at respective retailers before making a purchase.", " ", /*#__PURE__*/React.createElement("a", {
-    href: "https://outdoorempire.com/affiliate-disclaimer/",
-    target: "_blank",
-    rel: "noopener noreferrer"
-  }, "Learn More"))));
+  }, "Last Updated: ", formattedDate)))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
 
@@ -992,14 +995,22 @@ var LatestDeals = function LatestDeals(_ref) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setSortedDeals(deals.slice(0, 4));
   }, [deals]);
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", null, "Just Added"), /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    "class": "category-section"
+  }, /*#__PURE__*/React.createElement("p", {
+    id: "hh-affiliate-disclaimer"
+  }, "DISCLAIMER: Outdoor Empire does not sell the products on this page. Some or all links are affiliate links which means we may earn a small commission if you make a purchase, at no cost to you. As an Amazon Associate I earn from qualifying purchases. Discounts and availability are not guaranteed. Verify all information at respective retailers before making a purchase.", " ", /*#__PURE__*/React.createElement("a", {
+    href: "https://outdoorempire.com/affiliate-disclaimer/",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "Learn More")), /*#__PURE__*/React.createElement("h2", null, "Just Added"), /*#__PURE__*/React.createElement("div", {
     className: "deals-grid"
   }, sortedDeals.map(function (deal) {
     return /*#__PURE__*/React.createElement(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: deal.id,
       deal: deal
     });
-  })));
+  }))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LatestDeals);
 

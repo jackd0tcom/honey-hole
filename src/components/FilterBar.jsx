@@ -1,48 +1,60 @@
 import { useState } from "react";
 
 const FilterBar = ({ categories, setCategories }) => {
-  const [active, setActive] = useState("");
+  const [activeCategory, setActiveCategory] = useState(0);
+
   return (
-    <div className="honey-hole-filter-bar">
-      <div className="honey-hole-categories">
+    <div className="hh-filter-bar">
+      <div className="hh-categories">
         <button
+          id={activeCategory === 0 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(0);
             setCategories("all");
-            console.log("all");
           }}
         >
-          All
+          All Gear Deals
         </button>
         <button
+          id={activeCategory === 1 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(1);
             setCategories("camping-gear");
           }}
         >
           Camping Gear
         </button>
         <button
+          id={activeCategory === 2 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(2);
             setCategories("fishing-gear");
           }}
         >
           Fishing Gear
         </button>
         <button
+          id={activeCategory === 3 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(3);
             setCategories("hiking-gear");
           }}
         >
           Hiking Gear
         </button>
         <button
+          id={activeCategory === 4 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(4);
             setCategories("hunting-gear");
           }}
         >
           Hunting Gear
         </button>
         <button
+          id={activeCategory === 5 ? "hh-active-category" : ""}
           onClick={() => {
+            setActiveCategory(5);
             setCategories("outdoor-gear");
           }}
         >
