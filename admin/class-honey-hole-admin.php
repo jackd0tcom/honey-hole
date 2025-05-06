@@ -23,20 +23,20 @@
 
 class Honey_Hole_Admin
 {
-	/**
-	 * Add the admin menu items.
-	 */
-	public function add_admin_menu()
-	{
+	   /**
+     * Add the admin menu items.
+     */
+    public function add_admin_menu()
+    {
 
 		$hh_icon = plugins_url('images/honey-hole-icon.svg', __FILE__);
 
-		add_menu_page(
-			'Honey Hole Deals',
-			'Honey Hole',
-			'manage_options',
-			'honey-hole',
-			array($this, 'honey_hole_admin_page'),
+        add_menu_page(
+            'Honey Hole Deals',
+            'Honey Hole',
+            'manage_options',
+            'honey-hole',
+            array($this, 'honey_hole_admin_page'),
 			$hh_icon,
 			30
 		);
@@ -87,7 +87,7 @@ class Honey_Hole_Admin
 			'honey-hole-import',
 			array($this, 'honey_hole_import_page')
 		);
-	}
+    }
 
 	/**
 	 * The ID of this plugin.
@@ -200,6 +200,31 @@ class Honey_Hole_Admin
 		if (!current_user_can('manage_options')) {
 			wp_die(__('You do not have sufficient permissions to access this page.'));
 		}
+
+		// Get current category filter
+		$current_category = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : 'all';
+
+		// Get all categories
+		$categories = get_terms(array(
+			'taxonomy' => 'deal_category',
+			'hide_empty' => false,
+		));
+
+		// Add the category filter data to the admin page
+		wp_localize_script(
+			$this->plugin_name,
+			'honeyHoleAdmin',
+			array(
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('honey_hole_nonce'),
+				'visibility_nonce' => wp_create_nonce('honey_hole_visibility_toggle'),
+				'bulk_nonce' => wp_create_nonce('honey_hole_bulk'),
+				'order_nonce' => wp_create_nonce('honey_hole_update_order'),
+				'image_upload_nonce' => wp_create_nonce('honey_hole_image_upload'),
+				'currentCategory' => $current_category,
+				'categories' => $categories
+			)
+		);
 
 		// Include the admin display partial
 		require_once plugin_dir_path(__FILE__) . 'partials/honey-hole-admin-display.php';

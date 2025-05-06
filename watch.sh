@@ -28,7 +28,7 @@ sync_files
 echo "Watching for changes..."
 fswatch -o "$DEV_PLUGIN_DIR" | while read f; do
     sync_files
-done
+done 
 
 # Cleanup on exit
 trap "kill $WP_PID" EXIT 
