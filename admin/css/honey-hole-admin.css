@@ -1254,3 +1254,38 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
+  .hh-admin-filter-bar {
+    margin: 20px 0;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+  }
+  
+  .hh-admin-filter-bar .hh-categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .hh-admin-filter-bar .button {
+    margin: 0;
+    padding: 5px 15px;
+    background: #f0f0f1;
+    border: 1px solid #c3c4c7;
+    color: #2c3338;
+    text-decoration: none;
+    border-radius: 3px;
+  }
+  
+  .hh-admin-filter-bar .button:hover {
+    background: #f6f7f7;
+    border-color: #8c8f94;
+  }
+  
+  .hh-admin-filter-bar .button.active {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+  }
+  

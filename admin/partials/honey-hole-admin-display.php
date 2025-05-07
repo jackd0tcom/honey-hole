@@ -39,7 +39,7 @@ if (get_transient('honey_hole_deal_updated')) {
     echo '<div class="notice notice-success is-dismissible"><p>Deal updated successfully!</p></div>';
 }
 
-function honey_hole_render_deals_table()
+function honey_hole_render_deals_table($current_category = 'all')
 {
     // Get all categories
     $categories = get_terms(array(
@@ -51,25 +51,33 @@ function honey_hole_render_deals_table()
     // Get search query
     $search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
 
-    // Get all deals
+    // Get deals with pagination
+    $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
     $args = array(
         'post_type' => 'honey_hole_deal',
-        'post_status' => 'publish',
         'posts_per_page' => -1,
-        'orderby' => 'menu_order',
-        'order' => 'ASC'
+        'paged' => $paged,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC'
     );
 
-    // Add search query if present
-    if (!empty($search_query)) {
-        $args['s'] = $search_query;
+    // Add category filter if not 'all'
+    if ($current_category !== 'all') {
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'deal_category',
+                'field' => 'slug',
+                'terms' => $current_category
+            )
+        );
     }
 
-    $deals = get_posts($args);
+    $deals_query = new WP_Query($args);
 
     // Organize deals by category and tags
     $organized_deals = array();
-    foreach ($deals as $deal) {
+    foreach ($deals_query->posts as $deal) {
         $deal_categories = wp_get_post_terms($deal->ID, 'deal_category');
         $deal_tags = wp_get_post_terms($deal->ID, 'post_tag');
 
@@ -187,29 +195,55 @@ function honey_hole_render_deals_table()
 }
 
 function honey_hole_admin_page() {
+    // Get all categories
+    $categories = get_terms(array(
+        'taxonomy' => 'deal_category',
+        'hide_empty' => false,
+        'orderby' => 'name',
+    ));
+
+    // Get current category
+    $current_category = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : 'all';
 ?>
 <div class="wrap">
-        <h1>Honey Hole Deals</h1>
-        <div class="honey-hole-admin">
-            <div class="honey-hole-menu-container">
-                <div class="honey-hole-actions">
-                    <a href="<?php echo admin_url('admin.php?page=honey-hole-add-deal'); ?>" class="button button-primary button-hero">Add Deal</a>
-                </div>
-                <div class="honey-hole-search">
-                    <input type="text" id="deal-search" placeholder="Search by title" class="regular-text">
-                </div>
-            </div>
-            <?php honey_hole_render_deals_table(); ?>
-            <div class="honey-hole-danger-zone">
-                <h3>Danger Zone</h3>
-                <form method="post" action="">
-                    <?php wp_nonce_field('honey_hole_delete_all', 'honey_hole_nonce'); ?>
-                    <input type="hidden" name="action" value="delete_all_deals">
-                    <button type="submit" class="button button-secondary" onclick="return confirm('Are you sure you want to delete all deals? This action cannot be undone!')">Delete All Deals</button>
-                </form>
-            </div>
+    <h1>Honey Hole Deals</h1>
+    
+    <!-- Add Category Filter Buttons -->
+    <div class="hh-admin-filter-bar">
+        <div class="hh-categories">
+            <a href="<?php echo admin_url('admin.php?page=honey-hole'); ?>" 
+               class="button <?php echo $current_category === 'all' ? 'active' : ''; ?>">
+                All Deals
+            </a>
+            <?php foreach ($categories as $category) : ?>
+                <a href="<?php echo admin_url('admin.php?page=honey-hole&category=' . $category->slug); ?>" 
+                   class="button <?php echo $current_category === $category->slug ? 'active' : ''; ?>">
+                    <?php echo esc_html($category->name); ?>
+                </a>
+            <?php endforeach; ?>
         </div>
     </div>
+
+    <div class="honey-hole-admin">
+        <div class="honey-hole-menu-container">
+            <div class="honey-hole-actions">
+                <a href="<?php echo admin_url('admin.php?page=honey-hole-add-deal'); ?>" class="button button-primary button-hero">Add Deal</a>
+            </div>
+            <div class="honey-hole-search">
+                <input type="text" id="deal-search" placeholder="Search by title" class="regular-text">
+            </div>
+        </div>
+        <?php honey_hole_render_deals_table($current_category); ?>
+        <div class="honey-hole-danger-zone">
+            <h3>Danger Zone</h3>
+            <form method="post" action="">
+                <?php wp_nonce_field('honey_hole_delete_all', 'honey_hole_nonce'); ?>
+                <input type="hidden" name="action" value="delete_all_deals">
+                <button type="submit" class="button button-secondary" onclick="return confirm('Are you sure you want to delete all deals? This action cannot be undone!')">Delete All Deals</button>
+            </form>
+        </div>
+    </div>
+</div>
 <?php
 }
 
