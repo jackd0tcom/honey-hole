@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://fishbones.digital
- * @since             2.0.0
- * @package           Honey_Hole_2
+ * @since             1.0.0
+ * @package           Honey_Hole
  *
  * @wordpress-plugin
- * Plugin Name:       Honey Hole 2.0
- * Plugin URI:        https://outdoorempire.com/thehoneyhole
+ * Plugin Name:       Honey Hole
+ * Plugin URI:        https://outdoorempire.com/the-honey-hole
  * Description:       A plugin for managing and displaying deals on the Honey Hole
- * Version:           2.0.0
+ * Version:           1.0.0
  * Author:            Jack Ball
  * Author URI:        https://fishbones.digital/
  * License:           GPL-2.0+
@@ -29,7 +29,7 @@
 if (! defined('WPINC')) {
 	die;
 }
-define('HONEY_HOLE_VERSION', '2.0.0');
+define('HONEY_HOLE_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
@@ -67,7 +67,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-honey-hole.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    2.0.0
+ * @since    1.0.0
  */
 function run_honey_hole()
 {
