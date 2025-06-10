@@ -11,7 +11,8 @@
 
 
 var m = __webpack_require__(/*! react-dom */ "react-dom");
-if (false) {} else {
+if (false) // removed by dead control flow
+{} else {
   var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
   exports.createRoot = function(c, o) {
     i.usingClientEntryPoint = true;
@@ -428,42 +429,84 @@ const FilterBar = ({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-categories"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 0 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(0);
       setCategories("all");
     }
-  }, "All Gear Deals"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "All Gear Deals")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 1 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(1);
       setCategories("camping-gear");
     }
-  }, "Camping Gear"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "Camping Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 2 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(2);
       setCategories("fishing-gear");
     }
-  }, "Fishing Gear"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "Fishing Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 3 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(3);
       setCategories("hiking-gear");
     }
-  }, "Hiking Gear"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "Hiking Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 4 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(4);
       setCategories("hunting-gear");
     }
-  }, "Hunting Gear"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "Hunting Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "hh-filter-button",
     id: activeCategory === 5 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(5);
       setCategories("outdoor-gear");
     }
-  }, "Outdoor Gear")));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "hh-filter-icon",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png",
+    alt: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "hh-filter-heading"
+  }, "Outdoor Gear"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterBar);
 
