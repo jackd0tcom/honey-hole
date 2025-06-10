@@ -1,0 +1,90 @@
+.honey-hole-button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.honey-hole-delete-all-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  min-width: 120px;
+}
+
+.honey-hole-delete-all-button:hover {
+  background-color: #c82333;
+}
+
+.honey-hole-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.honey-hole-confirm-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.honey-hole-confirm-content {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.honey-hole-confirm-content h3 {
+  margin-top: 0;
+  color: #dc3545;
+}
+
+.honey-hole-confirm-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.honey-hole-confirm-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.honey-hole-confirm-button:hover {
+  background-color: #c82333;
+}
+
+.honey-hole-cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.honey-hole-cancel-button:hover {
+  background-color: #5a6268;
+} 
