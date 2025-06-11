@@ -1,0 +1,48 @@
+{
+  "name": "honey-hole",
+  "version": "2.0.0",
+  "description": "A WordPress plugin for displaying deals",
+  "homepage": "https://github.com/jackd0tcom/honey-hole#readme",
+  "bugs": {
+    "url": "https://github.com/jackd0tcom/honey-hole/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackd0tcom/honey-hole.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
+    "check-engines": "wp-scripts check-engines",
+    "check-licenses": "wp-scripts check-licenses",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "lint:md:docs": "wp-scripts lint-md-docs",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "packages-update": "wp-scripts packages-update",
+    "test:e2e": "wp-scripts test-e2e",
+    "test:unit": "wp-scripts test-unit-js",
+    "watch": "wp-scripts start"
+  },
+  "dependencies": {
+    "@wordpress/element": "^5.24.0",
+    "@wordpress/i18n": "^4.47.0",
+    "babel-loader": "^10.0.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@wordpress/scripts": "^27.9.0",
+    "autoprefixer": "^10.4.21",
+    "css-loader": "^7.1.2",
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0"
+  }
+}

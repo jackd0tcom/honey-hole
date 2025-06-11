@@ -81,7 +81,7 @@ const DealsManager = () => {
         <div className="honey-hole-controls">
           <SearchBar onSearch={handleSearch} />
           <div className="honey-hole-button-group">
-          <AddDealButton />
+            <AddDealButton />
             <DeleteAllButton onDeleteAll={fetchDeals} />
           </div>
         </div>

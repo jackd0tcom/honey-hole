@@ -6,7 +6,7 @@
  * This file is used to markup the public-facing aspects of the plugin.
  *
  * @link       https://fishbones.digital
- * @since      1.0.0
+ * @since      2.0.0
  *
  * @package    Honey_Hole
  * @subpackage Honey_Hole/public/partials
