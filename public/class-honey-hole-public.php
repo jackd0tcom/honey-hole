@@ -70,7 +70,7 @@ class Honey_Hole_Public
 		// Enqueue frontend styles
 		wp_enqueue_style(
 			'honey-hole-frontend',
-			plugin_dir_url(dirname(__FILE__)) . 'public/css/honey-hole-public.css',
+			plugin_dir_url(dirname(__FILE__)) . 'src/frontend/components/styles.css',
 			array(),
 			$version
 		);
