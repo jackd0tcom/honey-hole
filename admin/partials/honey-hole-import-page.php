@@ -63,6 +63,10 @@ function honey_hole_import_page()
                     <p>Imported: <span id="imported-count">0</span></p>
                     <p>Skipped: <span id="skipped-count">0</span></p>
                     <p>Errors: <span id="error-count">0</span></p>
+                    <div id="error-summary" style="display: none; margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                        <strong>Error Summary:</strong>
+                        <div id="error-summary-content"></div>
+                    </div>
                 </div>
             </div>
 
@@ -121,10 +125,33 @@ function honey_hole_import_page()
                             $skippedCount.text(response.data.skipped);
                             $errorCount.text(response.data.errors.length);
 
-                            // Reload page after 2 seconds to show the imported deals
-                            setTimeout(function() {
-                                window.location.reload();
-                            }, 2000);
+                            // Display error summary if available
+                            if (response.data.error_summary) {
+                                $('#error-summary-content').html(response.data.error_summary);
+                                $('#error-summary').show();
+                            }
+
+                            // Display detailed skipped deals if available
+                            if (response.data.skipped_deals && Object.keys(response.data.skipped_deals).length > 0) {
+                                var detailedHtml = '<div style="margin-top: 15px;"><strong>Detailed Skipped Deals:</strong><ul>';
+                                for (var errorType in response.data.skipped_deals) {
+                                    var deals = response.data.skipped_deals[errorType];
+                                    if (deals.length > 0) {
+                                        detailedHtml += '<li><strong>' + errorType + ':</strong><ul>';
+                                        deals.forEach(function(deal) {
+                                            detailedHtml += '<li>' + deal + '</li>';
+                                        });
+                                        detailedHtml += '</ul></li>';
+                                    }
+                                }
+                                detailedHtml += '</ul></div>';
+                                $('#error-summary-content').append(detailedHtml);
+                            }
+
+                            // Do NOT reload the page automatically
+                            // setTimeout(function() {
+                            //     window.location.reload();
+                            // }, 2000);
                         } else {
                             $progressStatus.text('Import failed: ' + response.data);
                             $importButton.prop('disabled', false).text('Import Deals');

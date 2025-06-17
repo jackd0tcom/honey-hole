@@ -124,9 +124,20 @@ function honey_hole_edit_deal_page()
                         <p class="description">Enter tags separated by commas (e.g., camping, hiking, backpacking)</p>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-image">Deal Image URL *</label>
-                        <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
-                        <p class="description">Enter the direct URL to the product image</p>
+                        <label for="deal-image">Deal Image *</label>
+                        <div class="image-upload-container">
+                            <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
+                            <input type="file" id="deal-image-upload" accept="image/*" style="display: none;">
+                            <button type="button" class="button" id="upload-image-button">Upload Image</button>
+                        </div>
+                        <div class="image-preview-container">
+                            <?php if (!empty($image_url)) : ?>
+                                <img src="<?php echo esc_url($image_url); ?>" alt="Deal Image" style="max-width: 200px; max-height: 200px; margin-top: 10px;">
+                            <?php else : ?>
+                                <div class="no-image">No image selected</div>
+                            <?php endif; ?>
+                        </div>
+                        <p class="description">Upload an image or enter the direct URL to the product image</p>
                     </div>
                 </div>
             </div>
@@ -136,5 +147,79 @@ function honey_hole_edit_deal_page()
             </div>
         </form>
     </div>
+
+    <script>
+        jQuery(document).ready(function($) {
+            // Image upload functionality
+            $('#upload-image-button').on('click', function() {
+                $('#deal-image-upload').click();
+            });
+
+            $('#deal-image-upload').on('change', function() {
+                var file = this.files[0];
+                if (file) {
+                    var formData = new FormData();
+                    formData.append('action', 'honey_hole_upload_image');
+                    formData.append('nonce', '<?php echo wp_create_nonce('honey_hole_image_upload'); ?>');
+                    formData.append('deal_id', '<?php echo esc_js($deal_id); ?>');
+                    formData.append('image', file);
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                $('#deal-image-url').val(response.data.image_url);
+                                $('.image-preview-container').html('<img src="' + response.data.image_url + '" alt="Deal Image" style="max-width: 200px; max-height: 200px; margin-top: 10px;">');
+                            } else {
+                                alert('Upload failed: ' + response.data);
+                            }
+                        },
+                        error: function() {
+                            alert('Upload failed. Please try again.');
+                        }
+                    });
+                }
+            });
+
+            // Discount calculation
+            function calculateDiscount() {
+                var originalPrice = parseFloat($('#deal-original-price').val()) || 0;
+                var salesPrice = parseFloat($('#deal-sales-price').val()) || 0;
+                
+                if (originalPrice > 0 && salesPrice > 0) {
+                    var discount = Math.round((originalPrice - salesPrice) / originalPrice * 100);
+                    $('#discount-percentage').text(discount);
+                } else {
+                    $('#discount-percentage').text('0');
+                }
+            }
+
+            $('#deal-original-price, #deal-sales-price').on('input', calculateDiscount);
+            calculateDiscount(); // Calculate on page load
+
+            // Rating stars functionality
+            $('.rating-stars .star').on('click', function() {
+                var value = $(this).data('value');
+                $('#deal-rating').val(value);
+                updateStars(value);
+            });
+
+            function updateStars(value) {
+                $('.rating-stars .star').removeClass('filled');
+                $('.rating-stars .star').each(function(index) {
+                    if (index < value) {
+                        $(this).addClass('filled');
+                    }
+                });
+            }
+
+            // Initialize stars on page load
+            updateStars(parseFloat($('#deal-rating').val()) || 0);
+        });
+    </script>
 <?php
 }

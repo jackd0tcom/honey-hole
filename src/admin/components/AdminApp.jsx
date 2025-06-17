@@ -3,6 +3,7 @@ import SearchBar from "./SearchBar";
 import DealList from "./DealList";
 import AddDealButton from "./AddDealButton";
 import CategoryFilter from "./CategoryFilter";
+import DeleteAllButton from "./DeleteAllButton";
 
 const AdminApp = () => {
   const [deals, setDeals] = useState([]);
@@ -102,6 +103,16 @@ const AdminApp = () => {
     }
   };
 
+  const handleRefreshDeals = async () => {
+    try {
+      const dealsData = await fetchDeals(selectedCategory, searchQuery);
+      setDeals(dealsData);
+      setOriginalDeals(dealsData);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   // const handleDealUpdate = async () => {
   //     try {
   //         const dealsData = await fetchDeals(selectedCategory, searchQuery);
@@ -131,6 +142,7 @@ const AdminApp = () => {
         <AddDealButton />
       </div>
       <DealList deals={deals} />
+      <DeleteAllButton onRefreshDeals={handleRefreshDeals} />
     </div>
   );
 };

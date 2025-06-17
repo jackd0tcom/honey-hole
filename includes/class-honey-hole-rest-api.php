@@ -92,13 +92,13 @@ class Honey_Hole_REST_API
 
                 $deal = array(
                     'id' => $post_id,
-                    'title' => get_the_title($post_id),
+                    'title' => $this->clean_html_entities(get_the_title($post_id)),
                     'sales_price' => get_post_meta($post_id, 'deal_sales_price', true),
                     'original_price' => get_post_meta($post_id, 'deal_original_price', true),
                     'rating' => get_post_meta($post_id, 'deal_rating', true),
                     'image_url' => get_post_meta($post_id, 'deal_image_url', true),
                     'product_url' => get_post_meta($post_id, 'deal_url', true),
-                    'promo_code' => get_post_meta($post_id, 'deal_promo_code', true),
+                    'promo_code' => $this->clean_html_entities(get_post_meta($post_id, 'deal_promo_code', true)),
                     'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'all')),
                     'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
                     'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),
@@ -132,6 +132,20 @@ class Honey_Hole_REST_API
     public function delete_posts($request)
     {
         $post_ids = $request->get_param('post_ids');
+        
+        // Check if we're deleting all deals
+        if ($post_ids === 'all') {
+            // Get all deal post IDs
+            $all_deals = get_posts(array(
+                'post_type' => 'honey_hole_deal',
+                'post_status' => 'any',
+                'posts_per_page' => -1,
+                'fields' => 'ids'
+            ));
+            
+            $post_ids = implode(',', $all_deals);
+        }
+        
         $post_ids = explode(',', $post_ids);
         foreach ($post_ids as $post_id) {
             wp_delete_post($post_id, true);
@@ -159,4 +173,30 @@ class Honey_Hole_REST_API
 
     //     return new WP_REST_Response($categories, 200);
     // }
+
+    /**
+     * Clean HTML entities from text
+     * 
+     * @param string $text The text to clean
+     * @return string Cleaned text
+     */
+    private function clean_html_entities($text)
+    {
+        // Decode HTML entities
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        
+        // Handle specific problematic entities
+        $text = str_replace('&#8217;', "'", $text); // Right single quotation mark
+        $text = str_replace('&#8216;', "'", $text); // Left single quotation mark
+        $text = str_replace('&#8220;', '"', $text); // Left double quotation mark
+        $text = str_replace('&#8221;', '"', $text); // Right double quotation mark
+        $text = str_replace('&#39;', "'", $text);   // Apostrophe
+        $text = str_replace('&apos;', "'", $text);  // Apostrophe
+        $text = str_replace('&quot;', '"', $text);  // Quote
+        $text = str_replace('&amp;', '&', $text);   // Ampersand
+        $text = str_replace('&lt;', '<', $text);    // Less than
+        $text = str_replace('&gt;', '>', $text);    // Greater than
+        
+        return $text;
+    }
 }

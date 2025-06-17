@@ -166,6 +166,12 @@ class Honey_Hole_Admin
 	 */
 	public function enqueue_scripts()
 	{
+		// Enqueue jQuery for admin pages
+		wp_enqueue_script('jquery');
+		
+		// Enqueue wp-util for ajaxurl
+		wp_enqueue_script('wp-util');
+
 		// Enqueue React and ReactDOM
 		wp_enqueue_script('react');
 		wp_enqueue_script('react-dom');
@@ -180,7 +186,7 @@ class Honey_Hole_Admin
 		wp_enqueue_script(
 			'honey-hole-admin',
 			plugin_dir_url(__FILE__) . 'js/honey-hole-admin.js',
-			array_merge(['react', 'react-dom'], $asset_file['dependencies']),
+			array_merge(['jquery', 'wp-util', 'react', 'react-dom'], $asset_file['dependencies']),
 			$version,
 			true
 		);
@@ -484,8 +490,7 @@ class Honey_Hole_Admin
 			try {
 				// Prepare post data
 				$post_data = array(
-					'post_title' => sanitize_text_field($data[$field_map['Title']]),
-					'post_content' => wp_kses_post($data[$field_map['Description']]),
+					'post_title' => sanitize_text_field($this->clean_imported_value($data[$field_map['Title']])),
 					'post_status' => 'publish',
 					'post_type' => 'honey_hole_deal'
 				);
@@ -499,14 +504,17 @@ class Honey_Hole_Admin
 
 				// Add meta data using direct SQL to avoid large queries
 				$meta_updates = array(
-					'deal_original_price' => sanitize_text_field($data[$field_map['Original Price']]),
-					'deal_sales_price' => sanitize_text_field($data[$field_map['Sales Price']]),
-					'deal_rating' => sanitize_text_field($data[$field_map['Rating']]),
-					'deal_url' => esc_url_raw($data[$field_map['Deal URL']]),
-					'deal_promo_code' => sanitize_text_field($data[$field_map['Promo Code']]),
-					'deal_normal_link' => esc_url_raw($data[$field_map['Normal Link']]),
-					'deal_image_url' => esc_url_raw($data[$field_map['Image URL']])
+					'deal_original_price' => sanitize_text_field($this->clean_imported_value($data[$field_map['Original Price']])),
+					'deal_sales_price' => sanitize_text_field($this->clean_imported_value($data[$field_map['Sales Price']])),
+					'deal_rating' => sanitize_text_field($this->clean_imported_value($data[$field_map['Rating']])),
+					'deal_url' => esc_url_raw($this->clean_imported_value($data[$field_map['Deal URL']])),
+					'deal_normal_link' => esc_url_raw($this->clean_imported_value($data[$field_map['Normal Link']])),
+					'deal_image_url' => esc_url_raw($this->clean_imported_value($data[$field_map['Image URL']]))
 				);
+				// Only set promo code if present
+				if (isset($field_map['Promo Code']) && isset($data[$field_map['Promo Code']]) && trim($data[$field_map['Promo Code']]) !== '') {
+					$meta_updates['deal_promo_code'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Promo Code']]));
+				}
 
 				foreach ($meta_updates as $meta_key => $meta_value) {
 					$wpdb->insert(
@@ -521,7 +529,7 @@ class Honey_Hole_Admin
 				}
 
 				// Set category
-				$category = sanitize_text_field($data[$field_map['Category']]);
+				$category = sanitize_text_field($this->clean_imported_value($data[$field_map['Category']]));
 				wp_set_object_terms($post_id, $category, 'deal_category');
 
 				// Commit transaction
@@ -591,18 +599,19 @@ class Honey_Hole_Admin
 			'Sales Price' => 'deal_sales_price',
 			'Rating' => 'deal_rating',
 			'Deal URL' => 'deal_url',
-			'Promo Code' => 'deal_promo_code',
 			'Normal Link' => 'deal_normal_link',
 			'Image URL' => 'deal_image_url',
 			'Category' => 'deal_category'
 		);
+		// Promo Code is optional
+		$optional_fields = array('Promo Code' => 'deal_promo_code');
 
-		// Map CSV headers to required fields (case-insensitive)
+		// Map CSV headers to required and optional fields (case-insensitive)
 		$field_map = array();
 		foreach ($headers as $index => $header) {
-			$header = trim($header); // Remove any whitespace but keep case
-			foreach ($required_fields as $field => $meta_key) {
-				if (strcasecmp($header, $field) === 0) { // Case-insensitive comparison
+			$header = trim($header);
+			foreach (array_merge($required_fields, $optional_fields) as $field => $meta_key) {
+				if (strcasecmp($header, $field) === 0) {
 					$field_map[$field] = $index;
 					break;
 				}
@@ -634,6 +643,8 @@ class Honey_Hole_Admin
 		$imported = 0;
 		$skipped = 0;
 		$errors = array();
+		$error_counts = array(); // Track error types
+		$skipped_deals = array(); // Track skipped deals by title
 		$row_number = 1; // Start at 1 to account for header row
 		$batch_size = 20; // Process 20 rows at a time
 		$batch = array();
@@ -642,17 +653,67 @@ class Honey_Hole_Admin
 		while (($data = fgetcsv($handle)) !== false) {
 			$row_number++;
 
-			// Check if all required fields have values
-			$missing_data = false;
-			foreach ($field_map as $field => $index) {
-				if (!isset($data[$index]) || trim($data[$index]) === '') {
-					$missing_data = true;
-					break;
+			// Check for missing required fields and track specific issues
+			$missing_fields = array();
+			foreach ($required_fields as $field => $meta_key) {
+				if (!isset($field_map[$field]) || !isset($data[$field_map[$field]]) || trim($data[$field_map[$field]]) === '') {
+					$missing_fields[] = $field;
 				}
 			}
 
-			if ($missing_data) {
+			if (!empty($missing_fields)) {
 				$skipped++;
+				// Get the title for tracking (if available)
+				$title = isset($field_map['Title']) && isset($data[$field_map['Title']]) ? trim($data[$field_map['Title']]) : "Row {$row_number}";
+				$error_key = 'missing_fields: ' . implode(', ', $missing_fields);
+				if (!isset($error_counts[$error_key])) {
+					$error_counts[$error_key] = 0;
+					$skipped_deals[$error_key] = array();
+				}
+				$error_counts[$error_key]++;
+				$skipped_deals[$error_key][] = $title;
+				continue;
+			}
+
+			// Validate data types
+			$validation_errors = array();
+			
+			// Check if prices are numeric
+			if (!is_numeric($data[$field_map['Original Price']])) {
+				$validation_errors[] = 'invalid_original_price';
+			}
+			if (!is_numeric($data[$field_map['Sales Price']])) {
+				$validation_errors[] = 'invalid_sales_price';
+			}
+			
+			// Check if rating is numeric and between 0-5
+			if (!is_numeric($data[$field_map['Rating']]) || 
+				floatval($data[$field_map['Rating']]) < 0 || 
+				floatval($data[$field_map['Rating']]) > 5) {
+				$validation_errors[] = 'invalid_rating';
+			}
+			
+			// Check if URLs are valid
+			if (!filter_var($data[$field_map['Deal URL']], FILTER_VALIDATE_URL)) {
+				$validation_errors[] = 'invalid_deal_url';
+			}
+			if (!filter_var($data[$field_map['Normal Link']], FILTER_VALIDATE_URL)) {
+				$validation_errors[] = 'invalid_normal_link';
+			}
+			if (!filter_var($data[$field_map['Image URL']], FILTER_VALIDATE_URL)) {
+				$validation_errors[] = 'invalid_image_url';
+			}
+
+			if (!empty($validation_errors)) {
+				$skipped++;
+				$title = isset($field_map['Title']) && isset($data[$field_map['Title']]) ? trim($data[$field_map['Title']]) : "Row {$row_number}";
+				$error_key = 'validation_errors: ' . implode(', ', $validation_errors);
+				if (!isset($error_counts[$error_key])) {
+					$error_counts[$error_key] = 0;
+					$skipped_deals[$error_key] = array();
+				}
+				$error_counts[$error_key]++;
+				$skipped_deals[$error_key][] = $title;
 				continue;
 			}
 
@@ -671,10 +732,12 @@ class Honey_Hole_Admin
 
 				// Check if we're approaching time limit
 				if (microtime(true) - $start_time > 25) { // Leave 5 seconds buffer
+					$error_summary = $this->format_error_summary($error_counts, $skipped_deals);
 					wp_send_json_error(sprintf(
-						'Import partially completed. Successfully imported %d deals. Skipped %d rows. Some rows may not have been processed due to time constraints. Please try importing the remaining rows.',
+						'Import partially completed. Successfully imported %d deals. Skipped %d rows. %s Some rows may not have been processed due to time constraints. Please try importing the remaining rows.',
 						$imported,
-						$skipped
+						$skipped,
+						$error_summary
 					));
 					break;
 				}
@@ -690,17 +753,134 @@ class Honey_Hole_Admin
 
 		fclose($handle);
 
+		$error_summary = $this->format_error_summary($error_counts, $skipped_deals);
+
 		wp_send_json_success(array(
 			'imported' => $imported,
 			'skipped' => $skipped,
 			'errors' => $errors,
+			'error_summary' => $error_summary,
+			'skipped_deals' => $skipped_deals,
 			'message' => sprintf(
-				'Import completed. Successfully imported %d deals. Skipped %d incomplete rows.',
+				'Import completed. Successfully imported %d deals. Skipped %d rows. %s',
 				$imported,
-				$skipped
+				$skipped,
+				$error_summary
 			)
 		));
 	}
+
+	/**
+	 * Format error summary.
+	 *
+	 * @since    2.0.0
+	 * @param    array     $error_counts    Array of error counts.
+	 * @param    array     $skipped_deals   Array of skipped deals.
+	 * @return   string    Formatted error summary.
+	 */
+	private function format_error_summary($error_counts, $skipped_deals)
+	{
+		if (empty($error_counts)) {
+			return '';
+		}
+
+		$summary_parts = array();
+		
+		foreach ($error_counts as $error_key => $count) {
+			$message = $this->get_error_message($error_key, $count, $skipped_deals);
+			if ($message) {
+				$summary_parts[] = $message;
+			}
+		}
+		
+		return empty($summary_parts) ? '' : 'Issues found: ' . implode('; ', $summary_parts);
+	}
+
+	/**
+	 * Get user-friendly error message.
+	 *
+	 * @since    2.0.0
+	 * @param    string    $error_key    Error key.
+	 * @param    int       $count        Error count.
+	 * @param    array     $skipped_deals   Array of skipped deals.
+	 * @return   string    User-friendly error message.
+	 */
+	private function get_error_message($error_key, $count, $skipped_deals = array())
+	{
+		$deals_list = isset($skipped_deals[$error_key]) ? $skipped_deals[$error_key] : array();
+		if (strpos($error_key, 'missing_fields:') === 0) {
+			$fields = str_replace('missing_fields: ', '', $error_key);
+			$field_list = explode(', ', $fields);
+			
+			if (count($field_list) === 1) {
+				$message = "({$count}) skipped due to missing {$field_list[0]}";
+			} else {
+				$last_field = array_pop($field_list);
+				$field_string = implode(', ', $field_list) . ' and ' . $last_field;
+				$message = "({$count}) skipped due to missing {$field_string}";
+			}
+			
+			// Add deal titles if available
+			if (!empty($deals_list)) {
+				$message .= ': ' . implode(', ', array_slice($deals_list, 0, 5)); // Show first 5
+				if (count($deals_list) > 5) {
+					$message .= ' and ' . (count($deals_list) - 5) . ' more';
+				}
+			}
+			
+			return $message;
+		}
+		
+		if (strpos($error_key, 'validation_errors:') === 0) {
+			$errors = str_replace('validation_errors: ', '', $error_key);
+			$error_list = explode(', ', $errors);
+			
+			$error_messages = array();
+			foreach ($error_list as $error) {
+				switch ($error) {
+					case 'invalid_original_price':
+						$error_messages[] = 'invalid original price';
+						break;
+					case 'invalid_sales_price':
+						$error_messages[] = 'invalid sales price';
+						break;
+					case 'invalid_rating':
+						$error_messages[] = 'invalid rating (must be 0-5)';
+						break;
+					case 'invalid_deal_url':
+						$error_messages[] = 'invalid deal URL';
+						break;
+					case 'invalid_normal_link':
+						$error_messages[] = 'invalid normal link';
+						break;
+					case 'invalid_image_url':
+						$error_messages[] = 'invalid image URL';
+						break;
+				}
+			}
+			
+			if (count($error_messages) === 1) {
+				$message = "({$count}) skipped due to {$error_messages[0]}";
+			} else {
+				$last_error = array_pop($error_messages);
+				$error_string = implode(', ', $error_messages) . ' and ' . $last_error;
+				$message = "({$count}) skipped due to {$error_string}";
+			}
+			
+			// Add deal titles if available
+			if (!empty($deals_list)) {
+				$message .= ': ' . implode(', ', array_slice($deals_list, 0, 5)); // Show first 5
+				if (count($deals_list) > 5) {
+					$message .= ' and ' . (count($deals_list) - 5) . ' more';
+				}
+			}
+			
+			return $message;
+		}
+		
+		return "({$count}) {$error_key}";
+	}
+
 	// Add AJAX handler for saving visibility changes
 	function honey_hole_save_visibility_changes()
 	{
@@ -735,5 +915,42 @@ class Honey_Hole_Admin
 		} else {
 			wp_send_json_error('Failed to save some visibility changes');
 		}
+	}
+
+	/**
+	 * Clean up common encoding issues in imported data.
+	 *
+	 * @since    2.0.0
+	 * @param    string    $value    The value to clean.
+	 * @return   string    Cleaned value.
+	 */
+	private function clean_imported_value($value)
+	{
+		// Decode HTML entities (including numeric entities)
+		$value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+		
+		// Fix common CSV escaping issues
+		$value = str_replace("''", "'", $value); // Double apostrophe to single
+		$value = str_replace('""', '"', $value); // Double quote to single
+		
+		// Handle specific problematic entities that might not be decoded properly
+		$value = str_replace('&#8217;', "'", $value); // Right single quotation mark
+		$value = str_replace('&#8216;', "'", $value); // Left single quotation mark
+		$value = str_replace('&#8220;', '"', $value); // Left double quotation mark
+		$value = str_replace('&#8221;', '"', $value); // Right double quotation mark
+		$value = str_replace('&#39;', "'", $value);   // Apostrophe
+		$value = str_replace('&apos;', "'", $value);  // Apostrophe
+		$value = str_replace('&quot;', '"', $value);  // Quote
+		$value = str_replace('&amp;', '&', $value);   // Ampersand
+		$value = str_replace('&lt;', '<', $value);    // Less than
+		$value = str_replace('&gt;', '>', $value);    // Greater than
+		
+		// Remove any remaining HTML entities using regex
+		$value = preg_replace('/&#?[a-z0-9]+;/i', '', $value);
+		
+		// Trim whitespace
+		$value = trim($value);
+		
+		return $value;
 	}
 }
