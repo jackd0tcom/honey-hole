@@ -134,7 +134,8 @@ const DealCard = ({
     original_price,
     sales_price,
     rating,
-    product_url
+    product_url,
+    promo_code
   } = deal;
   const discount_percentage = Math.round((original_price - sales_price) / original_price * 100);
   let USDollar = new Intl.NumberFormat("en-US", {
@@ -156,7 +157,9 @@ const DealCard = ({
   }, "\u2605");
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-card"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-promo-code-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code ", promo_code)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: product_url,
     className: "deal-card-link",
     target: "_blank",
@@ -245,6 +248,7 @@ const DealGrid = ({
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deals-grid"
   }, dealsArray.map(deal => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    promo: deal.promo_code,
     key: deal.id,
     deal: deal,
     categories: categories

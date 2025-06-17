@@ -55,7 +55,7 @@ const DealsManager = () => {
       selectedCategory === "all" || deal.category === selectedCategory;
     const matchesSearch =
       deal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      deal.description.toLowerCase().includes(searchQuery.toLowerCase());
+      (deal.promo_code && deal.promo_code.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 

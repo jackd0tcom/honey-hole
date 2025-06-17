@@ -98,6 +98,7 @@ class Honey_Hole_REST_API
                     'rating' => get_post_meta($post_id, 'deal_rating', true),
                     'image_url' => get_post_meta($post_id, 'deal_image_url', true),
                     'product_url' => get_post_meta($post_id, 'deal_url', true),
+                    'promo_code' => get_post_meta($post_id, 'deal_promo_code', true),
                     'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'all')),
                     'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
                     'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),

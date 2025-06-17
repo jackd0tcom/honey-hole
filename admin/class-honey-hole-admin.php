@@ -246,7 +246,7 @@ class Honey_Hole_Admin
 			$sales_price = floatval($_POST['deal_sales_price']);
 			$rating = floatval($_POST['deal_rating']);
 			$deal_url = esc_url_raw($_POST['deal_url']);
-			$description = sanitize_textarea_field($_POST['deal_description']);
+			$promo_code = sanitize_text_field($_POST['deal_promo_code']);
 			$category_id = intval($_POST['deal_category']);
 			$image_url = esc_url_raw($_POST['deal_image_url']);
 			$tags = sanitize_text_field($_POST['deal_tags']);
@@ -254,7 +254,6 @@ class Honey_Hole_Admin
 			// Create the deal post
 			$deal_data = array(
 				'post_title'    => $title,
-				'post_content'  => $description,
 				'post_status'   => 'publish',
 				'post_type'     => 'honey_hole_deal'
 			);
@@ -277,6 +276,7 @@ class Honey_Hole_Admin
 				update_post_meta($deal_id, 'deal_sales_price', $sales_price);
 				update_post_meta($deal_id, 'deal_rating', $rating);
 				update_post_meta($deal_id, 'deal_url', $deal_url);
+				update_post_meta($deal_id, 'deal_promo_code', $promo_code);
 				update_post_meta($deal_id, 'deal_image_url', $image_url);
 
 				// Set transient for success message
@@ -377,8 +377,7 @@ class Honey_Hole_Admin
 			// Update post
 			wp_update_post(array(
 				'ID' => $deal_id,
-				'post_title' => sanitize_text_field($_POST['deal_title']),
-				'post_content' => sanitize_textarea_field($_POST['deal_description'])
+				'post_title' => sanitize_text_field($_POST['deal_title'])
 			));
 
 			// Update meta
@@ -386,6 +385,7 @@ class Honey_Hole_Admin
 			update_post_meta($deal_id, 'deal_sales_price', floatval($_POST['deal_sales_price']));
 			update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
 			update_post_meta($deal_id, 'deal_url', esc_url_raw($_POST['deal_url']));
+			update_post_meta($deal_id, 'deal_promo_code', sanitize_text_field($_POST['deal_promo_code']));
 			update_post_meta($deal_id, 'deal_image_url', esc_url_raw($_POST['deal_image_url']));
 
 			// Update category
@@ -503,6 +503,7 @@ class Honey_Hole_Admin
 					'deal_sales_price' => sanitize_text_field($data[$field_map['Sales Price']]),
 					'deal_rating' => sanitize_text_field($data[$field_map['Rating']]),
 					'deal_url' => esc_url_raw($data[$field_map['Deal URL']]),
+					'deal_promo_code' => sanitize_text_field($data[$field_map['Promo Code']]),
 					'deal_normal_link' => esc_url_raw($data[$field_map['Normal Link']]),
 					'deal_image_url' => esc_url_raw($data[$field_map['Image URL']])
 				);
@@ -590,6 +591,7 @@ class Honey_Hole_Admin
 			'Sales Price' => 'deal_sales_price',
 			'Rating' => 'deal_rating',
 			'Deal URL' => 'deal_url',
+			'Promo Code' => 'deal_promo_code',
 			'Normal Link' => 'deal_normal_link',
 			'Image URL' => 'deal_image_url',
 			'Category' => 'deal_category'

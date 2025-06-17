@@ -41,7 +41,7 @@ class Honey_Hole_Post_Types {
             'rewrite'             => array('slug' => 'deals'),
             'capability_type'     => 'post',
             'hierarchical'        => false,
-            'supports'            => array('title', 'editor', 'thumbnail'),
+            'supports'            => array('title', 'thumbnail'),
             'menu_position'       => 5,
             'menu_icon'           => 'dashicons-money-alt',
             'show_in_rest'        => true,

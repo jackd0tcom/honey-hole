@@ -1,6 +1,13 @@
 const DealCard = ({ deal }) => {
-  const { title, image_url, original_price, sales_price, rating, product_url } =
-    deal;
+  const {
+    title,
+    image_url,
+    original_price,
+    sales_price,
+    rating,
+    product_url,
+    promo_code,
+  } = deal;
 
   const discount_percentage = Math.round(
     ((original_price - sales_price) / original_price) * 100
@@ -27,6 +34,13 @@ const DealCard = ({ deal }) => {
 
   return (
     <div className="deal-card">
+      {promo_code ? (
+        <div className="hh-promo-code-wrapper">
+          <p>Use Code {promo_code}</p>
+        </div>
+      ) : (
+        <></>
+      )}
       <a
         href={product_url}
         className="deal-card-link"

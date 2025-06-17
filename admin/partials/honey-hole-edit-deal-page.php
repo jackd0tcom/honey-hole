@@ -33,6 +33,7 @@ function honey_hole_edit_deal_page()
     $original_url = get_post_meta($deal_id, 'deal_original_url', true);
     $image_url = get_post_meta($deal_id, 'deal_image_url', true);
     $rating = get_post_meta($deal_id, 'deal_rating', true);
+    $promo_code = get_post_meta($deal_id, 'deal_promo_code', true);
     $category = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'ids'));
     $category = !empty($category) ? $category[0] : '';
 ?>
@@ -92,8 +93,9 @@ function honey_hole_edit_deal_page()
                 <div class="honey-hole-form-section">
                     <h2>Deal Details</h2>
                     <div class="honey-hole-form-field">
-                        <label for="deal-description">Description</label>
-                        <textarea id="deal-description" name="deal_description" rows="5"><?php echo esc_textarea($deal->post_content); ?></textarea>
+                        <label for="deal-promo-code">Promo Code (Optional)</label>
+                        <input type="text" id="deal-promo-code" name="deal_promo_code" value="<?php echo esc_attr($promo_code); ?>" placeholder="Enter promotional code">
+                        <p class="description">Enter any promotional code for this deal</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-category">Category *</label>

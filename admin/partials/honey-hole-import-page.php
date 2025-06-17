@@ -27,7 +27,7 @@ function honey_hole_import_page()
             <p>Upload a CSV file containing your deals. The file should have the following columns (column names are case-insensitive):</p>
             <ul>
                 <li><strong>Title</strong> - The deal title (required)</li>
-                <li><strong>Description</strong> - The deal description (required)</li>
+                <li><strong>Promo Code</strong> - The promotional code (optional)</li>
                 <li><strong>Original Price</strong> - The original price (required)</li>
                 <li><strong>Sales Price</strong> - The sale price (required)</li>
                 <li><strong>Rating</strong> - The deal rating (required)</li>
@@ -68,9 +68,9 @@ function honey_hole_import_page()
 
             <div class="honey-hole-sample-csv">
                 <h3>Sample CSV Format</h3>
-                <pre>title,description,original_price,sales_price,rating,deal_url,normal_link,image_url,category
-"REI Co-op Flash 22 Pack","Great daypack for hiking",49.95,29.95,4.5,"https://example.com/affiliate","https://example.com/product","https://example.com/image.jpg","Backpacks"
-"Patagonia Nano Puff Jacket","Lightweight insulated jacket",199.00,149.00,4.8,"https://example.com/affiliate2","https://example.com/product2","https://example.com/image2.jpg","Jackets"</pre>
+                <pre>title,promo_code,original_price,sales_price,rating,deal_url,normal_link,image_url,category
+"REI Co-op Flash 22 Pack","SUMMER20",49.95,29.95,4.5,"https://example.com/affiliate","https://example.com/product","https://example.com/image.jpg","Backpacks"
+"Patagonia Nano Puff Jacket","",199.00,149.00,4.8,"https://example.com/affiliate2","https://example.com/product2","https://example.com/image2.jpg","Jackets"</pre>
             </div>
         </div>
     </div>

@@ -33,7 +33,12 @@ const DealGrid = ({ deals }) => {
       <FilterBar categories={categories} setCategories={setCategories} />
       <div className="deals-grid">
         {dealsArray.map((deal) => (
-          <DealCard key={deal.id} deal={deal} categories={categories} />
+          <DealCard
+            promo={deal.promo_code}
+            key={deal.id}
+            deal={deal}
+            categories={categories}
+          />
         ))}
       </div>
     </>
