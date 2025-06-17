@@ -1,3 +1,6 @@
+/*!********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/@wordpress/scripts/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./src/frontend/components/styles.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************/
 /* Honey Hole Deals Grid */
 .honey-hole-deals {
   margin: 0 auto;
@@ -51,7 +54,7 @@
 
 /* Category Section */
 .category-section {
-  margin-bottom: 40px;
+  margin-bottom: 1rem;
 }
 
 .category-section h2 {
@@ -225,7 +228,8 @@
 /* Email Form */
 .hh-email-wrapper {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 #hh-input-wrapper {
@@ -323,22 +327,60 @@
 .italic {
   font-style: italic;
 }
+#deal-video {
+  aspect-ratio: 16/9;
+  margin-top: 2rem;
+}
 .hh-filter-bar {
-  margin: 4rem 0px;
+  margin: 2rem 0px 2rem;
 }
 .hh-categories {
   display: flex;
   -moz-column-gap: 10px;
        column-gap: 10px;
   justify-content: space-around;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-#hh-active-category {
-  background-color: #476a44 !important;
-  color: white !important;
+#hh-active-category img {
+  background-color: #476a44;
+}
+.hh-filter-button {
+  background-color: unset;
+  color: black;
+}
+.hh-filter-heading {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.hh-filter-img {
+  height: 85px;
+  width: auto;
+  background-color: #476a447a;
+  border-radius: 50%;
+  padding: 5px;
+}
+.hh-filter-button:hover,
+.hh-filter-button:focus,
+.hh-filter-button:active {
+  background-color: unset;
+  color: black;
+  font-weight: 700;
+}
+.hh-filter-img:hover {
+  background-color: #476a44;
+  transition: 200ms;
 }
 
-#deal-video {
-  aspect-ratio: 16/9;
+.hh-heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  margin-top: 4rem;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
 }
 
 /* Responsive Design */

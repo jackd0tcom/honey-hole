@@ -74,15 +74,6 @@ class Honey_Hole_Public
 			array(),
 			$version
 		);
-
-		// Enqueue public styles
-		wp_enqueue_style(
-			'honey-hole-public',
-			plugin_dir_url(__FILE__) . 'css/honey-hole-public.css',
-			array(),
-			$this->version,
-			'all'
-		);
 	}
 
 	/**

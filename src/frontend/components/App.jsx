@@ -47,8 +47,9 @@ const App = () => {
     <div className="honey-hole-deals">
       <Hero />
       <LatestDeals deals={deals} />
-      <EmailSignup />
       <DealsVideo />
+      <EmailSignup />
+
       {error && <div className="honey-hole-error">{error}</div>}
       {loading ? (
         <div className="honey-hole-loading">Loading deals...</div>

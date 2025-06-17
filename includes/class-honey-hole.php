@@ -27,7 +27,8 @@
  * @subpackage Honey_Hole/includes
  * @author     Jack Ball <jackballdev@gmail.com>
  */
-class Honey_Hole {
+class Honey_Hole
+{
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -66,8 +67,9 @@ class Honey_Hole {
 	 *
 	 * @since    2.0.0
 	 */
-	public function __construct() {
-		if ( defined( 'HONEY_HOLE_VERSION' ) ) {
+	public function __construct()
+	{
+		if (defined('HONEY_HOLE_VERSION')) {
 			$this->version = HONEY_HOLE_VERSION;
 		} else {
 			$this->version = '2.0.0';
@@ -78,7 +80,6 @@ class Honey_Hole {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -97,53 +98,53 @@ class Honey_Hole {
 	 * @since    2.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function load_dependencies()
+	{
 
 		/**
 		 * The class responsible for registering post types and taxonomies.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-post-types.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-post-types.php';
 
 		/**
 		 * The class responsible for adding meta boxes to the post type.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-meta-boxes.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-meta-boxes.php';
 
 		/**
 		 * The class responsible for REST API endpoints.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-rest-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-rest-api.php';
 
 		/**
 		 * The class responsible for shortcode functionality.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-shortcode.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-shortcode.php';
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-loader.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-honey-hole-i18n.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-honey-hole-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-honey-hole-admin.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-honey-hole-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-honey-hole-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-honey-hole-public.php';
 
 		$this->loader = new Honey_Hole_Loader();
-
 	}
 
 	/**
@@ -155,12 +156,12 @@ class Honey_Hole {
 	 * @since    2.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
+	private function set_locale()
+	{
 
 		$plugin_i18n = new Honey_Hole_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
+		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
 
 	/**
@@ -170,21 +171,21 @@ class Honey_Hole {
 	 * @since    2.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function define_admin_hooks()
+	{
 
-		$plugin_admin = new Honey_Hole_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Honey_Hole_Admin($this->get_plugin_name(), $this->get_version());
 
 		$post_types = new Honey_Hole_Post_Types();
 		$meta_boxes = new Honey_Hole_Meta_Boxes();
 
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
-		$this->loader->add_action( 'init', $post_types, 'register_post_types' );
-		$this->loader->add_action( 'add_meta_boxes', $meta_boxes, 'add_meta_boxes' );
-		$this->loader->add_action( 'save_post', $meta_boxes, 'save_meta_box_data' );
+		$this->loader->add_action('admin_menu', $plugin_admin, 'add_admin_menu');
+		$this->loader->add_action('init', $post_types, 'register_post_types');
+		$this->loader->add_action('add_meta_boxes', $meta_boxes, 'add_meta_boxes');
+		$this->loader->add_action('save_post', $meta_boxes, 'save_meta_box_data');
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 	}
 
 	/**
@@ -194,16 +195,16 @@ class Honey_Hole {
 	 * @since    2.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+	private function define_public_hooks()
+	{
 
-		$plugin_public = new Honey_Hole_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Honey_Hole_Public($this->get_plugin_name(), $this->get_version());
 		$rest_api = new Honey_Hole_REST_API();
 		$shortcode = new Honey_Hole_Shortcode();
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		$this->loader->add_action( 'rest_api_init', $rest_api, 'register_routes' );
-
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+		$this->loader->add_action('rest_api_init', $rest_api, 'register_routes');
 	}
 
 	/**
@@ -211,7 +212,8 @@ class Honey_Hole {
 	 *
 	 * @since    2.0.0
 	 */
-	public function run() {
+	public function run()
+	{
 		$this->loader->run();
 	}
 
@@ -222,7 +224,8 @@ class Honey_Hole {
 	 * @since     2.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
+	public function get_plugin_name()
+	{
 		return $this->plugin_name;
 	}
 
@@ -232,7 +235,8 @@ class Honey_Hole {
 	 * @since     2.0.0
 	 * @return    Honey_Hole_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
+	public function get_loader()
+	{
 		return $this->loader;
 	}
 
@@ -242,8 +246,8 @@ class Honey_Hole {
 	 * @since     2.0.0
 	 * @return    string    The version number of the plugin.
 	 */
-	public function get_version() {
+	public function get_version()
+	{
 		return $this->version;
 	}
-
 }

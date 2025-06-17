@@ -29,6 +29,7 @@ const DealGrid = ({ deals }) => {
 
   return (
     <>
+      <h2 className="hh-heading">Honey Hole Deals</h2>
       <FilterBar categories={categories} setCategories={setCategories} />
       <div className="deals-grid">
         {dealsArray.map((deal) => (

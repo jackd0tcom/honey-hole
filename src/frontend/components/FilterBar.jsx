@@ -7,6 +7,7 @@ const FilterBar = ({ categories, setCategories }) => {
     <div className="hh-filter-bar">
       <div className="hh-categories">
         <button
+          className="hh-filter-button"
           id={activeCategory === 0 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(0);
@@ -14,12 +15,14 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png"
             alt=""
           />
           <h2 className="hh-filter-heading">All Gear Deals</h2>
         </button>
         <button
+          className="hh-filter-button"
           id={activeCategory === 1 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(1);
@@ -27,12 +30,14 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png"
             alt=""
           />
           <h2 className="hh-filter-heading">Camping Gear</h2>
         </button>
         <button
+          className="hh-filter-button"
           id={activeCategory === 2 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(2);
@@ -40,12 +45,14 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png"
             alt=""
           />
           <h2 className="hh-filter-heading">Fishing Gear</h2>
         </button>
         <button
+          className="hh-filter-button"
           id={activeCategory === 3 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(3);
@@ -53,12 +60,14 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png"
             alt=""
           />
           <h2 className="hh-filter-heading">Hiking Gear</h2>
         </button>
         <button
+          className="hh-filter-button"
           id={activeCategory === 4 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(4);
@@ -66,12 +75,14 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png"
             alt=""
           />
           <h2 className="hh-filter-heading">Hunting Gear</h2>
         </button>
         <button
+          className="hh-filter-button"
           id={activeCategory === 5 ? "hh-active-category" : ""}
           onClick={() => {
             setActiveCategory(5);
@@ -79,6 +90,7 @@ const FilterBar = ({ categories, setCategories }) => {
           }}
         >
           <img
+            className="hh-filter-img"
             src="          https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png"
             alt=""
           />
