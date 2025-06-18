@@ -35,7 +35,8 @@ foreach ($deals as $deal) {
 $options = array(
     'honey_hole_settings',
     'honey_hole_version',
-    'honey_hole_installed'
+    'honey_hole_installed',
+    'honey_hole_video_url'
 );
 
 foreach ($options as $option) {

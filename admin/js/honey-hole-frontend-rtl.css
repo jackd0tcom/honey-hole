@@ -409,14 +409,71 @@
   .honey-hole-hero-content h2 {
     font-size: 1.5rem;
   }
+  .honey-hole-hero-copy-text {
+    font-size: 0.8rem;
+  }
+  .hh-affiliate-disclaimer {
+    font-size: 0.5rem;
+  }
   .honey-hole-hero-image img {
     height: 180px;
   }
   .hh-email-image {
-    height: 25vh;
+    height: 15vh;
+  }
+  .hh-email-copy-text {
+    font-size: 0.9rem;
+  }
+  .hh-email-content {
+    padding: 20px;
+  }
+  .hh-email-content h2 {
+    font-size: 1.1rem;
+  }
+  .af-textWrap input {
+    font-size: 0.9rem;
+  }
+  .af-textWrap {
+    width: 100%;
+  }
+  #hh-email-submit {
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+  .hh-email-disclaimer {
+    font-size: 0.7rem;
+  }
+  .hh-email-disclaimer-link {
+    font-size: 0.7rem;
+  }
+  .hh-email-container-two h4 {
+    font-size: 1rem;
   }
   .deals-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .hh-filter-bar {
+    overflow: scroll;
+  }
+  .hh-filter-heading {
+    margin-top: 0px;
+  }
+  .hh-filter-img {
+    height: 60px;
+  }
+  .hh-filter-button {
+    flex: none;
+  }
+  .hh-categories {
+    padding: 0px;
+    overflow: scroll;
+  }
+  .hh-promo-code-wrapper p {
+    font-size: 0.8rem;
+  }
+  .hh-promo-code-wrapper {
+    width: 80%;
+    border-radius: 10px;
   }
 }
 
@@ -468,8 +525,11 @@
   .hh-email-container-two-wrapper {
     width: 100%;
   }
-  .deals-grid {
-    grid-template-columns: 1fr;
+  .deal-rating {
+    display: none;
+  }
+  .deal-pricing {
+    flex-wrap: wrap;
   }
 }
 

@@ -130,7 +130,7 @@ const AdminApp = () => {
       <div className="honey-hole-menu-container">
         <a href="https://outdoorempire.com/thehoneyhole/" target="_blank">
           <div className="honey-hole-logo">
-            <img src={window.honeyHoleAdmin.logoUrl} alt="Honey Hole" />
+            <img src="https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png" alt="Honey Hole" />
           </div>
         </a>
         <CategoryFilter

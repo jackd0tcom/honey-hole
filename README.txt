@@ -25,10 +25,14 @@ Honey Hole plugin for Outdoor Empire. Built for the purpose of managing and disp
 
 = 2.0 =
 * Under the Hood
-- Migration to multiple files - everything migrated successfully
+- Migrated from PHP based app to React based app
+- Adds WP API endpoints
 
 * New Features
-- 
+- Sorting on frontend and backend by deal category
+- Adds Youtube video on frontend
+- Squashed Bugs.
+- Improved Backend UI
 
 == Upgrade Notice ==
 

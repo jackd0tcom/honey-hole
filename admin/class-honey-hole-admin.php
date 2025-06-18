@@ -87,6 +87,15 @@ class Honey_Hole_Admin
 			'honey-hole-import',
 			array($this, 'honey_hole_import_page')
 		);
+
+		add_submenu_page(
+			'honey-hole',
+			'Video Settings',
+			'Video Settings',
+			'manage_options',
+			'honey-hole-video-settings',
+			array($this, 'honey_hole_video_settings_page')
+		);
 	}
 
 	/**
@@ -156,7 +165,7 @@ class Honey_Hole_Admin
 		 * class.
 		 */
 
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/honey-hole-admin.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . '../src/admin/styles/admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -194,7 +203,7 @@ class Honey_Hole_Admin
 		// Enqueue our admin styles
 		wp_enqueue_style(
 			'honey-hole-admin',
-			plugin_dir_url(__FILE__) . 'js/honey-hole-admin.css',
+			plugin_dir_url(__FILE__) . '../src/admin/styles/admin.css',
 			array(),
 			$version
 		);
@@ -673,7 +682,7 @@ class Honey_Hole_Admin
 				$error_counts[$error_key]++;
 				$skipped_deals[$error_key][] = $title;
 				continue;
-			}
+				}
 
 			// Validate data types
 			$validation_errors = array();
@@ -926,31 +935,80 @@ class Honey_Hole_Admin
 	 */
 	private function clean_imported_value($value)
 	{
-		// Decode HTML entities (including numeric entities)
+		// Decode common HTML entities
 		$value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 		
-		// Fix common CSV escaping issues
-		$value = str_replace("''", "'", $value); // Double apostrophe to single
-		$value = str_replace('""', '"', $value); // Double quote to single
-		
-		// Handle specific problematic entities that might not be decoded properly
-		$value = str_replace('&#8217;', "'", $value); // Right single quotation mark
-		$value = str_replace('&#8216;', "'", $value); // Left single quotation mark
-		$value = str_replace('&#8220;', '"', $value); // Left double quotation mark
-		$value = str_replace('&#8221;', '"', $value); // Right double quotation mark
-		$value = str_replace('&#39;', "'", $value);   // Apostrophe
-		$value = str_replace('&apos;', "'", $value);  // Apostrophe
-		$value = str_replace('&quot;', '"', $value);  // Quote
-		$value = str_replace('&amp;', '&', $value);   // Ampersand
-		$value = str_replace('&lt;', '<', $value);    // Less than
-		$value = str_replace('&gt;', '>', $value);    // Greater than
-		
-		// Remove any remaining HTML entities using regex
-		$value = preg_replace('/&#?[a-z0-9]+;/i', '', $value);
-		
-		// Trim whitespace
+		// Remove extra whitespace
 		$value = trim($value);
 		
 		return $value;
+	}
+
+	/**
+	 * Render the video settings page
+	 */
+	public function honey_hole_video_settings_page()
+	{
+		// Handle form submission
+		if (isset($_POST['submit_video_settings'])) {
+			check_admin_referer('honey_hole_video_settings', 'honey_hole_video_nonce');
+			
+			$video_url = sanitize_text_field($_POST['video_url']);
+			update_option('honey_hole_video_url', $video_url);
+			
+			echo '<div class="notice notice-success"><p>Video settings updated successfully!</p></div>';
+		}
+		
+		// Get current video URL
+		$current_video_url = get_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+		
+		?>
+		<div class="wrap">
+			<h1>Video Settings</h1>
+			<p>Configure the video that appears on the deals page.</p>
+			
+			<form method="post" action="">
+				<?php wp_nonce_field('honey_hole_video_settings', 'honey_hole_video_nonce'); ?>
+				
+				<table class="form-table">
+					<tr>
+						<th scope="row">
+							<label for="video_url">Video URL</label>
+						</th>
+						<td>
+							<input type="url" 
+								   id="video_url" 
+								   name="video_url" 
+								   value="<?php echo esc_attr($current_video_url); ?>" 
+								   class="regular-text"
+								   placeholder="https://www.youtube.com/embed/VIDEO_ID"
+								   required />
+							<p class="description">
+								Enter the full YouTube embed URL. Example: https://www.youtube.com/embed/VIDEO_ID
+							</p>
+						</td>
+					</tr>
+				</table>
+				
+				<?php submit_button('Save Video Settings', 'primary', 'submit_video_settings'); ?>
+			</form>
+			
+			<div style="margin-top: 30px;">
+				<h3>Preview</h3>
+				<div style="max-width: 600px;">
+					<iframe
+						width="100%"
+						height="315"
+						src="<?php echo esc_url($current_video_url); ?>"
+						title="Video Preview"
+						frameborder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						referrerpolicy="strict-origin-when-cross-origin"
+						allowfullscreen>
+					</iframe>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 }

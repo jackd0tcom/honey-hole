@@ -27,7 +27,6 @@ const DealList = ({ deals: initialDeals }) => {
       const response = await fetch("/wp-json/honey-hole/v1/deals");
       if (!response.ok) throw new Error("Failed to fetch deals");
       const updatedDeals = await response.json();
-      console.log("Received updated deals:", updatedDeals);
       setDeals(updatedDeals);
     } catch (error) {
       console.error("Error refreshing deals:", error);

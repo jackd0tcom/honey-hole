@@ -20,13 +20,13 @@ const Hero = () => {
             <h2>
               We Find the Best Outdoor Gear Deals to Save You Time and Money!
             </h2>
-            <p>
+            <p className="honey-hole-hero-copy-text">
               We manually crawl catalogs, ads, and websites of top outdoor gear
               brands and retailers in search of discounted outdoor gear to
               create this curated list that will save you hours of shopping
               around.
             </p>
-            <p>
+            <p className="honey-hole-hero-copy-text">
               Deal prices are valid at time of posting, but could change at any
               moment.
             </p>

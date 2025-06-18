@@ -126,7 +126,7 @@ function honey_hole_edit_deal_page()
                     <div class="honey-hole-form-field">
                         <label for="deal-image">Deal Image *</label>
                         <div class="image-upload-container">
-                            <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
+                        <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
                             <input type="file" id="deal-image-upload" accept="image/*" style="display: none;">
                             <button type="button" class="button" id="upload-image-button">Upload Image</button>
                         </div>

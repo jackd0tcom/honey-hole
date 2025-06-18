@@ -59,6 +59,11 @@ class Honey_Hole_REST_API
                 return current_user_can('edit_posts');
             },
         ));
+        register_rest_route($this->namespace, '/video-settings', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'get_video_settings'),
+            'permission_callback' => '__return_true',
+        ));
         // register_rest_route($this->namespace, '/deals/category/(?P<category>[a-zA-Z0-9-]+)', array(
         //     'methods' => 'GET',
         //     'callback' => array($this, 'get_deals_by_category'),
@@ -198,5 +203,20 @@ class Honey_Hole_REST_API
         $text = str_replace('&gt;', '>', $text);    // Greater than
         
         return $text;
+    }
+
+    /**
+     * Get video settings
+     * 
+     * @param WP_REST_Request $request The request object
+     * @return WP_REST_Response
+     */
+    public function get_video_settings($request)
+    {
+        $video_url = get_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+        
+        return new WP_REST_Response(array(
+            'video_url' => $video_url
+        ), 200);
     }
 }

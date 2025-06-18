@@ -95,12 +95,12 @@ const EmailSignup = () => {
           <div class="hh-email-container-two-wrapper">
             <div class="hh-email-container-two">
               <h4>Get Sweet Outdoor Gear Deals in Your Inbox 🤑🏕️🔥</h4>
-              <p>
+              <p className="hh-email-copy-text">
                 Receive outdoor stories, tips, and deal alerts. Plus, be entered
                 into our weekly gear giveaway when you sign up for{" "}
                 <span className="italic">The Honey Hole</span> email newsletter!
               </p>
-              <p>
+              <p className="hh-email-copy-text">
                 Join thousands of outdoor enthusiasts who love saving money and
                 discovering the best gear.
               </p>

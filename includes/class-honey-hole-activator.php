@@ -30,6 +30,11 @@ class Honey_Hole_Activator {
             ));
         }
         
+        // Set default video URL if it doesn't exist
+        if (!get_option('honey_hole_video_url')) {
+            update_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+        }
+        
         // Create necessary database tables if needed
         self::create_tables();
     }
