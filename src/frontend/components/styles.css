@@ -415,6 +415,15 @@
   .deals-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .hh-filter-bar {
+    overflow: scroll;
+  }
+  .hh-filter-heading {
+    margin-top: 0px;
+  }
+  .hh-filter-img {
+    height: 100px;
+  }
 }
 
 @media screen and (max-width: 768px) {
