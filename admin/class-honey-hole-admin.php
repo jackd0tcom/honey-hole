@@ -165,7 +165,7 @@ class Honey_Hole_Admin
 		 * class.
 		 */
 
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . '../src/admin/styles/admin.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'js/honey-hole-admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -203,7 +203,7 @@ class Honey_Hole_Admin
 		// Enqueue our admin styles
 		wp_enqueue_style(
 			'honey-hole-admin',
-			plugin_dir_url(__FILE__) . '../src/admin/styles/admin.css',
+			plugin_dir_url(__FILE__) . 'js/honey-hole-admin.css',
 			array(),
 			$version
 		);
@@ -504,6 +504,17 @@ class Honey_Hole_Admin
 					'post_type' => 'honey_hole_deal'
 				);
 
+				// Handle date added if present
+				if (isset($field_map['Date Added']) && isset($data[$field_map['Date Added']]) && trim($data[$field_map['Date Added']]) !== '') {
+					$date_added = $this->clean_imported_value($data[$field_map['Date Added']]);
+					// Try to parse the date
+					$parsed_date = $this->parse_date_added($date_added);
+					if ($parsed_date) {
+						$post_data['post_date'] = $parsed_date;
+						$post_data['post_date_gmt'] = get_gmt_from_date($parsed_date);
+					}
+				}
+
 				// Insert the post
 				$post_id = wp_insert_post($post_data);
 
@@ -612,8 +623,11 @@ class Honey_Hole_Admin
 			'Image URL' => 'deal_image_url',
 			'Category' => 'deal_category'
 		);
-		// Promo Code is optional
-		$optional_fields = array('Promo Code' => 'deal_promo_code');
+		// Promo Code and Date Added are optional
+		$optional_fields = array(
+			'Promo Code' => 'deal_promo_code',
+			'Date Added' => 'post_date'
+		);
 
 		// Map CSV headers to required and optional fields (case-insensitive)
 		$field_map = array();
@@ -924,6 +938,58 @@ class Honey_Hole_Admin
 		} else {
 			wp_send_json_error('Failed to save some visibility changes');
 		}
+	}
+
+	/**
+	 * Parse date added field from various formats
+	 *
+	 * @since    2.0.0
+	 * @param    string    $date_string    The date string to parse
+	 * @return   string|false    MySQL formatted date or false if invalid
+	 */
+	private function parse_date_added($date_string)
+	{
+		// Remove any extra whitespace
+		$date_string = trim($date_string);
+		
+		if (empty($date_string)) {
+			return false;
+		}
+
+		// Try common date formats
+		$formats = array(
+			'Y-m-d H:i:s',    // 2024-01-15 14:30:00
+			'Y-m-d H:i',      // 2024-01-15 14:30
+			'Y-m-d',          // 2024-01-15
+			'm/d/Y H:i:s',    // 01/15/2024 14:30:00
+			'm/d/Y H:i',      // 01/15/2024 14:30
+			'm/d/Y',          // 01/15/2024
+			'd/m/Y H:i:s',    // 15/01/2024 14:30:00
+			'd/m/Y H:i',      // 15/01/2024 14:30
+			'd/m/Y',          // 15/01/2024
+			'F j, Y H:i:s',   // January 15, 2024 14:30:00
+			'F j, Y H:i',     // January 15, 2024 14:30
+			'F j, Y',         // January 15, 2024
+		);
+
+		foreach ($formats as $format) {
+			$date = DateTime::createFromFormat($format, $date_string);
+			if ($date !== false) {
+				// If no time is specified, set to current time
+				if (strpos($format, 'H') === false) {
+					$date->setTime(date('H'), date('i'), date('s'));
+				}
+				return $date->format('Y-m-d H:i:s');
+			}
+		}
+
+		// Try strtotime as a fallback
+		$timestamp = strtotime($date_string);
+		if ($timestamp !== false) {
+			return date('Y-m-d H:i:s', $timestamp);
+		}
+
+		return false;
 	}
 
 	/**

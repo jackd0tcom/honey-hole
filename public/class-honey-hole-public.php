@@ -52,6 +52,9 @@ class Honey_Hole_Public
 	{
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		
+		// Register the shortcode
+		add_shortcode('honey_hole_deals', array($this, 'render_deals_shortcode'));
 	}
 
 	/**
@@ -70,7 +73,7 @@ class Honey_Hole_Public
 		// Enqueue frontend styles
 		wp_enqueue_style(
 			'honey-hole-frontend',
-			plugin_dir_url(dirname(__FILE__)) . 'src/frontend/components/styles.css',
+			plugin_dir_url(dirname(__FILE__)) . 'admin/js/honey-hole-frontend.css',
 			array(),
 			$version
 		);
