@@ -2,7 +2,12 @@
 
 All notable changes to the Honey Hole plugin will be documented in this file.
 
-## [2.0.0] - 2024-12-19
+## [2.1.0] 2025-07-01
+
+### Fixed
+- Search Functionality fixed.
+
+## [2.0.0] - 2025-06-23
 
 ### Added
 - React-based admin interface for managing deals

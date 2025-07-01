@@ -1,6 +1,6 @@
 <?php
 
-namespace RYSE\GitHubUpdaterDemo;
+namespace Honey_Hole\GitHubUpdater;
 
 use DateTime;
 
@@ -8,16 +8,16 @@ use DateTime;
  * Enable WordPress to check for and update a custom plugin that's hosted in
  * either a public or private repository on GitHub.
  *
- * @author Ryan Sechrest
- * @package RYSE\GitHubUpdaterDemo
- * @version 1.2.1
+ * @author Jack Ball (modified for Honey Hole)
+ * @package Honey_Hole\GitHubUpdater
+ * @version 2.1.0
  */
 class GitHubUpdater
 {
     /**
      * Absolute path to the plugin file containing the plugin header.
      *
-     * @var string .../wp-content/plugins/github-updater-demo/github-updater-demo.php
+     * @var string .../wp-content/plugins/honey-hole-v2/honey-hole.php
      */
     private string $file = '';
 
@@ -26,28 +26,28 @@ class GitHubUpdater
     /**
      * GitHub repository URL.
      *
-     * @var string https://github.com/ryansechrest/github-updater-demo
+     * @var string https://github.com/jackd0tcom/honey-hole
      */
     private string $gitHubUrl = '';
 
     /**
      * GitHub repository path.
      *
-     * @var string ryansechrest/github-updater-demo
+     * @var string jackd0tcom/honey-hole
      */
     private string $gitHubPath = '';
 
     /**
      * GitHub organization name.
      *
-     * @var string ryansechrest
+     * @var string jackd0tcom
      */
     private string $gitHubOrg = '';
 
     /**
      * GitHub repository name.
      *
-     * @var string github-updater-demo
+     * @var string honey-hole
      */
     private string $gitHubRepo = '';
 
@@ -70,42 +70,42 @@ class GitHubUpdater
     /**
      * WordPress plugin name.
      *
-     * @var string GitHub Updater Demo
+     * @var string Honey Hole
      */
     private string $pluginName = '';
 
     /**
      * WordPress plugin file.
      *
-     * @var string github-updater-demo/github-updater-demo.php
+     * @var string honey-hole-v2/honey-hole.php
      */
     private string $pluginFile = '';
 
     /**
      * WordPress plugin directory.
      *
-     * @var string github-updater-demo
+     * @var string honey-hole-v2
      */
     private string $pluginDir = '';
 
     /**
      * WordPress plugin filename.
      *
-     * @var string github-updater-demo.php
+     * @var string honey-hole.php
      */
     private string $pluginFilename = '';
 
     /**
      * WordPress plugin slug.
      *
-     * @var string ryansechrest-github-updater-demo
+     * @var string jackd0tcom-honey-hole
      */
     private string $pluginSlug = '';
 
     /**
      * WordPress plugin URL.
      *
-     * @var string https://github.com/ryansechrest/github-updater-demo
+     * @var string https://github.com/jackd0tcom/honey-hole
      */
     private string $pluginUrl = '';
 
@@ -180,7 +180,7 @@ class GitHubUpdater
     /**
      * Automatically generated option name for GitHub access token.
      *
-     * @var string github_updater_demo_access_token
+     * @var string honey_hole_access_token
      */
     private string $optionName = '';
 
@@ -189,7 +189,7 @@ class GitHubUpdater
     /**
      * Set the absolute path to the plugin file containing the plugin header.
      *
-     * @param string $file .../wp-content/plugins/github-updater-demo/github-updater-demo.php
+     * @param string $file .../wp-content/plugins/honey-hole-v2/honey-hole.php
      */
     public function __construct(string $file)
     {
@@ -350,20 +350,20 @@ class GitHubUpdater
 
     // *************************************************************************
 
-    /**
+        /**
      * Load the properties with values based on `$file`.
      *
-     *   $gitHubUrl       GitHub URL           https://github.com/ryansechrest/github-updater-demo
-     *   $gitHubPath      GitHub path          ryansechrest/github-updater-demo
-     *   $gitHubOrg       GitHub organization  ryansechrest
-     *   $gitHubRepo      GitHub repository    github-updater-demo
-     *   $pluginFile      Plugin file          github-updater-demo/github-updater-demo.php
-     *   $pluginDir       Plugin directory     github-updater-demo
-     *   $pluginFilename  Plugin filename      github-updater-demo.php
-     *   $pluginSlug      Plugin slug          ryansechrest-github-updater-demo
-     *   $pluginUrl       Plugin URL           https://github.com/ryansechrest/github-updater-demo
-     *   $pluginVersion   Plugin version       1.0.0
-     *   $testedUpTo      Tested up to         6.6
+     *   $gitHubUrl       GitHub URL           https://github.com/jackd0tcom/honey-hole
+     *   $gitHubPath      GitHub path          jackd0tcom/honey-hole
+     *   $gitHubOrg       GitHub organization  jackd0tcom
+     *   $gitHubRepo      GitHub repository    honey-hole
+     *   $pluginFile      Plugin file          honey-hole-v2/honey-hole.php
+     *   $pluginDir       Plugin directory     honey-hole-v2
+     *   $pluginFilename  Plugin filename      honey-hole.php
+     *   $pluginSlug      Plugin slug          jackd0tcom-honey-hole
+     *   $pluginUrl       Plugin URL           https://github.com/jackd0tcom/honey-hole
+     *   $pluginVersion   Plugin version       2.1.0
+     *   $testedUpTo      Tested up to         6.6.1
      */
     private function load(): void
     {
@@ -392,39 +392,39 @@ class GitHubUpdater
             return;
         }
 
-        // e.g. `https://github.com/ryansechrest/github-updater-demo`
+        // e.g. `https://github.com/jackd0tcom/honey-hole`
         $this->gitHubUrl = $updateUri;
 
-        // e.g. `ryansechrest/github-updater-demo`
+        // e.g. `jackd0tcom/honey-hole`
         $this->gitHubPath = trim(
             wp_parse_url($updateUri, PHP_URL_PATH),
             '/'
         );
 
-        // e.g. `ryansechrest` and `github-updater-demo`
+        // e.g. `jackd0tcom` and `honey-hole`
         [$this->gitHubOrg, $this->gitHubRepo] = explode(
             '/', $this->gitHubPath
         );
 
-        // e.g. `GitHub Updater Demo`
+        // e.g. `Honey Hole 2.0`
         $this->pluginName = $pluginName;
 
-        // e.g. `github-updater-demo/github-updater-demo.php`
+        // e.g. `honey-hole-v2/honey-hole.php`
         $this->pluginFile = str_replace(
             WP_PLUGIN_DIR . '/', '', $this->file
         );
 
-        // e.g. `github-updater-demo` and `github-updater-demo.php`
+        // e.g. `honey-hole-v2` and `honey-hole.php`
         [$this->pluginDir, $this->pluginFilename] = explode(
             '/', $this->pluginFile
         );
 
-        // e.g. `ryansechrest-github-updater-demo`
+        // e.g. `jackd0tcom-honey-hole`
         $this->pluginSlug = sprintf(
             '%s-%s', $this->gitHubOrg, $this->gitHubRepo
         );
 
-        // e.g. `https://github.com/ryansechrest/github-updater-demo`
+        // e.g. `https://github.com/jackd0tcom/honey-hole`
         $this->pluginUrl = $pluginUri;
 
         // e.g. `1.0.0`
@@ -459,10 +459,10 @@ class GitHubUpdater
     /**
      * Hook to build the plugin details result.
      *
-     * @param array|false|object $result ['name' => 'GitHub Updater Demo', ...]
+     * @param array|false|object $result ['name' => 'Honey Hole', ...]
      * @param string $action plugin_information
-     * @param object $args ['slug' => 'ryansechrest-github-updater-demo', ...]
-     * @return array|false|object ['name' => 'GitHub Updater Demo', ...]
+     * @param object $args ['slug' => 'jackd0tcom-honey-hole', ...]
+     * @return array|false|object ['name' => 'Honey Hole', ...]
      */
     public function _buildPluginDetailsResult(
         array|false|object $result, string $action, object $args
@@ -594,10 +594,10 @@ class GitHubUpdater
     /**
      * Hook to log the plugin details for plugins.
      *
-     * @param object $res ['name' => 'GitHub Updater Demo', ...]
+     * @param object $res ['name' => 'Honey Hole', ...]
      * @param string $action plugin_information
-     * @param object $args ['slug' => 'ryansechrest-github-updater-demo', ...]
-     * @return object ['name' => 'GitHub Updater Demo', ...]
+     * @param object $args ['slug' => 'jackd0tcom-honey-hole', ...]
+     * @return object ['name' => 'Honey Hole', ...]
      */
     public function _logPluginDetailsResult(
         object $res, string $action, object $args
@@ -641,11 +641,11 @@ class GitHubUpdater
      *
      *   $update  Plugin update data with the latest details.
      *   $data    Plugin data as defined in the plugin header.
-     *   $file    Plugin file, e.g. `github-updater-demo/github-updater-demo.php`
+     *   $file    Plugin file, e.g. `honey-hole-v2/honey-hole.php`
      *
      * @param array|false $update false
-     * @param array $data ['PluginName' => 'GitHub Updater Demo', ...]
-     * @param string $file github-updater-demo/github-updater-demo.php
+     * @param array $data ['PluginName' => 'Honey Hole', ...]
+     * @param string $file honey-hole-v2/honey-hole.php
      * @return array|false
      */
     public function _checkPluginUpdates(
@@ -720,7 +720,7 @@ class GitHubUpdater
     /**
      * Get the remote plugin file contents from the GitHub repository.
      *
-     * @param string $filename github-updater-demo.php
+     * @param string $filename honey-hole.php
      * @return string
      */
     private function getRemotePluginFileContents(string $filename): string
@@ -733,13 +733,13 @@ class GitHubUpdater
     /**
      * Get the remote plugin file contents from the public GitHub repository.
      *
-     * @param string $filename github-updater-demo.php
+     * @param string $filename honey-hole.php
      * @return string
      */
     private function getPublicRemotePluginFileContents(string $filename): string
     {
         // Get public remote plugin file containing plugin header,
-        // e.g. `https://raw.githubusercontent.com/ryansechrest/github-updater-demo/main/github-updater-demo.php`
+        // e.g. `https://raw.githubusercontent.com/jackd0tcom/honey-hole/main/honey-hole.php`
         $remoteFile = $this->getPublicRemotePluginFile($filename);
 
         return wp_remote_retrieve_body(wp_remote_get($remoteFile));
@@ -748,8 +748,8 @@ class GitHubUpdater
     /**
      * Get the public remote plugin file.
      *
-     * @param string $filename github-updater-demo.php
-     * @return string https://raw.githubusercontent.com/ryansechrest/github-updater-demo/main/github-updater-demo.php
+     * @param string $filename honey-hole.php
+     * @return string https://raw.githubusercontent.com/jackd0tcom/honey-hole/main/honey-hole.php
      */
     private function getPublicRemotePluginFile(string $filename): string
     {
@@ -765,7 +765,7 @@ class GitHubUpdater
     /**
      * Get the remote plugin file contents from the private GitHub repository.
      *
-     * @param string $filename github-updater-demo.php
+     * @param string $filename honey-hole.php
      * @return string
      */
     private function getPrivateRemotePluginFileContents(
@@ -773,7 +773,7 @@ class GitHubUpdater
     ): string
     {
         // Get public remote plugin file containing plugin header,
-        // e.g. `https://api.github.com/repos/ryansechrest/github-updater-demo/contents/github-updater-demo.php?ref=main`
+        // e.g. `https://api.github.com/repos/jackd0tcom/honey-hole/contents/honey-hole.php?ref=main`
         $remoteFile = $this->getPrivateRemotePluginFile($filename);
 
         return wp_remote_retrieve_body(
@@ -792,8 +792,8 @@ class GitHubUpdater
     /**
      * Get the private remote plugin file.
      *
-     * @param string $filename github-updater-demo.php
-     * @return string https://api.github.com/repos/ryansechrest/github-updater-demo/contents/github-updater-demo.php?ref=main
+     * @param string $filename honey-hole.php
+     * @return string https://api.github.com/repos/jackd0tcom/honey-hole/contents/honey-hole.php?ref=main
      */
     private function getPrivateRemotePluginFile(string $filename): string
     {
@@ -809,7 +809,7 @@ class GitHubUpdater
     /**
      * Get the path to the remote plugin ZIP file.
      *
-     * @return string https://github.com/ryansechrest/github-updater-demo/archive/refs/heads/main.zip
+     * @return string https://github.com/jackd0tcom/honey-hole/archive/refs/heads/main.zip
      */
     private function getRemotePluginZipFile(): string
     {
@@ -821,7 +821,7 @@ class GitHubUpdater
     /**
      * Get the path to the public remote plugin ZIP file.
      *
-     * @return string https://github.com/ryansechrest/github-updater-demo/archive/refs/heads/main.zip
+     * @return string https://github.com/jackd0tcom/honey-hole/archive/refs/heads/main.zip
      */
     private function getPublicRemotePluginZipFile(): string
     {
@@ -835,7 +835,7 @@ class GitHubUpdater
     /**
      * Get the path to the private remote plugin ZIP file.
      *
-     * @return string https://api.github.com/repos/ryansechrest/github-updater-demo/zipball/main
+     * @return string https://api.github.com/repos/jackd0tcom/honey-hole/zipball/main
      */
     private function getPrivateRemotePluginZipFile(): string
     {
@@ -874,7 +874,7 @@ class GitHubUpdater
      *   $url   The request URL.
      *
      * @param array $args ['method' => 'GET', 'headers' => [], ...]
-     * @param string $url https://api.github.com/repos/ryansechrest/github-updater-demo/zipball/main
+     * @param string $url https://api.github.com/repos/jackd0tcom/honey-hole/zipball/main
      * @return array ['headers' => ['Authorization => 'Bearer...'], ...]
      */
     public function _prepareHttpRequestArgs(array $args, string $url): array
@@ -899,8 +899,8 @@ class GitHubUpdater
      * Move the updated plugin.
      *
      * The updated plugin will be extracted into a directory containing GitHub's
-     * branch name (e.g. `github-updater-demo-main`). Since this likely differs
-     * from the old plugin (e.g. `github-updater-demo`), it will cause WordPress
+     * branch name (e.g. `honey-hole-main`). Since this likely differs
+     * from the old plugin (e.g. `honey-hole-v2`), it will cause WordPress
      * to deactivate it. To prevent this, we move the new plugin to the old
      * plugin's directory.
      *
@@ -919,15 +919,15 @@ class GitHubUpdater
     /**
      * Hook to move the updated plugin.
      *
-     * @param array $result ['destination' => '.../wp-content/plugins/github-updater-demo-main', ...]
-     * @param array $options ['plugin' => 'github-updater-demo/github-updater-demo.php', ...]
+     * @param array $result ['destination' => '.../wp-content/plugins/honey-hole-main', ...]
+     * @param array $options ['plugin' => 'honey-hole-v2/honey-hole.php', ...]
      * @return array
      */
     public function _moveUpdatedPlugin(array $result, array $options): array
     {
-        // Get the plugin being updated
-        // e.g. `github-updater-demo/github-updater-demo.php`
-        $pluginFile = $options['plugin'] ?? '';
+                 // Get the plugin being updated
+         // e.g. `honey-hole-v2/honey-hole.php`
+         $pluginFile = $options['plugin'] ?? '';
 
         // If the plugin does not match this plugin, exit
         if ($pluginFile !== $this->pluginFile) return $result;
@@ -937,7 +937,7 @@ class GitHubUpdater
         );
 
         // Save the path to the new plugin
-        // e.g. `.../wp-content/plugins/github-updater-demo-main`
+        // e.g. `.../wp-content/plugins/honey-hole-main`
         $newPluginPath = $result['destination'] ?? '';
 
         $this->log(
@@ -958,17 +958,17 @@ class GitHubUpdater
         // Save the root path to all plugins, e.g. `.../wp-content/plugins`
         $pluginRootPath = $result['local_destination'] ?? WP_PLUGIN_DIR;
 
-        // Piece together the path to the old plugin,
-        // e.g. `.../wp-content/plugins/github-updater-demo`
-        $oldPluginPath = $pluginRootPath . '/' . $this->pluginDir;
+                 // Piece together the path to the old plugin,
+         // e.g. `.../wp-content/plugins/honey-hole-v2`
+         $oldPluginPath = $pluginRootPath . '/' . $this->pluginDir;
 
         // Move the new plugin to the old plugin directory
         move_dir($newPluginPath, $oldPluginPath);
 
-        // Update result based on changes above
-        // destination:         `.../wp-content/plugins/github-updater-demo`
-        // destination_name:    `github-updater-demo`
-        // remote_destination:  `.../wp-content/plugins/github-updater-demo`
+                 // Update result based on changes above
+         // destination:         `.../wp-content/plugins/honey-hole-v2`
+         // destination_name:    `honey-hole-v2`
+         // remote_destination:  `.../wp-content/plugins/honey-hole-v2` 
         $result['destination'] = $oldPluginPath;
         $result['destination_name'] = $this->pluginDir;
         $result['remote_destination'] = $oldPluginPath;
@@ -1007,7 +1007,7 @@ class GitHubUpdater
             );
 
             add_settings_section(
-                id: 'ryse-github-updater-section',
+                id: 'honey-hole-github-updater-section',
                 title: 'GitHub Access Tokens',
                 callback: [$this, '_addSettingsSection'],
                 page: 'general',
@@ -1015,11 +1015,11 @@ class GitHubUpdater
             );
 
             add_settings_field(
-                id: 'ryse-github-updater-field',
+                id: 'honey-hole-github-updater-field',
                 title: $this->pluginName,
                 callback: [$this, '_addSettingsField'],
                 page: 'general',
-                section: 'ryse-github-updater-section',
+                section: 'honey-hole-github-updater-section',
                 args: ['label_for' => $this->optionName]
             );
         });
@@ -1070,7 +1070,7 @@ class GitHubUpdater
                 message: sprintf(
                     __(
                         'GitHub access token format for the "%s" plugin was not recognized. Access token should start with "github_pat_".',
-                        'ryse-github-updater'
+                        'honey-hole'
                     ),
                     esc_html($this->pluginName)
                 ),
@@ -1088,7 +1088,7 @@ class GitHubUpdater
                 message: sprintf(
                     __(
                         'GitHub access token for the "%s" plugin is too short to be valid. Access token should be at least 80 characters.',
-                        'ryse-github-updater'
+                        'honey-hole'
                     ),
                     esc_html($this->pluginName)
                 )
@@ -1118,7 +1118,7 @@ class GitHubUpdater
                 message: sprintf(
                     __(
                         'GitHub access token for the "%s" plugin is invalid. If there is currently a valid access token saved, it was retained to ensure connectivity.',
-                        'ryse-github-updater'
+                        'honey-hole'
                     ),
                     esc_html($this->pluginName)
                 ),
@@ -1157,7 +1157,7 @@ class GitHubUpdater
     {
         echo __(
             'Manage <a href="https://github.com/settings/personal-access-tokens">personal access tokens</a> for plugins hosted in a private repository on GitHub.',
-            'ryse-github-updater'
+            'honey-hole'
         );
     }
 
@@ -1172,7 +1172,7 @@ class GitHubUpdater
         echo 'name="' . esc_attr($this->optionName) . '" ';
         echo 'type="text" ';
         echo 'id="' . esc_attr($this->optionName) . '" ';
-        echo 'placeholder="' . __('Enter a new access token', 'ryse-github-updater') . '" ';
+        echo 'placeholder="' . __('Enter a new access token', 'honey-hole') . '" ';
         echo 'class="regular-text"';
         echo '>';
 
@@ -1182,7 +1182,7 @@ class GitHubUpdater
             echo '<p class="description" style="margin-top:.5em;"><i>';
             echo __(
                 'There is currently no access token saved.',
-                'ryse-github-updater'
+                'honey-hole'
             );
             echo '</i></p>';
             return;
@@ -1199,7 +1199,7 @@ class GitHubUpdater
         echo sprintf(
             __(
                 'Current access token <code>github_pat_***************%s</code>, generated by <b><a href="%s" target="_blank">%s</a></b>, expires on <b>%s</b> at <b>%s</b>.',
-                'ryse-github-updater'
+                'honey-hole'
             ),
             esc_html($tokenTail),
             esc_html('https://github.com/' . $gitHubAccount),
@@ -1400,7 +1400,7 @@ class GitHubUpdater
     /**
      * Get the large plugin banner (1544x500).
      *
-     * @return string https://example.org/wp-content/plugins/github-updater-demo/assets/banner-1544x500.jpg
+     * @return string https://example.org/wp-content/plugins/honey-hole/assets/banner-1544x500.jpg
      */
     private function getPluginBannerLarge(): string
     {
