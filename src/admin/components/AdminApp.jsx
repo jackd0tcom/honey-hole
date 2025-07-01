@@ -94,13 +94,13 @@ const AdminApp = () => {
   };
 
   const handleSearch = async (query) => {
-    setSearchQuery(query);
-    try {
-      const dealsData = await fetchDeals(selectedCategory, query);
-      setDeals(dealsData);
-    } catch (err) {
-      setError(err.message);
-    }
+    if (query !== "") {
+      setDeals(
+        deals.filter((deal) => {
+          return deal.title.toLowerCase().includes(query.toLowerCase());
+        })
+      );
+    } else setDeals(originalDeals);
   };
 
   const handleRefreshDeals = async () => {
@@ -114,12 +114,12 @@ const AdminApp = () => {
   };
 
   // const handleDealUpdate = async () => {
-  //     try {
-  //         const dealsData = await fetchDeals(selectedCategory, searchQuery);
-  //         setDeals(dealsData);
-  //     } catch (err) {
-  //         setError(err.message);
-  //     }
+  //   try {
+  //     const dealsData = await fetchDeals(selectedCategory, searchQuery);
+  //     setDeals(dealsData);
+  //   } catch (err) {
+  //     setError(err.message);
+  //   }
   // };
   if (loading)
     return <div className="honey-hole-loading">Loading deals...</div>;
@@ -130,7 +130,10 @@ const AdminApp = () => {
       <div className="honey-hole-menu-container">
         <a href="https://outdoorempire.com/thehoneyhole/" target="_blank">
           <div className="honey-hole-logo">
-            <img src="https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png" alt="Honey Hole" />
+            <img
+              src="https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png"
+              alt="Honey Hole"
+            />
           </div>
         </a>
         <CategoryFilter
