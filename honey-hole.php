@@ -23,6 +23,10 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       honey-hole
  * Domain Path:       /languages
+ * Update URI:        https://github.com/your-username/honey-hole-v2
+ * Tested up to:      6.6.1
+ * Requires at least: 6.0
+ * Requires PHP:      8.0
  */
 
 // If this file is called directly, abort.
@@ -59,6 +63,20 @@ register_deactivation_hook(__FILE__, 'deactivate_honey_hole');
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path(__FILE__) . 'includes/class-honey-hole.php';
+
+/**
+ * GitHub Updater integration
+ * Enables automatic updates from GitHub repository
+ */
+require plugin_dir_path(__FILE__) . 'includes/GitHubUpdater.php';
+
+// Initialize GitHub Updater
+$gitHubUpdater = new GitHubUpdater(__FILE__);
+$gitHubUpdater->setBranch('main'); // or 'master' depending on your default branch
+$gitHubUpdater->setPluginIcon('admin/images/honey-hole-icon.svg');
+$gitHubUpdater->setChangelog('CHANGELOG.md');
+$gitHubUpdater->enableSetting(); // Adds GitHub Access Token setting to General Settings
+$gitHubUpdater->add();
 
 /**
  * Begins execution of the plugin.
