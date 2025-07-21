@@ -214,6 +214,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealCard.jsx */ "./src/frontend/components/DealCard.jsx");
 /* harmony import */ var _FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FilterBar.jsx */ "./src/frontend/components/FilterBar.jsx");
+/* harmony import */ var _Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Sorter.jsx */ "./src/frontend/components/Sorter.jsx");
+
 
 
 
@@ -225,6 +227,7 @@ const DealGrid = ({
   const [categories, setCategories] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("all");
   const [dealsArray, setDealsArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
   const [originalArray, setOriginalArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
+  const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (categories === "all") {
       setDealsArray(deals);
@@ -232,6 +235,28 @@ const DealGrid = ({
       return deal.categories[0].slug === categories;
     }));
   }, [categories]);
+  const getSavings = a => {
+    if (!a.original_price || a.original_price === 0) return 0;
+    return (a.original_price - a.sales_price) / a.original_price * 100;
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    console.log("sorting");
+    let sortedDeals = [...dealsArray];
+    if (sort === "newest") {
+      sortedDeals.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+    } else if (sort === "oldest") {
+      sortedDeals.sort((a, b) => new Date(a.date_added) - new Date(b.date_added));
+    } else if (sort === "low") {
+      sortedDeals.sort((a, b) => a.sales_price - b.sales_price);
+    } else if (sort === "high") {
+      sortedDeals.sort((a, b) => b.sales_price - a.sales_price);
+    } else if (sort === "savings") {
+      sortedDeals.sort((a, b) => getSavings(b) - getSavings(a));
+    } else if (sort === "rating") {
+      sortedDeals.sort((a, b) => b.rating - a.rating);
+    }
+    setDealsArray(sortedDeals);
+  }, [sort]);
   const test = () => {
     console.log(deals[0].categories[0].slug);
   };
@@ -245,6 +270,9 @@ const DealGrid = ({
   }, "Honey Hole Deals"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     categories: categories,
     setCategories: setCategories
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    sort: sort,
+    setSort: setSort
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deals-grid"
   }, dealsArray.map(deal => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -658,6 +686,50 @@ const SearchBar = ({
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchBar);
+
+/***/ }),
+
+/***/ "./src/frontend/components/Sorter.jsx":
+/*!********************************************!*\
+  !*** ./src/frontend/components/Sorter.jsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const Sorter = ({
+  sort,
+  setSort
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "sorter-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    name: "sort",
+    id: "sort",
+    onChange: e => {
+      setSort(e.target.value);
+      console.log(e.target.value);
+    }
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "newest"
+  }, "Newest First"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "oldest"
+  }, "Oldest First"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "low"
+  }, "Price Low to High"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "high"
+  }, "Price High to Low"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "savings"
+  }, "Savings % Off"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "rating"
+  }, "Deal Rating"))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Sorter);
 
 /***/ }),
 
