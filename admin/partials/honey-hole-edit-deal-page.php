@@ -34,6 +34,7 @@ function honey_hole_edit_deal_page()
     $image_url = get_post_meta($deal_id, 'deal_image_url', true);
     $rating = get_post_meta($deal_id, 'deal_rating', true);
     $promo_code = get_post_meta($deal_id, 'deal_promo_code', true);
+    $seller = get_post_meta($deal_id, 'deal_seller', true);
     $category = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'ids'));
     $category = !empty($category) ? $category[0] : '';
 ?>
@@ -98,7 +99,12 @@ function honey_hole_edit_deal_page()
                         <p class="description">Enter any promotional code for this deal</p>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-category">Category *</label>
+                        <label for="deal-seller">Seller *</label>
+                        <input type="text" id="deal-seller" name="deal_seller" value="<?php echo esc_attr($seller); ?>" placeholder="Enter seller" required>
+                        <p class="description">Enter the seller for this deal</p>
+                    </div>
+                    <div class="honey-hole-form-field">
+                            <label for="deal-category">Category *</label>
                         <select id="deal-category" name="deal_category" required>
                             <option value="">Select a category</option>
                             <?php

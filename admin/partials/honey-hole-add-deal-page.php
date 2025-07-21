@@ -72,6 +72,11 @@ function honey_hole_add_deal_page()
                         <p class="description">Enter any promotional code for this deal</p>
                     </div>
                     <div class="honey-hole-form-field">
+                        <label for="deal-seller">Seller *</label>
+                        <input type="text" id="deal-seller" name="deal_seller" placeholder="Enter seller" required>
+                        <p class="description">Enter the seller for this deal</p>
+                    </div>
+                    <div class="honey-hole-form-field">
                         <label for="deal-category">Category *</label>
                         <select id="deal-category" name="deal_category" required>
                             <option value="">Select a category</option>

@@ -160,6 +160,8 @@ const DealCard = ({
           <span className="rating-count">{deal.rating}</span>
         </div>
 
+        <div className="deal-seller">{deal.seller}</div>
+
         <div className="deal-tags">{deal.tags && deal.tags.join(", ")}</div>
 
         <div className="deal-date">

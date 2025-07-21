@@ -177,7 +177,7 @@ class Honey_Hole_Admin
 	{
 		// Enqueue jQuery for admin pages
 		wp_enqueue_script('jquery');
-		
+
 		// Enqueue wp-util for ajaxurl
 		wp_enqueue_script('wp-util');
 
@@ -262,6 +262,7 @@ class Honey_Hole_Admin
 			$rating = floatval($_POST['deal_rating']);
 			$deal_url = esc_url_raw($_POST['deal_url']);
 			$promo_code = sanitize_text_field($_POST['deal_promo_code']);
+			$seller = sanitize_text_field($_POST['deal_seller']);
 			$category_id = intval($_POST['deal_category']);
 			$image_url = esc_url_raw($_POST['deal_image_url']);
 			$tags = sanitize_text_field($_POST['deal_tags']);
@@ -293,6 +294,7 @@ class Honey_Hole_Admin
 				update_post_meta($deal_id, 'deal_url', $deal_url);
 				update_post_meta($deal_id, 'deal_promo_code', $promo_code);
 				update_post_meta($deal_id, 'deal_image_url', $image_url);
+				update_post_meta($deal_seller, 'deal_seller', $seller);
 
 				// Set transient for success message
 				set_transient('honey_hole_deal_added', true, 45);
@@ -401,6 +403,7 @@ class Honey_Hole_Admin
 			update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
 			update_post_meta($deal_id, 'deal_url', esc_url_raw($_POST['deal_url']));
 			update_post_meta($deal_id, 'deal_promo_code', sanitize_text_field($_POST['deal_promo_code']));
+			update_post_meta($deal_id, 'deal_seller', sanitize_text_field($_POST['deal_seller']));
 			update_post_meta($deal_id, 'deal_image_url', esc_url_raw($_POST['deal_image_url']));
 
 			// Update category
@@ -696,11 +699,11 @@ class Honey_Hole_Admin
 				$error_counts[$error_key]++;
 				$skipped_deals[$error_key][] = $title;
 				continue;
-				}
+			}
 
 			// Validate data types
 			$validation_errors = array();
-			
+
 			// Check if prices are numeric
 			if (!is_numeric($data[$field_map['Original Price']])) {
 				$validation_errors[] = 'invalid_original_price';
@@ -708,14 +711,16 @@ class Honey_Hole_Admin
 			if (!is_numeric($data[$field_map['Sales Price']])) {
 				$validation_errors[] = 'invalid_sales_price';
 			}
-			
+
 			// Check if rating is numeric and between 0-5
-			if (!is_numeric($data[$field_map['Rating']]) || 
-				floatval($data[$field_map['Rating']]) < 0 || 
-				floatval($data[$field_map['Rating']]) > 5) {
+			if (
+				!is_numeric($data[$field_map['Rating']]) ||
+				floatval($data[$field_map['Rating']]) < 0 ||
+				floatval($data[$field_map['Rating']]) > 5
+			) {
 				$validation_errors[] = 'invalid_rating';
 			}
-			
+
 			// Check if URLs are valid
 			if (!filter_var($data[$field_map['Deal URL']], FILTER_VALIDATE_URL)) {
 				$validation_errors[] = 'invalid_deal_url';
@@ -808,14 +813,14 @@ class Honey_Hole_Admin
 		}
 
 		$summary_parts = array();
-		
+
 		foreach ($error_counts as $error_key => $count) {
 			$message = $this->get_error_message($error_key, $count, $skipped_deals);
 			if ($message) {
 				$summary_parts[] = $message;
 			}
 		}
-		
+
 		return empty($summary_parts) ? '' : 'Issues found: ' . implode('; ', $summary_parts);
 	}
 
@@ -834,7 +839,7 @@ class Honey_Hole_Admin
 		if (strpos($error_key, 'missing_fields:') === 0) {
 			$fields = str_replace('missing_fields: ', '', $error_key);
 			$field_list = explode(', ', $fields);
-			
+
 			if (count($field_list) === 1) {
 				$message = "({$count}) skipped due to missing {$field_list[0]}";
 			} else {
@@ -842,7 +847,7 @@ class Honey_Hole_Admin
 				$field_string = implode(', ', $field_list) . ' and ' . $last_field;
 				$message = "({$count}) skipped due to missing {$field_string}";
 			}
-			
+
 			// Add deal titles if available
 			if (!empty($deals_list)) {
 				$message .= ': ' . implode(', ', array_slice($deals_list, 0, 5)); // Show first 5
@@ -850,14 +855,14 @@ class Honey_Hole_Admin
 					$message .= ' and ' . (count($deals_list) - 5) . ' more';
 				}
 			}
-			
+
 			return $message;
 		}
-		
+
 		if (strpos($error_key, 'validation_errors:') === 0) {
 			$errors = str_replace('validation_errors: ', '', $error_key);
 			$error_list = explode(', ', $errors);
-			
+
 			$error_messages = array();
 			foreach ($error_list as $error) {
 				switch ($error) {
@@ -881,7 +886,7 @@ class Honey_Hole_Admin
 						break;
 				}
 			}
-			
+
 			if (count($error_messages) === 1) {
 				$message = "({$count}) skipped due to {$error_messages[0]}";
 			} else {
@@ -889,7 +894,7 @@ class Honey_Hole_Admin
 				$error_string = implode(', ', $error_messages) . ' and ' . $last_error;
 				$message = "({$count}) skipped due to {$error_string}";
 			}
-			
+
 			// Add deal titles if available
 			if (!empty($deals_list)) {
 				$message .= ': ' . implode(', ', array_slice($deals_list, 0, 5)); // Show first 5
@@ -897,10 +902,10 @@ class Honey_Hole_Admin
 					$message .= ' and ' . (count($deals_list) - 5) . ' more';
 				}
 			}
-			
+
 			return $message;
 		}
-		
+
 		return "({$count}) {$error_key}";
 	}
 
@@ -951,7 +956,7 @@ class Honey_Hole_Admin
 	{
 		// Remove any extra whitespace
 		$date_string = trim($date_string);
-		
+
 		if (empty($date_string)) {
 			return false;
 		}
@@ -1003,10 +1008,10 @@ class Honey_Hole_Admin
 	{
 		// Decode common HTML entities
 		$value = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-		
+
 		// Remove extra whitespace
 		$value = trim($value);
-		
+
 		return $value;
 	}
 
@@ -1018,47 +1023,47 @@ class Honey_Hole_Admin
 		// Handle form submission
 		if (isset($_POST['submit_video_settings'])) {
 			check_admin_referer('honey_hole_video_settings', 'honey_hole_video_nonce');
-			
+
 			$video_url = sanitize_text_field($_POST['video_url']);
 			update_option('honey_hole_video_url', $video_url);
-			
+
 			echo '<div class="notice notice-success"><p>Video settings updated successfully!</p></div>';
 		}
-		
+
 		// Get current video URL
 		$current_video_url = get_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
-		
-		?>
+
+?>
 		<div class="wrap">
 			<h1>Video Settings</h1>
 			<p>Configure the video that appears on the deals page.</p>
-			
+
 			<form method="post" action="">
 				<?php wp_nonce_field('honey_hole_video_settings', 'honey_hole_video_nonce'); ?>
-				
+
 				<table class="form-table">
 					<tr>
 						<th scope="row">
 							<label for="video_url">Video URL</label>
 						</th>
 						<td>
-							<input type="url" 
-								   id="video_url" 
-								   name="video_url" 
-								   value="<?php echo esc_attr($current_video_url); ?>" 
-								   class="regular-text"
-								   placeholder="https://www.youtube.com/embed/VIDEO_ID"
-								   required />
+							<input type="url"
+								id="video_url"
+								name="video_url"
+								value="<?php echo esc_attr($current_video_url); ?>"
+								class="regular-text"
+								placeholder="https://www.youtube.com/embed/VIDEO_ID"
+								required />
 							<p class="description">
 								Enter the full YouTube embed URL. Example: https://www.youtube.com/embed/VIDEO_ID
 							</p>
 						</td>
 					</tr>
 				</table>
-				
+
 				<?php submit_button('Save Video Settings', 'primary', 'submit_video_settings'); ?>
 			</form>
-			
+
 			<div style="margin-top: 30px;">
 				<h3>Preview</h3>
 				<div style="max-width: 600px;">
@@ -1075,6 +1080,6 @@ class Honey_Hole_Admin
 				</div>
 			</div>
 		</div>
-		<?php
+<?php
 	}
 }

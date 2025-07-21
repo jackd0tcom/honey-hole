@@ -7,6 +7,7 @@ const DealCard = ({ deal }) => {
     rating,
     product_url,
     promo_code,
+    seller,
   } = deal;
 
   const discount_percentage = Math.round(
@@ -85,6 +86,7 @@ const DealCard = ({ deal }) => {
             </div>
             <span className="rating-value">{rating}.0</span>
           </div>
+          <div className="deal-seller">{seller}</div>
         </div>
       </a>
     </div>

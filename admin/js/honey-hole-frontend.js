@@ -135,7 +135,8 @@ const DealCard = ({
     sales_price,
     rating,
     product_url,
-    promo_code
+    promo_code,
+    seller
   } = deal;
   const discount_percentage = Math.round((original_price - sales_price) / original_price * 100);
   let USDollar = new Intl.NumberFormat("en-US", {
@@ -194,7 +195,9 @@ const DealCard = ({
     className: `star ${i < rating ? "filled" : ""}`
   }, "\u2605"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rating-value"
-  }, rating, ".0")))));
+  }, rating, ".0")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-seller"
+  }, seller))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealCard);
 
@@ -279,7 +282,8 @@ const DealGrid = ({
     promo: deal.promo_code,
     key: deal.id,
     deal: deal,
-    categories: categories
+    categories: categories,
+    seller: deal.seller
   }))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealGrid);

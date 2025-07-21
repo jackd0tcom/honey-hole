@@ -454,6 +454,8 @@ const DealCard = ({
   }, "\u2605"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rating-count"
   }, deal.rating)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-seller"
+  }, deal.seller), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-tags"
   }, deal.tags && deal.tags.join(", ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-date"
@@ -493,6 +495,7 @@ const DealList = ({
   const [isConfirming, setIsConfirming] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [bulkDeals, setBulkDeals] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isDeleting, setIsDeleting] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
 
   // Update local state when initialDeals changes
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {

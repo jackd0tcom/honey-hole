@@ -42,6 +42,8 @@ class Honey_Hole_Meta_Boxes
         $image_url = get_post_meta($post->ID, 'deal_image_url', true);
         $original_url = get_post_meta($post->ID, 'deal_original_url', true);
         $promo_code = get_post_meta($post->ID, 'deal_promo_code', true);
+        $seller = get_post_meta($post->ID, 'deal_seller', true);
+
 
         // Output the form fields
 ?>
@@ -77,6 +79,11 @@ class Honey_Hole_Meta_Boxes
             <label for="honey_hole_promo_code">Promo Code (Optional):</label>
             <input type="text" id="honey_hole_promo_code" name="honey_hole_promo_code" value="<?php echo esc_attr($promo_code); ?>" class="widefat" />
             <span class="description">Enter any promotional code for this deal</span>
+        </p>
+        <p>
+            <label for="honey_hole_seller">Seller:</label>
+            <input type="text" id="honey_hole_seller" name="honey_hole_seller" value="<?php echo esc_attr($seller); ?>" class="widefat" />
+            <span class="description">Add the seller for the deal</span>
         </p>
 <?php
     }
@@ -117,7 +124,8 @@ class Honey_Hole_Meta_Boxes
             'honey_hole_normal_link' => 'deal_normal_link',
             'honey_hole_image_url' => 'deal_image_url',
             'honey_hole_original_url' => 'deal_original_url',
-            'honey_hole_promo_code' => 'deal_promo_code'
+            'honey_hole_promo_code' => 'deal_promo_code',
+            'honey_hole_seller' => 'deal_seller'
         );
 
         foreach ($fields as $field => $meta_key) {

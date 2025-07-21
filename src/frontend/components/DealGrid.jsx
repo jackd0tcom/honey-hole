@@ -71,6 +71,7 @@ const DealGrid = ({ deals }) => {
             key={deal.id}
             deal={deal}
             categories={categories}
+            seller={deal.seller}
           />
         ))}
       </div>
