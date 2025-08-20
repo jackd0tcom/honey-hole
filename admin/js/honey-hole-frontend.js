@@ -56,6 +56,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./LatestDeals.jsx */ "./src/frontend/components/LatestDeals.jsx");
 /* harmony import */ var _Hero_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Hero.jsx */ "./src/frontend/components/Hero.jsx");
 /* harmony import */ var _DealsVideo_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DealsVideo.jsx */ "./src/frontend/components/DealsVideo.jsx");
+/* harmony import */ var _DealOMeterGraphic_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DealOMeterGraphic.jsx */ "./src/frontend/components/DealOMeterGraphic.jsx");
+
 
 
 
@@ -100,7 +102,7 @@ const App = () => {
     className: "honey-hole-deals"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
     deals: deals
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealsVideo_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-error"
   }, error), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-loading"
@@ -136,7 +138,8 @@ const DealCard = ({
     rating,
     product_url,
     promo_code,
-    seller
+    seller,
+    categories
   } = deal;
   const discount_percentage = Math.round((original_price - sales_price) / original_price * 100);
   let USDollar = new Intl.NumberFormat("en-US", {
@@ -144,18 +147,57 @@ const DealCard = ({
     currency: "USD"
   });
   const getDiscountClass = percentage => {
-    if (percentage >= 50) return "discount-high";
-    if (percentage >= 30) return "discount-medium";
-    return "discount-low";
+    if (percentage >= 60) return "red-discount";
+    if (percentage >= 50) return "orange-discount";
+    if (percentage >= 40) return "yellow-discount";
+    if (percentage >= 30) return "blue-discount";
+    return "green-discount";
+  };
+  const getDealMeter = percentage => {
+    if (percentage >= 60) return "https://outdoorempire.com/wp-content/uploads/2025/07/Red-Deal-O-Meter.png";
+    if (percentage >= 50) return "https://outdoorempire.com/wp-content/uploads/2025/07/Orange-Deal-O-Meter.png";
+    if (percentage >= 40) return "https://outdoorempire.com/wp-content/uploads/2025/07/Yellow-Deal-O-Meter.png";
+    if (percentage >= 30) return "https://outdoorempire.com/wp-content/uploads/2025/07/Blue-Deal-O-Meter.png";
+    return "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png";
   };
   const getPriceClass = percentage => {
-    if (percentage >= 50) return "sales-price-high";
-    if (percentage >= 30) return "sales-price-medium";
-    return "sales-price-low";
+    if (percentage >= 60) return "red-deal";
+    if (percentage >= 50) return "orange-deal";
+    if (percentage >= 40) return "yellow-deal";
+    if (percentage >= 30) return "blue-deal";
+    return "green-deal";
   };
   const star = (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "star"
   }, "\u2605");
+  if (categories[0].name === "Big Sale") {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-card big-sale"
+    }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "hh-promo-code-wrapper"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code ", promo_code)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: product_url,
+      className: "deal-card-link",
+      target: "_blank",
+      rel: "noopener noreferrer"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "big-sale-hh-logo"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: "https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png",
+      alt: ""
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-image big-sale-img"
+    }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      src: image_url,
+      alt: title
+    }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "no-image"
+    }, "No Image Available")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-content"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+      className: "deal-title"
+    }, title))));
+  }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-card"
   }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -166,6 +208,12 @@ const DealCard = ({
     target: "_blank",
     rel: "noopener noreferrer"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-o-meter-card"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-o-meter-card-img",
+    src: getDealMeter(discount_percentage),
+    alt: ""
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-image"
   }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
     src: image_url,
@@ -185,17 +233,6 @@ const DealCard = ({
   }, USDollar.format(original_price)), discount_percentage > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: `discount ${getDiscountClass(discount_percentage)}`
   }, discount_percentage, "% OFF")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-rating"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rating-stars"
-  }, Array.from({
-    length: 5
-  }, (_, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    key: i,
-    className: `star ${i < rating ? "filled" : ""}`
-  }, "\u2605"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rating-value"
-  }, rating, ".0")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-seller"
   }, seller))));
 };
@@ -270,10 +307,14 @@ const DealGrid = ({
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-heading"
-  }, "Honey Hole Deals"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, "Honey Hole Deals"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-main-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     categories: categories,
     setCategories: setCategories
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-deal-grid-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
     sort: sort,
     setSort: setSort
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -284,9 +325,34 @@ const DealGrid = ({
     deal: deal,
     categories: categories,
     seller: deal.seller
-  }))));
+  }))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealGrid);
+
+/***/ }),
+
+/***/ "./src/frontend/components/DealOMeterGraphic.jsx":
+/*!*******************************************************!*\
+  !*** ./src/frontend/components/DealOMeterGraphic.jsx ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const DealOMeterGraphic = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-o-meter-graphic-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: "https://outdoorempire.com/wp-content/uploads/2025/08/Deal-o-meter-graphic-1-scaled.jpg",
+    alt: ""
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealOMeterGraphic);
 
 /***/ }),
 
@@ -492,7 +558,7 @@ const FilterBar = ({
     className: "hh-filter-bar"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-categories"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Categories"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
     id: activeCategory === 0 ? "hh-active-category" : "",
     onClick: () => {
@@ -641,7 +707,9 @@ const LatestDeals = ({
 }) => {
   const [sortedDeals, setSortedDeals] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    setSortedDeals(deals.slice(0, 4));
+    setSortedDeals(deals.filter(deal => {
+      return deal.categories[0].name !== "Big Sale";
+    }).slice(0, 4));
   }, [deals]);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "category-section"

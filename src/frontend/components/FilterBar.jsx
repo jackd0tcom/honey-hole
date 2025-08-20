@@ -6,6 +6,7 @@ const FilterBar = ({ categories, setCategories }) => {
   return (
     <div className="hh-filter-bar">
       <div className="hh-categories">
+        <h4>Categories</h4>
         <button
           className="hh-filter-button"
           id={activeCategory === 0 ? "hh-active-category" : ""}

@@ -2,6 +2,11 @@
   !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/@wordpress/scripts/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./src/frontend/components/styles.css ***!
   \********************************************************************************************************************************************************************************************************************************************************/
 /* Honey Hole Deals Grid */
+#honey-hole-app {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 .honey-hole-deals {
   margin: 0 auto;
 }
@@ -79,6 +84,18 @@
   align-items: center;
 }
 
+.big-sale {
+  /* grid-column: 1 / 3; */
+}
+
+.big-sale-img {
+  /* padding-top: 45% !important; */
+}
+.big-sale-hh-logo {
+  width: 50%;
+  margin: 0 auto;
+}
+
 .deal-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -144,18 +161,6 @@
   color: #e44d26;
 }
 
-.sales-price-low {
-  color: #2271b1;
-}
-
-.sales-price-medium {
-  color: #f57c00;
-}
-
-.sales-price-high {
-  color: #d32f2f;
-}
-
 .discount {
   padding: 2px 6px;
   border-radius: 3px;
@@ -163,18 +168,6 @@
   font-weight: 600;
   display: inline-block;
   color: white;
-}
-
-.discount-low {
-  background: #2271b1;
-}
-
-.discount-medium {
-  background: #f57c00;
-}
-
-.discount-high {
-  background: #d32f2f;
 }
 
 /* Deal Rating Styles */
@@ -349,11 +342,18 @@
   aspect-ratio: 16/9;
   margin-top: 2rem;
 }
+.hh-main-wrapper {
+  display: flex;
+  -moz-column-gap: 2rem;
+       column-gap: 2rem;
+}
 .hh-filter-bar {
-  margin: 2rem 0px 2rem;
+  margin: 4rem 0px 2rem;
+  width: 40%;
 }
 .hh-categories {
   display: flex;
+  flex-direction: column;
   -moz-column-gap: 10px;
        column-gap: 10px;
   justify-content: space-around;
@@ -440,6 +440,57 @@
   color: grey;
   font-size: 0.8rem;
   margin-top: 10px;
+}
+
+.red-deal {
+  color: #d13135;
+}
+.orange-deal {
+  color: #eb761e;
+}
+.yellow-deal {
+  color: #f6a218;
+}
+.blue-deal {
+  color: #01b1f1;
+}
+.green-deal {
+  color: #1db14b;
+}
+
+.red-discount {
+  background: #d13135;
+}
+
+.orange-discount {
+  background: #eb761e;
+}
+
+.yellow-discount {
+  background: #f6a218;
+}
+.blue-discount {
+  background: #01b1f1;
+}
+.green-discount {
+  background: #1db14b;
+}
+.deal-o-meter-card {
+  padding: 10px;
+  padding-left: 20px;
+  padding-top: 5px;
+}
+.deal-o-meter-card-img {
+  height: 50px;
+  width: auto;
+}
+
+.deal-o-meter-graphic-wrapper {
+  width: 100%;
+}
+.deal-o-meter-graphic-wrapper img {
+  width: 100%;
+  height: auto;
 }
 
 /* Responsive Design */
