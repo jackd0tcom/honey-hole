@@ -7,7 +7,7 @@ import LatestDeals from "./LatestDeals.jsx";
 import Hero from "./Hero.jsx";
 import DealsVideo from "./DealsVideo.jsx";
 import DealOMeterGraphic from "./DealOMeterGraphic.jsx";
-import SideBar from "./SideBar.jsx";
+import HeroEmailSignup from "./HeroEmailSignup.jsx";
 
 const App = () => {
   const [deals, setDeals] = useState([]);
@@ -50,12 +50,12 @@ const App = () => {
       <div className="honey-hole-header">
         <div>
           <Hero />
-          <LatestDeals deals={deals} />
-          {/* <DealOMeterGraphic /> */}
-          <EmailSignup />
+          <div className="hero-header-two">
+            <HeroEmailSignup />
+            <DealOMeterGraphic />
+          </div>
           {error && <div className="honey-hole-error">{error}</div>}
         </div>
-        <SideBar />
       </div>
       {loading ? (
         <div className="honey-hole-loading">Loading deals...</div>

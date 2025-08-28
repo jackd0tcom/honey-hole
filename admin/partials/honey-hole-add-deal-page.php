@@ -152,26 +152,162 @@ function honey_hole_add_deal_page()
         const standardFields = document.getElementById('honey-hole-standard-deal-fields');
         const bigSaleFields = document.getElementById('honey-hole-big-sale-fields');
         
-        // Hide both sections initially
-        standardFields.style.display = 'none';
-        bigSaleFields.style.display = 'none';
-        
         // Get the selected category name
         const selectedOption = categorySelect.options[categorySelect.selectedIndex];
         const categoryName = selectedOption.text;
         
         if (categoryName === 'Big Sale') {
+            // Show Big Sale fields, hide standard fields
+            standardFields.style.display = 'none';
             bigSaleFields.style.display = 'block';
-            // Make Big Sale title required, standard title not required
-            document.getElementById('deal-title').required = false;
-            document.getElementById('deal-title-big-sale').required = true;
+            
+            // Disable required attributes for standard deal fields
+            const standardRequiredFields = standardFields.querySelectorAll('[required]');
+            standardRequiredFields.forEach(field => {
+                field.required = false;
+                field.disabled = true; // Disable to prevent form submission
+            });
+            
+            // Enable required attributes for Big Sale fields
+            const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+            bigSaleRequiredFields.forEach(field => {
+                field.required = true;
+                field.disabled = false;
+            });
+            
         } else if (categoryName !== '') {
+            // Show standard fields, hide Big Sale fields
             standardFields.style.display = 'block';
-            // Make standard title required, Big Sale title not required
-            document.getElementById('deal-title').required = true;
-            document.getElementById('deal-title-big-sale').required = false;
+            bigSaleFields.style.display = 'none';
+            
+            // Enable required attributes for standard deal fields
+            const standardRequiredFields = standardFields.querySelectorAll('[required]');
+            standardRequiredFields.forEach(field => {
+                field.required = true;
+                field.disabled = false;
+            });
+            
+            // Disable required attributes for Big Sale fields
+            const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+            bigSaleRequiredFields.forEach(field => {
+                field.required = false;
+                field.disabled = true; // Disable to prevent form submission
+            });
+        } else {
+            // No category selected - show all fields but disable them until category is chosen
+            standardFields.style.display = 'block';
+            bigSaleFields.style.display = 'block';
+            
+            // Disable all fields until category is selected
+            const allFields = document.querySelectorAll('#honey-hole-standard-deal-fields input, #honey-hole-standard-deal-fields textarea, #honey-hole-big-sale-fields input, #honey-hole-big-sale-fields textarea');
+            allFields.forEach(field => {
+                field.disabled = true;
+            });
         }
     }
+    
+    // Initialize fields on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Only run the toggle function if a category is already selected
+        const categorySelect = document.getElementById('deal-category');
+        if (categorySelect && categorySelect.value !== '') {
+            honeyHoleToggleAddDealFields();
+        }
+        
+        // Add form validation debugging
+        const form = document.getElementById('honey-hole-deal-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submission - validating fields...');
+                
+                // Check which category is selected
+                const categorySelect = document.getElementById('deal-category');
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                const categoryName = selectedOption.text;
+                
+                console.log('Selected category:', categoryName);
+                
+                if (categoryName === 'Big Sale') {
+                    // Validate Big Sale fields
+                    const bigSaleTitle = document.getElementById('deal-title-big-sale');
+                    const description = document.getElementById('deal-description');
+                    
+                    if (!bigSaleTitle.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the Big Sale deal.');
+                        bigSaleTitle.focus();
+                        return false;
+                    }
+                    
+                    if (!description.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a description for the Big Sale deal.');
+                        description.focus();
+                        return false;
+                    }
+                } else if (categoryName !== '') {
+                    // Validate standard deal fields
+                    const title = document.getElementById('deal-title');
+                    const originalPrice = document.getElementById('deal-original-price');
+                    const salesPrice = document.getElementById('deal-sales-price');
+                    const seller = document.getElementById('deal-seller');
+                    
+                    if (!title.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the deal.');
+                        title.focus();
+                        return false;
+                    }
+                    
+                    if (!originalPrice.value || parseFloat(originalPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid original price.');
+                        originalPrice.focus();
+                        return false;
+                    }
+                    
+                    if (!salesPrice.value || parseFloat(salesPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid sales price.');
+                        salesPrice.focus();
+                        return false;
+                    }
+                    
+                    if (!seller.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a seller for the deal.');
+                        seller.focus();
+                        return false;
+                    }
+                } else {
+                    e.preventDefault();
+                    alert('Please select a category for the deal.');
+                    categorySelect.focus();
+                    return false;
+                }
+                
+                // Validate common fields
+                const dealUrl = document.getElementById('deal-url');
+                const imageUrl = document.getElementById('deal-image-url');
+                
+                if (!dealUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter a deal URL.');
+                    dealUrl.focus();
+                    return false;
+                }
+                
+                if (!imageUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter an image URL.');
+                    imageUrl.focus();
+                    return false;
+                }
+                
+                console.log('Form validation passed!');
+            });
+        }
+    });
     </script>
 <?php
 }

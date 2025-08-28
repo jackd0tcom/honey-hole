@@ -57,7 +57,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Hero_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Hero.jsx */ "./src/frontend/components/Hero.jsx");
 /* harmony import */ var _DealsVideo_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DealsVideo.jsx */ "./src/frontend/components/DealsVideo.jsx");
 /* harmony import */ var _DealOMeterGraphic_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DealOMeterGraphic.jsx */ "./src/frontend/components/DealOMeterGraphic.jsx");
-/* harmony import */ var _SideBar_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SideBar.jsx */ "./src/frontend/components/SideBar.jsx");
+/* harmony import */ var _HeroEmailSignup_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./HeroEmailSignup.jsx */ "./src/frontend/components/HeroEmailSignup.jsx");
 
 
 
@@ -104,11 +104,11 @@ const App = () => {
     className: "honey-hole-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-header"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    deals: deals
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hero-header-two"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_HeroEmailSignup_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealOMeterGraphic_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], null)), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-error"
-  }, error)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SideBar_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], null)), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, error))), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-loading"
   }, "Loading deals...") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealGrid_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     deals: deals
@@ -143,7 +143,9 @@ const DealCard = ({
     product_url,
     promo_code,
     seller,
-    categories
+    categories,
+    background_image,
+    description
   } = deal;
   const discount_percentage = Math.round((original_price - sales_price) / original_price * 100);
   let USDollar = new Intl.NumberFormat("en-US", {
@@ -176,31 +178,37 @@ const DealCard = ({
   }, "\u2605");
   if (categories[0].name === "Big Sale") {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "deal-card big-sale"
+      className: "deal-card big-sale",
+      style: {
+        backgroundImage: `url(${background_image})`
+      }
     }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "hh-promo-code-wrapper"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code ", promo_code)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: product_url,
-      className: "deal-card-link",
+      className: "deal-card-link big-sale-card",
       target: "_blank",
       rel: "noopener noreferrer"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "big-sale-hh-logo"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-      src: "https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png",
-      alt: ""
-    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "deal-image big-sale-img"
-    }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-      src: image_url,
-      alt: title
-    }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "big-sale-title-wrapper"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+      className: "big-sale-title"
+    }, title)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-image-wrapper big-sale-img"
+    }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-image",
+      style: {
+        backgroundImage: `url(${image_url})`
+      }
+    }) :
+    // <img src={image_url} alt={title} />
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "no-image"
     }, "No Image Available")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "deal-content"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "deal-title"
-    }, title))));
+      className: "big-sale-title-wrapper"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+      className: "big-sale-description"
+    }, description))));
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-card"
@@ -218,11 +226,15 @@ const DealCard = ({
     src: getDealMeter(discount_percentage),
     alt: ""
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-image"
-  }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: image_url,
-    alt: title
-  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-image-wrapper"
+  }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-image",
+    style: {
+      backgroundImage: `url(${image_url})`
+    }
+  }) :
+  // <img src={image_url} alt={title} />
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "no-image"
   }, "No Image Available")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-content"
@@ -271,6 +283,7 @@ const DealGrid = ({
   const [categories, setCategories] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("all");
   const [dealsArray, setDealsArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
   const [originalArray, setOriginalArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
+  const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (categories === "all") {
@@ -283,6 +296,8 @@ const DealGrid = ({
     if (!a.original_price || a.original_price === 0) return 0;
     return (a.original_price - a.sales_price) / a.original_price * 100;
   };
+  const currentCategory = ["All Gear Deals", "Camping Gear", "Fishing Gear", "Hiking Gear", "Hunting Gear", "Outdoor Gear"];
+  const categoryIcon = ["https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png"];
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     console.log("sorting");
     let sortedDeals = [...dealsArray];
@@ -322,10 +337,19 @@ const DealGrid = ({
     className: "hh-main-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     categories: categories,
-    setCategories: setCategories
+    setCategories: setCategories,
+    activeCategory: activeCategory,
+    setActiveCategory: setActiveCategory
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-deal-grid-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-grid-heading"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-grid-icon",
+    src: categoryIcon[activeCategory]
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "deal-grid-title"
+  }, currentCategory[activeCategory])), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deals-grid"
   }, dealsArray.map(deal => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
     promo: deal.promo_code,
@@ -356,7 +380,7 @@ const DealOMeterGraphic = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-o-meter-graphic-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: "https://outdoorempire.com/wp-content/uploads/2025/08/Deal-o-meter-graphic-1-scaled.jpg",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/08/Deal-o-meter-graphic-1-2.jpg",
     alt: ""
   }));
 };
@@ -503,7 +527,7 @@ const EmailSignup = () => {
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "af-clear"
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    class: "af-element buttonContainer"
+    class: "af-element hh-email-submit-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     id: "hh-email-submit",
     name: "submit",
@@ -527,17 +551,7 @@ const EmailSignup = () => {
     href: "https://www.aweber.com/privacy.htm",
     target: "_blank",
     rel: "noopener noreferrer"
-  }, "email privacy")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    class: "hh-email-container-two-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    class: "hh-email-container-two"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Get Sweet Outdoor Gear Deals in Your Inbox \uD83E\uDD11\uD83C\uDFD5\uFE0F\uD83D\uDD25"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "hh-email-copy-text"
-  }, "Receive outdoor stories, tips, and deal alerts. Plus, be entered into our weekly gear giveaway when you sign up for", " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "italic"
-  }, "The Honey Hole"), " email newsletter!"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "hh-email-copy-text"
-  }, "Join thousands of outdoor enthusiasts who love saving money and discovering the best gear."))))));
+  }, "email privacy")))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EmailSignup);
 
@@ -555,14 +569,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _SideBar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SideBar */ "./src/frontend/components/SideBar.jsx");
+/* harmony import */ var _EmailSignup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EmailSignup */ "./src/frontend/components/EmailSignup.jsx");
+
+
 
 
 const FilterBar = ({
   categories,
-  setCategories
+  setCategories,
+  activeCategory,
+  setActiveCategory
 }) => {
-  const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "sidebar"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-filter-bar"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
     id: "hh-filter"
@@ -636,7 +657,7 @@ const FilterBar = ({
     className: "hh-filter-icon"
   }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
-  }, "Outdoor Gear"))));
+  }, "Outdoor Gear")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SideBar__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EmailSignup__WEBPACK_IMPORTED_MODULE_2__["default"], null));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FilterBar);
 
@@ -682,6 +703,123 @@ const Hero = () => {
   }, "Last Updated: ", formattedDate)))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
+
+/***/ }),
+
+/***/ "./src/frontend/components/HeroEmailSignup.jsx":
+/*!*****************************************************!*\
+  !*** ./src/frontend/components/HeroEmailSignup.jsx ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const HeroEmailSignup = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "hh-hero-email-section"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "hh-email-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "hh-email-container-one"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "hh-hero-email-image"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "hh-email-content"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Get the Best Deals and Win Free Gear!"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+    method: "post",
+    class: "af-form-wrapper",
+    "accept-charset": "UTF-8",
+    action: "https://www.aweber.com/scripts/addlead.pl"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hidden"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_web_form_id",
+    value: "894900673"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_split_id",
+    value: ""
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "listname",
+    value: "awlist6324539"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "redirect",
+    value: "https://www.aweber.com/thankyou-coi.htm?m=text",
+    id: "redirect_8e911f903751383335eaae138e94c2b8"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_adtracking",
+    value: "Honey_Hole_unstyled_form"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_message",
+    value: "1"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_required",
+    value: "email"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "hidden",
+    name: "meta_tooltip",
+    value: ""
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    id: "af-form-894900673",
+    class: "af-form"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    id: "hh-hero-input-wrapper",
+    class: "af-body af-standards"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "af-element hero-email-input"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "af-textWrap"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    placeholder: "Email",
+    class: "text",
+    id: "awf_field-118013225",
+    type: "email",
+    name: "email",
+    value: "",
+    tabindex: "500",
+    onfocus: " if (this.value == '') { this.value = ''; }",
+    onblur: "if (this.value == '') { this.value='';}"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "af-clear"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "af-element hh-hero-email-submit-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    id: "hh-email-submit",
+    name: "submit",
+    class: "submit",
+    type: "submit",
+    value: "Subscribe",
+    tabindex: "501"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "af-clear"
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hidden"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: "https://forms.aweber.com/form/displays.htm?id=HJwsnAwMbOzM",
+    alt: ""
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    class: "hh-email-disclaimer"
+  }, "We email once per week, sometimes more. Unsubscribe at any time."), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    class: "hh-email-disclaimer"
+  }, "We respect your", " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    id: "hh-email-disclaimer-link",
+    href: "https://www.aweber.com/privacy.htm",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "email privacy")))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroEmailSignup);
 
 /***/ }),
 

@@ -8,6 +8,7 @@ const DealGrid = ({ deals }) => {
   const [categories, setCategories] = useState("all");
   const [dealsArray, setDealsArray] = useState(deals);
   const [originalArray, setOriginalArray] = useState(deals);
+  const [activeCategory, setActiveCategory] = useState(0);
   const [sort, setSort] = useState("newest");
 
   useEffect(() => {
@@ -25,6 +26,24 @@ const DealGrid = ({ deals }) => {
     if (!a.original_price || a.original_price === 0) return 0;
     return ((a.original_price - a.sales_price) / a.original_price) * 100;
   };
+
+  const currentCategory = [
+    "All Gear Deals",
+    "Camping Gear",
+    "Fishing Gear",
+    "Hiking Gear",
+    "Hunting Gear",
+    "Outdoor Gear",
+  ];
+
+  const categoryIcon = [
+    "https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png",
+    "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png",
+    "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png",
+    "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png",
+    "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png",
+    "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png",
+  ];
 
   useEffect(() => {
     console.log("sorting");
@@ -67,8 +86,22 @@ const DealGrid = ({ deals }) => {
       </div>
       <div className="hh-main-bg">
         <div className="hh-main-wrapper">
-          <FilterBar categories={categories} setCategories={setCategories} />
+          <FilterBar
+            categories={categories}
+            setCategories={setCategories}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
           <div className="hh-deal-grid-wrapper">
+            <div className="deal-grid-heading">
+              <img
+                className="deal-grid-icon"
+                src={categoryIcon[activeCategory]}
+              />
+              <h2 className="deal-grid-title">
+                {currentCategory[activeCategory]}
+              </h2>
+            </div>
             <div className="deals-grid">
               {dealsArray.map((deal) => (
                 <DealCard

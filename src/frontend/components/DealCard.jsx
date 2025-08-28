@@ -9,6 +9,8 @@ const DealCard = ({ deal }) => {
     promo_code,
     seller,
     categories,
+    background_image,
+    description,
   } = deal;
 
   const discount_percentage = Math.round(
@@ -52,7 +54,10 @@ const DealCard = ({ deal }) => {
 
   if (categories[0].name === "Big Sale") {
     return (
-      <div className="deal-card big-sale">
+      <div
+        className="deal-card big-sale"
+        style={{ backgroundImage: `url(${background_image})` }}
+      >
         {promo_code ? (
           <div className="hh-promo-code-wrapper">
             <p>Use Code {promo_code}</p>
@@ -62,25 +67,26 @@ const DealCard = ({ deal }) => {
         )}
         <a
           href={product_url}
-          className="deal-card-link"
+          className="deal-card-link big-sale-card"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <div className="big-sale-hh-logo">
-            <img
-              src="https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png"
-              alt=""
-            />
+          <div className="big-sale-title-wrapper">
+            <h4 className="big-sale-title">{title}</h4>
           </div>
-          <div className="deal-image big-sale-img">
+          <div className="deal-image-wrapper big-sale-img">
             {image_url ? (
-              <img src={image_url} alt={title} />
+              <div
+                className="deal-image"
+                style={{ backgroundImage: `url(${image_url})` }}
+              ></div>
             ) : (
+              // <img src={image_url} alt={title} />
               <div className="no-image">No Image Available</div>
             )}
           </div>
-          <div className="deal-content">
-            <h3 className="deal-title">{title}</h3>
+          <div className="big-sale-title-wrapper">
+            <h4 className="big-sale-description">{description}</h4>
           </div>
         </a>
       </div>
@@ -108,10 +114,14 @@ const DealCard = ({ deal }) => {
             alt=""
           />
         </div>
-        <div className="deal-image">
+        <div className="deal-image-wrapper">
           {image_url ? (
-            <img src={image_url} alt={title} />
+            <div
+              className="deal-image"
+              style={{ backgroundImage: `url(${image_url})` }}
+            ></div>
           ) : (
+            // <img src={image_url} alt={title} />
             <div className="no-image">No Image Available</div>
           )}
         </div>

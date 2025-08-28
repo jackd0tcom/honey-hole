@@ -73,32 +73,6 @@
   padding: 5px;
 }
 
-/* Dynamic form sections */
-.honey-hole-field-group {
-  transition: all 0.3s ease;
-}
-
-.honey-hole-field-group.hidden {
-  display: none;
-}
-
-/* Big Sale specific styling */
-#honey-hole-big-sale-fields textarea {
-  width: 100%;
-  max-width: 600px;
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Form section transitions */
-.honey-hole-form-section {
-  transition: opacity 0.3s ease;
-}
-
-.honey-hole-form-section[style*="display: none"] {
-  opacity: 0;
-}
-
 .honey-hole-admin {
   margin-top: 20px;
   padding-bottom: 80px;

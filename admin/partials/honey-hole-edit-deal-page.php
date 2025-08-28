@@ -204,14 +204,37 @@ function honey_hole_edit_deal_page()
             
             if (categoryName === 'Big Sale') {
                 bigSaleFields.style.display = 'block';
-                // Make Big Sale title required, standard title not required
-                document.getElementById('deal-title').required = false;
-                document.getElementById('deal-title-big-sale').required = true;
+                
+                // Disable required attributes for standard deal fields
+                const standardRequiredFields = standardFields.querySelectorAll('[required]');
+                standardRequiredFields.forEach(field => {
+                    field.required = false;
+                    field.disabled = true; // Disable to prevent form submission
+                });
+                
+                // Enable required attributes for Big Sale fields
+                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+                bigSaleRequiredFields.forEach(field => {
+                    field.required = true;
+                    field.disabled = false;
+                });
+                
             } else if (categoryName !== '') {
                 standardFields.style.display = 'block';
-                // Make standard title required, Big Sale title not required
-                document.getElementById('deal-title').required = true;
-                document.getElementById('deal-title-big-sale').required = false;
+                
+                // Enable required attributes for standard deal fields
+                const standardRequiredFields = standardFields.querySelectorAll('[required]');
+                standardRequiredFields.forEach(field => {
+                    field.required = true;
+                    field.disabled = false;
+                });
+                
+                // Disable required attributes for Big Sale fields
+                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+                bigSaleRequiredFields.forEach(field => {
+                    field.required = false;
+                    field.disabled = true; // Disable to prevent form submission
+                });
             }
         }
 
@@ -286,6 +309,107 @@ function honey_hole_edit_deal_page()
             // Initialize stars on page load
             updateStars(parseFloat($('#deal-rating').val()) || 0);
         });
+        
+        // Initialize fields on page load
+        // Only run the toggle function if a category is already selected
+        const categorySelect = document.getElementById('deal-category');
+        if (categorySelect && categorySelect.value !== '') {
+            honeyHoleToggleEditDealFields();
+        }
+        
+        // Add form validation debugging
+        const form = document.getElementById('honey-hole-deal-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submission - validating fields...');
+                
+                // Check which category is selected
+                const categorySelect = document.getElementById('deal-category');
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                const categoryName = selectedOption.text;
+                
+                console.log('Selected category:', categoryName);
+                
+                if (categoryName === 'Big Sale') {
+                    // Validate Big Sale fields
+                    const bigSaleTitle = document.getElementById('deal-title-big-sale');
+                    const description = document.getElementById('deal-description');
+                    
+                    if (!bigSaleTitle.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the Big Sale deal.');
+                        bigSaleTitle.focus();
+                        return false;
+                    }
+                    
+                    if (!description.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a description for the Big Sale deal.');
+                        description.focus();
+                        return false;
+                    }
+                } else if (categoryName !== '') {
+                    // Validate standard deal fields
+                    const title = document.getElementById('deal-title');
+                    const originalPrice = document.getElementById('deal-original-price');
+                    const salesPrice = document.getElementById('deal-sales-price');
+                    const seller = document.getElementById('deal-seller');
+                    
+                    if (!title.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the deal.');
+                        title.focus();
+                        return false;
+                    }
+                    
+                    if (!originalPrice.value || parseFloat(originalPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid original price.');
+                        originalPrice.focus();
+                        return false;
+                    }
+                    
+                    if (!salesPrice.value || parseFloat(salesPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid sales price.');
+                        salesPrice.focus();
+                        return false;
+                    }
+                    
+                    if (!seller.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a seller for the deal.');
+                        seller.focus();
+                        return false;
+                    }
+                } else {
+                    e.preventDefault();
+                    alert('Please select a category for the deal.');
+                    categorySelect.focus();
+                    return false;
+                }
+                
+                // Validate common fields
+                const dealUrl = document.getElementById('deal-url');
+                const imageUrl = document.getElementById('deal-image-url');
+                
+                if (!dealUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter a deal URL.');
+                    dealUrl.focus();
+                    return false;
+                }
+                
+                if (!imageUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter an image URL.');
+                    imageUrl.focus();
+                    return false;
+                }
+                
+                console.log('Form validation passed!');
+            });
+        }
     </script>
 <?php
 }

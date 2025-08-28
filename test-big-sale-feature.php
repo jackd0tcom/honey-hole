@@ -95,4 +95,8 @@ echo "2. Select 'Big Sale' as the category\n";
 echo "3. Verify that only Big Sale fields are shown\n";
 echo "4. Fill in the fields and save\n";
 echo "5. Check that the deal appears correctly on the frontend\n";
+echo "\nIf you encounter any errors:\n";
+echo "- Check the browser console for JavaScript errors\n";
+echo "- Verify that the form validation is working\n";
+echo "- Check that required fields are properly toggled\n";
 ?>
