@@ -255,15 +255,27 @@ class Honey_Hole_Admin
 
 		// Handle form submission
 		if (isset($_POST['action']) && $_POST['action'] === 'add_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_add_deal')) {
-			// Sanitize and validate input
-			$title = sanitize_text_field($_POST['deal_title']);
-			$original_price = floatval($_POST['deal_original_price']);
-			$sales_price = floatval($_POST['deal_sales_price']);
-			$rating = floatval($_POST['deal_rating']);
+			// Get category to determine which fields to process
+			$category_id = intval($_POST['deal_category']);
+			$category_term = get_term($category_id, 'deal_category');
+			$is_big_sale = $category_term && $category_term->name === 'Big Sale';
+			
+			// Sanitize and validate input based on category
+			if ($is_big_sale) {
+				$title = sanitize_text_field($_POST['deal_title_big_sale']);
+				$description = sanitize_textarea_field($_POST['deal_description']);
+				$background_image = esc_url_raw($_POST['deal_background_image']);
+			} else {
+				$title = sanitize_text_field($_POST['deal_title']);
+				$original_price = floatval($_POST['deal_original_price']);
+				$sales_price = floatval($_POST['deal_sales_price']);
+				$rating = floatval($_POST['deal_rating']);
+				$seller = sanitize_text_field($_POST['deal_seller']);
+			}
+			
+			// Common fields
 			$deal_url = esc_url_raw($_POST['deal_url']);
 			$promo_code = sanitize_text_field($_POST['deal_promo_code']);
-			$seller = sanitize_text_field($_POST['deal_seller']);
-			$category_id = intval($_POST['deal_category']);
 			$image_url = esc_url_raw($_POST['deal_image_url']);
 			$tags = sanitize_text_field($_POST['deal_tags']);
 
@@ -287,14 +299,21 @@ class Honey_Hole_Admin
 					wp_set_object_terms($deal_id, $tag_array, 'post_tag');
 				}
 
-				// Save the meta data
-				update_post_meta($deal_id, 'deal_original_price', $original_price);
-				update_post_meta($deal_id, 'deal_sales_price', $sales_price);
-				update_post_meta($deal_id, 'deal_rating', $rating);
+				// Save the meta data based on category
+				if ($is_big_sale) {
+					update_post_meta($deal_id, 'deal_description', $description);
+					update_post_meta($deal_id, 'deal_background_image', $background_image);
+				} else {
+					update_post_meta($deal_id, 'deal_original_price', $original_price);
+					update_post_meta($deal_id, 'deal_sales_price', $sales_price);
+					update_post_meta($deal_id, 'deal_rating', $rating);
+					update_post_meta($deal_id, 'deal_seller', $seller);
+				}
+				
+				// Common meta fields
 				update_post_meta($deal_id, 'deal_url', $deal_url);
 				update_post_meta($deal_id, 'deal_promo_code', $promo_code);
 				update_post_meta($deal_id, 'deal_image_url', $image_url);
-				update_post_meta($deal_seller, 'deal_seller', $seller);
 
 				// Set transient for success message
 				set_transient('honey_hole_deal_added', true, 45);
@@ -391,23 +410,41 @@ class Honey_Hole_Admin
 		if (isset($_POST['action']) && $_POST['action'] === 'edit_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_edit_deal')) {
 			$deal_id = intval($_POST['deal_id']);
 
-			// Update post
+			// Get category to determine which fields to process
+			$category_id = intval($_POST['deal_category']);
+			$category_term = get_term($category_id, 'deal_category');
+			$is_big_sale = $category_term && $category_term->name === 'Big Sale';
+			
+			// Update post title based on category
+			if ($is_big_sale) {
+				$title = sanitize_text_field($_POST['deal_title_big_sale']);
+			} else {
+				$title = sanitize_text_field($_POST['deal_title']);
+			}
+			
 			wp_update_post(array(
 				'ID' => $deal_id,
-				'post_title' => sanitize_text_field($_POST['deal_title'])
+				'post_title' => $title
 			));
 
-			// Update meta
-			update_post_meta($deal_id, 'deal_original_price', floatval($_POST['deal_original_price']));
-			update_post_meta($deal_id, 'deal_sales_price', floatval($_POST['deal_sales_price']));
-			update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
+			// Update meta based on category
+			if ($is_big_sale) {
+				update_post_meta($deal_id, 'deal_description', sanitize_textarea_field($_POST['deal_description']));
+				update_post_meta($deal_id, 'deal_background_image', esc_url_raw($_POST['deal_background_image']));
+			} else {
+				update_post_meta($deal_id, 'deal_original_price', floatval($_POST['deal_original_price']));
+				update_post_meta($deal_id, 'deal_sales_price', floatval($_POST['deal_sales_price']));
+				update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
+				update_post_meta($deal_id, 'deal_seller', sanitize_text_field($_POST['deal_seller']));
+			}
+			
+			// Common meta fields
 			update_post_meta($deal_id, 'deal_url', esc_url_raw($_POST['deal_url']));
 			update_post_meta($deal_id, 'deal_promo_code', sanitize_text_field($_POST['deal_promo_code']));
-			update_post_meta($deal_id, 'deal_seller', sanitize_text_field($_POST['deal_seller']));
 			update_post_meta($deal_id, 'deal_image_url', esc_url_raw($_POST['deal_image_url']));
 
 			// Update category
-			wp_set_object_terms($deal_id, intval($_POST['deal_category']), 'deal_category');
+			wp_set_object_terms($deal_id, $category_id, 'deal_category');
 
 			// Update tags
 			if (!empty($_POST['deal_tags'])) {

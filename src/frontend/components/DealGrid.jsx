@@ -61,21 +61,25 @@ const DealGrid = ({ deals }) => {
 
   return (
     <>
-      <h2 className="hh-heading">Honey Hole Deals</h2>
-      <div className="hh-main-wrapper">
-        <FilterBar categories={categories} setCategories={setCategories} />
-        <div className="hh-deal-grid-wrapper">
-          <Sorter sort={sort} setSort={setSort} />
-          <div className="deals-grid">
-            {dealsArray.map((deal) => (
-              <DealCard
-                promo={deal.promo_code}
-                key={deal.id}
-                deal={deal}
-                categories={categories}
-                seller={deal.seller}
-              />
-            ))}
+      <div className="hh-grid-heading-wrapper">
+        <h2 className="hh-heading">Honey Hole Deals</h2>{" "}
+        <Sorter sort={sort} setSort={setSort} />
+      </div>
+      <div className="hh-main-bg">
+        <div className="hh-main-wrapper">
+          <FilterBar categories={categories} setCategories={setCategories} />
+          <div className="hh-deal-grid-wrapper">
+            <div className="deals-grid">
+              {dealsArray.map((deal) => (
+                <DealCard
+                  promo={deal.promo_code}
+                  key={deal.id}
+                  deal={deal}
+                  categories={categories}
+                  seller={deal.seller}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

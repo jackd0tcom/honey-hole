@@ -35,8 +35,14 @@ function honey_hole_edit_deal_page()
     $rating = get_post_meta($deal_id, 'deal_rating', true);
     $promo_code = get_post_meta($deal_id, 'deal_promo_code', true);
     $seller = get_post_meta($deal_id, 'deal_seller', true);
+    $description = get_post_meta($deal_id, 'deal_description', true);
+    $background_image = get_post_meta($deal_id, 'deal_background_image', true);
     $category = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'ids'));
     $category = !empty($category) ? $category[0] : '';
+    
+    // Get category name for field toggling
+    $category_term = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'names'));
+    $category_name = !empty($category_term) ? $category_term[0] : '';
 ?>
     <div class="wrap">
         <h1>Edit Deal</h1>
@@ -45,8 +51,32 @@ function honey_hole_edit_deal_page()
             <input type="hidden" name="action" value="edit_deal">
             <input type="hidden" name="deal_id" value="<?php echo esc_attr($deal_id); ?>">
             <div class="honey-hole-form-container">
+                
+                <!-- Category Selection (First) -->
                 <div class="honey-hole-form-section">
-                    <h2>Deal Information</h2>
+                    <h2>Deal Category</h2>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-category">Category *</label>
+                        <select id="deal-category" name="deal_category" required onchange="honeyHoleToggleEditDealFields()">
+                            <option value="">Select a category</option>
+                            <?php
+                            $categories = get_terms(array(
+                                'taxonomy' => 'deal_category',
+                                'hide_empty' => false,
+                            ));
+                            foreach ($categories as $cat) {
+                                $selected = $cat->term_id == $category ? 'selected' : '';
+                                echo '<option value="' . esc_attr($cat->term_id) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <p class="description">Select the category for this deal. Big Sale deals have a different structure.</p>
+                    </div>
+                </div>
+
+                <!-- Standard Deal Fields (hidden for Big Sale) -->
+                <div id="honey-hole-standard-deal-fields" class="honey-hole-form-section" style="<?php echo ($category_name === 'Big Sale') ? 'display: none;' : ''; ?>">
+                    <h2>Standard Deal Information</h2>
                     <div class="honey-hole-form-field">
                         <label for="deal-title">Title *</label>
                         <input type="text" id="deal-title" name="deal_title" value="<?php echo esc_attr($deal->post_title); ?>" required>
@@ -86,38 +116,42 @@ function honey_hole_edit_deal_page()
                         <p class="description">Rate the deal from 0 to 5 stars</p>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-url">Deal URL *</label>
-                        <input type="url" id="deal-url" name="deal_url" value="<?php echo esc_attr($deal_url); ?>" required>
-                    </div>
-                </div>
-
-                <div class="honey-hole-form-section">
-                    <h2>Deal Details</h2>
-                    <div class="honey-hole-form-field">
-                        <label for="deal-promo-code">Promo Code (Optional)</label>
-                        <input type="text" id="deal-promo-code" name="deal_promo_code" value="<?php echo esc_attr($promo_code); ?>" placeholder="Enter promotional code">
-                        <p class="description">Enter any promotional code for this deal</p>
-                    </div>
-                    <div class="honey-hole-form-field">
                         <label for="deal-seller">Seller *</label>
                         <input type="text" id="deal-seller" name="deal_seller" value="<?php echo esc_attr($seller); ?>" placeholder="Enter seller" required>
                         <p class="description">Enter the seller for this deal</p>
                     </div>
+                </div>
+
+                <!-- Big Sale Specific Fields (hidden for standard deals) -->
+                <div id="honey-hole-big-sale-fields" class="honey-hole-form-section" style="<?php echo ($category_name === 'Big Sale') ? '' : 'display: none;'; ?>">
+                    <h2>Big Sale Deal Information</h2>
                     <div class="honey-hole-form-field">
-                            <label for="deal-category">Category *</label>
-                        <select id="deal-category" name="deal_category" required>
-                            <option value="">Select a category</option>
-                            <?php
-                            $categories = get_terms(array(
-                                'taxonomy' => 'deal_category',
-                                'hide_empty' => false,
-                            ));
-                            foreach ($categories as $cat) {
-                                $selected = $cat->term_id == $category ? 'selected' : '';
-                                echo '<option value="' . esc_attr($cat->term_id) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
-                            }
-                            ?>
-                        </select>
+                        <label for="deal-title-big-sale">Title *</label>
+                        <input type="text" id="deal-title-big-sale" name="deal_title_big_sale" value="<?php echo esc_attr($deal->post_title); ?>" required>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-description">Description *</label>
+                        <textarea id="deal-description" name="deal_description" rows="4" required placeholder="Enter a detailed description for the big sale deal"><?php echo esc_textarea($description); ?></textarea>
+                        <p class="description">Provide a compelling description for the big sale deal</p>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-background-image">Background Image URL</label>
+                        <input type="url" id="deal-background-image" name="deal_background_image" value="<?php echo esc_url($background_image); ?>" placeholder="Enter background image URL (optional)">
+                        <p class="description">Enter the URL for a background image (optional)</p>
+                    </div>
+                </div>
+
+                <!-- Common Fields (shown for all deals) -->
+                <div class="honey-hole-form-section">
+                    <h2>Common Deal Details</h2>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-url">Deal URL *</label>
+                        <input type="url" id="deal-url" name="deal_url" value="<?php echo esc_attr($deal_url); ?>" required>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-promo-code">Promo Code (Optional)</label>
+                        <input type="text" id="deal-promo-code" name="deal_promo_code" value="<?php echo esc_attr($promo_code); ?>" placeholder="Enter promotional code">
+                        <p class="description">Enter any promotional code for this deal</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-tags">Tags</label>
@@ -155,6 +189,32 @@ function honey_hole_edit_deal_page()
     </div>
 
     <script>
+        function honeyHoleToggleEditDealFields() {
+            const categorySelect = document.getElementById('deal-category');
+            const standardFields = document.getElementById('honey-hole-standard-deal-fields');
+            const bigSaleFields = document.getElementById('honey-hole-big-sale-fields');
+            
+            // Hide both sections initially
+            standardFields.style.display = 'none';
+            bigSaleFields.style.display = 'none';
+            
+            // Get the selected category name
+            const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+            const categoryName = selectedOption.text;
+            
+            if (categoryName === 'Big Sale') {
+                bigSaleFields.style.display = 'block';
+                // Make Big Sale title required, standard title not required
+                document.getElementById('deal-title').required = false;
+                document.getElementById('deal-title-big-sale').required = true;
+            } else if (categoryName !== '') {
+                standardFields.style.display = 'block';
+                // Make standard title required, Big Sale title not required
+                document.getElementById('deal-title').required = true;
+                document.getElementById('deal-title-big-sale').required = false;
+            }
+        }
+
         jQuery(document).ready(function($) {
             // Image upload functionality
             $('#upload-image-button').on('click', function() {

@@ -105,6 +105,8 @@ class Honey_Hole_REST_API
                     'product_url' => get_post_meta($post_id, 'deal_url', true),
                     'promo_code' => $this->clean_html_entities(get_post_meta($post_id, 'deal_promo_code', true)),
                     'seller' => $this->clean_html_entities(get_post_meta($post_id, 'deal_seller', true)),
+                    'description' => get_post_meta($post_id, 'deal_description', true),
+                    'background_image' => get_post_meta($post_id, 'deal_background_image', true),
                     'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'all')),
                     'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
                     'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),

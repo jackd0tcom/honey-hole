@@ -57,6 +57,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Hero_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Hero.jsx */ "./src/frontend/components/Hero.jsx");
 /* harmony import */ var _DealsVideo_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./DealsVideo.jsx */ "./src/frontend/components/DealsVideo.jsx");
 /* harmony import */ var _DealOMeterGraphic_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DealOMeterGraphic.jsx */ "./src/frontend/components/DealOMeterGraphic.jsx");
+/* harmony import */ var _SideBar_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SideBar.jsx */ "./src/frontend/components/SideBar.jsx");
+
 
 
 
@@ -99,12 +101,14 @@ const App = () => {
     }
   };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-deals"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    className: "honey-hole-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "honey-hole-header"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LatestDeals_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
     deals: deals
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_EmailSignup_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-error"
-  }, error), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, error)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SideBar_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], null)), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-loading"
   }, "Loading deals...") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealGrid_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     deals: deals
@@ -305,19 +309,23 @@ const DealGrid = ({
       className: "honey-hole-empty"
     }, "No deals found");
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-grid-heading-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-heading"
-  }, "Honey Hole Deals"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, "Honey Hole Deals"), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    sort: sort,
+    setSort: setSort
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-main-bg"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-main-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     categories: categories,
     setCategories: setCategories
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-deal-grid-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    sort: sort,
-    setSort: setSort
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deals-grid"
   }, dealsArray.map(deal => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
     promo: deal.promo_code,
@@ -325,7 +333,7 @@ const DealGrid = ({
     deal: deal,
     categories: categories,
     seller: deal.seller
-  }))))));
+  })))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealGrid);
 
@@ -556,20 +564,22 @@ const FilterBar = ({
   const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-filter-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+    id: "hh-filter"
+  }, "Filter"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-categories"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Categories"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+    className: "hh-filter-subheading"
+  }, "Categories"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
     id: activeCategory === 0 ? "hh-active-category" : "",
     onClick: () => {
       setActiveCategory(0);
       setCategories("all");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "All Gear Deals")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
@@ -578,11 +588,9 @@ const FilterBar = ({
       setActiveCategory(1);
       setCategories("camping-gear");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "Camping Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
@@ -591,11 +599,9 @@ const FilterBar = ({
       setActiveCategory(2);
       setCategories("fishing-gear");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "Fishing Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
@@ -604,11 +610,9 @@ const FilterBar = ({
       setActiveCategory(3);
       setCategories("hiking-gear");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "Hiking Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
@@ -617,11 +621,9 @@ const FilterBar = ({
       setActiveCategory(4);
       setCategories("hunting-gear");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "Hunting Gear")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "hh-filter-button",
@@ -630,11 +632,9 @@ const FilterBar = ({
       setActiveCategory(5);
       setCategories("outdoor-gear");
     }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "hh-filter-img",
-    src: "          https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png",
-    alt: ""
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-filter-icon"
+  }, "+"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-filter-heading"
   }, "Outdoor Gear"))));
 };
@@ -758,6 +758,30 @@ const SearchBar = ({
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchBar);
+
+/***/ }),
+
+/***/ "./src/frontend/components/SideBar.jsx":
+/*!*********************************************!*\
+  !*** ./src/frontend/components/SideBar.jsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DealsVideo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealsVideo */ "./src/frontend/components/DealsVideo.jsx");
+
+
+const SideBar = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "sidebar-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealsVideo__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SideBar);
 
 /***/ }),
 
