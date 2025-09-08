@@ -50,10 +50,10 @@ const App = () => {
       <div className="honey-hole-header">
         <div>
           <Hero />
-          <div className="hero-header-two">
-            <HeroEmailSignup />
-            <DealOMeterGraphic />
-          </div>
+          {/* <div className="hero-header-two"> */}
+          {/* <DealOMeterGraphic /> */}
+          {/* <HeroEmailSignup /> */}
+          {/* </div> */}
           {error && <div className="honey-hole-error">{error}</div>}
         </div>
       </div>

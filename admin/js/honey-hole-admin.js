@@ -209,7 +209,10 @@ const AdminApp = () => {
     onCategoryChange: handleCategoryChange
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SearchBar__WEBPACK_IMPORTED_MODULE_1__["default"], {
     onSearch: handleSearch
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddDealButton__WEBPACK_IMPORTED_MODULE_3__["default"], null)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealList__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddDealButton__WEBPACK_IMPORTED_MODULE_3__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "/wp-admin/admin.php?page=honey-hole-export",
+    className: "button button-secondary"
+  }, "Export Deals")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealList__WEBPACK_IMPORTED_MODULE_2__["default"], {
     deals: deals
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DeleteAllButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
     onRefreshDeals: handleRefreshDeals
@@ -404,6 +407,13 @@ const DealCard = ({
       setIsDeleting(false);
     }
   };
+  const getDealMeter = percentage => {
+    if (percentage >= 60) return "https://outdoorempire.com/wp-content/uploads/2025/07/Red-Deal-O-Meter.png";
+    if (percentage >= 50) return "https://outdoorempire.com/wp-content/uploads/2025/07/Orange-Deal-O-Meter.png";
+    if (percentage >= 40) return "https://outdoorempire.com/wp-content/uploads/2025/07/Yellow-Deal-O-Meter.png";
+    if (percentage >= 30) return "https://outdoorempire.com/wp-content/uploads/2025/07/Blue-Deal-O-Meter.png";
+    return "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png";
+  };
   const discount = deal.original_price > 0 ? Math.round((deal.original_price - deal.sales_price) / deal.original_price * 100) : 0;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-deal-card"
@@ -416,6 +426,18 @@ const DealCard = ({
     checked: bulkDeals.includes(deal.id),
     onChange: () => handleBulkToggle(deal.id)
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-rating"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-o-meter-card"
+  }, !deal.rating ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-o-meter-card-img",
+    src: getDealMeter(deal.discount_percentage),
+    alt: ""
+  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-o-meter-card-img",
+    src: getDealMeter(deal.rating * 14),
+    alt: "Great Price"
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-actions"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: `/wp-admin/admin.php?page=honey-hole-edit-deal&id=${deal.id}`,
@@ -432,30 +454,29 @@ const DealCard = ({
     className: "deal-thumbnail-image"
   }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "no-image"
-  }, "No Image")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, "No Image"), deal.badge && !deal.promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-admin-deal-badge"
+  }, deal.badge), deal.promo_code && !deal.badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "hh-admin-deal-badge"
+  }, deal.promo_code), deal.promo_code && deal.badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "hh-admin-deal-promo-code"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, deal.promo_code), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, deal.badge))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
     className: "deal-title"
   }, deal.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-pricing"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, deal.sales_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "sales-price"
-  }, formattedPrice), deal.original_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, formattedPrice), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "original-price"
+  }, USDollar.format(deal.original_price))), !deal.sales_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "original-price-only"
   }, USDollar.format(deal.original_price)), deal.discount_percentage && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "discount"
   }, deal.discount_percentage, "% OFF")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-rating"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rating-stars"
-  }, [...Array(5)].map((_, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    key: i,
-    className: `star ${i < deal.rating ? "filled" : ""}`
-  }, "\u2605"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rating-count"
-  }, deal.rating)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-seller"
-  }, deal.seller), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, deal.seller ? deal.seller : "No Seller Saved"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-tags"
   }, deal.tags && deal.tags.join(", ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-date"

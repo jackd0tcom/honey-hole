@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "./SideBar";
 import EmailSignup from "./EmailSignup";
 
@@ -7,11 +7,21 @@ const FilterBar = ({
   setCategories,
   activeCategory,
   setActiveCategory,
+  isMobile,
+  setFiltering,
 }) => {
   return (
     <div className="sidebar">
+      {isMobile && (
+        <div className="mobile-sidebar-header">
+          <p>Filter</p>
+          <p className="mobile-close" onClick={() => setFiltering(false)}>
+            ×
+          </p>
+        </div>
+      )}
       <div className="hh-filter-bar">
-        <h4 id="hh-filter">Filter</h4>
+        {!isMobile && <h4 id="hh-filter">Filter</h4>}
         <div className="hh-categories">
           <h4 className="hh-filter-subheading">Categories</h4>
           <button
@@ -81,18 +91,6 @@ const FilterBar = ({
             <h2 className="hh-filter-heading">Outdoor Gear</h2>
           </button>
         </div>
-        {/* <div className="honey-hole-sort">
-            <select
-                value={filters.sortBy}
-                onChange={(e) => handleSortChange(e.target.value)}
-            >
-                <option value="date">Newest</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="discount">Highest Discount</option>
-                <option value="rating">Highest Rated</option>
-            </select>
-        </div> */}
       </div>
       <SideBar />
       <EmailSignup />

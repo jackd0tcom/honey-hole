@@ -52,6 +52,7 @@
   display: flex;
   align-items: flex-start;
   column-gap: 20px;
+  padding: 0 20px;
 }
 
 /* Sidebar */
@@ -65,7 +66,8 @@
   top: 20px;
   height: 100%;
   width: 40%;
-  max-width: 250px;
+  max-width: 240px;
+  min-width: 200px;
 }
 
 /* Category Section */
@@ -85,7 +87,7 @@
 /* Grid */
 .deals-grid {
   display: grid;
-  gap: 20px;
+  gap: 0.5rem;
   margin: 20px 0;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -108,6 +110,7 @@
 .deal-card {
   display: flex;
   background: #fff;
+  position: relative;
   border-radius: 8px;
   transition:
     transform 0.2s ease,
@@ -179,13 +182,59 @@
   text-align: center;
   z-index: 1;
   margin-top: -5px;
+  position: absolute;
+  left: 3%;
+  transition: 200ms;
 }
 .hh-promo-code-wrapper p {
   padding: 2px 10px;
-  background-color: #5353532b;
-  color: #727272;
+  background-color: #041e15;
+  color: white;
   margin: auto;
   border-radius: 8px;
+}
+
+/* Deal Badge */
+.deal-badge {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  background: #ff6b35;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.big-sale-badge {
+  background: #ff6b35;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Great Price Styling */
+.great-price {
+  color: #28a745 !important;
+  font-weight: bold;
+}
+
+.great-deal-label {
+  background: #28a745;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
 }
 
 /* Deal Content */
@@ -345,7 +394,7 @@
   background: url("https://outdoorempire.com/wp-content/uploads/2024/02/backpacking-gear-reviews.jpg");
   background-size: cover;
   background-position: top center;
-  height: 16vh;
+  height: 14vh;
 }
 
 .hh-email-image {
@@ -429,7 +478,8 @@
   max-width: 1280px;
   margin: 0 auto;
   display: flex;
-  column-gap: 2rem;
+  column-gap: 1.25rem;
+  padding: 0 20px;
 }
 .hh-filter-bar {
   border: 1px solid #eee;
@@ -442,9 +492,9 @@
 #hh-filter {
   font-size: 1rem;
   margin-bottom: 10px;
+  border-bottom: 2px solid #eee;
 }
 .hh-filter-subheading {
-  border-top: 2px solid #eee;
   padding-top: 10px;
   margin-bottom: 10px;
   font-size: 1rem;
@@ -497,12 +547,12 @@
   transition: 200ms;
 }
 .hh-grid-heading-wrapper {
-  max-width: 1280px;
+  max-width: 1260px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   margin-top: 1rem;
-  padding: 0 0px 5px;
+  padding: 0 20px 5px 20px;
   /* border-bottom: 2px solid #dcdcdc; */
 }
 
@@ -593,6 +643,58 @@
 .green-discount {
   background: #1db14b;
 }
+/* Deal o meter */
+
+.deal-o-meter-graphic-wrapper {
+  width: 65%;
+}
+.dom-container {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #5a3303;
+  border-radius: 10px;
+}
+.dom-top {
+  background-color: #5a3303;
+  color: #daae60;
+  font-weight: 800;
+  padding: 20px;
+}
+.dom-top h3 {
+  font-weight: 800;
+  margin: 0;
+}
+.dom-middle {
+  color: #5a3303;
+  font-weight: 700;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.dom-copy {
+  width: 40%;
+  padding: 20px 10px;
+  margin: 0;
+}
+.dom-graphic {
+  width: 55%;
+  position: absolute;
+  right: 10px;
+  top: -43%;
+}
+.dom-bottom {
+  background-color: #5a3303;
+  color: #daae60;
+  font-weight: 800;
+  padding: 20px;
+}
+.dom-bottom h5 {
+  margin: 0;
+  font-size: 1rem;
+  max-width: 35%;
+}
+
 .deal-o-meter-card {
   padding: 10px;
   padding-left: 20px;
@@ -602,13 +704,52 @@
   height: 45px;
   width: auto;
 }
-
-.deal-o-meter-graphic-wrapper {
-  width: 50%;
+.mobile-filter-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.195);
 }
-.deal-o-meter-graphic-wrapper img {
+.modal-wrapper {
+  background-color: white;
+  width: 70%;
+  height: 100dvh;
+  position: fixed;
+}
+.mobile-close {
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: -10px !important;
+}
+.mobile-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px;
+}
+.mobile-sidebar-header p {
+  margin: 0;
+}
+.mobile-filter-buttons {
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+}
+#mobile-filter-button {
+  padding: 7px 12px;
+  background-color: white;
+  color: black;
   width: 100%;
-  height: auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .deals-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Responsive Design */
@@ -662,11 +803,17 @@
   .hh-email-container-two h4 {
     font-size: 1rem;
   }
+  .hh-email-content {
+    padding: 10px;
+  }
   .deals-grid {
     grid-template-columns: repeat(3, 1fr);
   }
   .hh-filter-bar {
-    overflow: scroll;
+    padding: 10px;
+  }
+  .hh-filter-subheading {
+    padding-top: 0;
   }
   .hh-filter-heading {
     margin-top: 0px;
@@ -689,17 +836,40 @@
     border-radius: 10px;
   }
 }
-
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
   .deals-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media screen and (max-width: 768px) {
   #hh-input-wrapper {
     flex-direction: column;
     align-items: flex-start;
   }
   #hh-input-wrapper .af-element:nth-child(1) {
     width: 100%;
+  }
+  .dom-middle {
+    flex-direction: row;
+  }
+  .dom-graphic {
+    position: relative;
+    right: unset;
+    width: 60%;
+  }
+  .dom-copy {
+    font-size: 0.9rem;
+  }
+  .dom-bottom h5 {
+    max-width: 100%;
+  }
+  .mobile-filter-buttons {
+    margin-top: 1rem;
+  }
+  .hh-filter-heading {
+    margin-bottom: 0;
+    padding: 10px 0;
   }
 }
 
@@ -726,6 +896,16 @@
   .honey-hole-hero-image img {
     height: auto;
   }
+  .hero-header-two {
+    flex-direction: column;
+    row-gap: 20px;
+  }
+  .deal-o-meter-graphic-wrapper {
+    width: 100%;
+  }
+  .hh-hero-email-section {
+    width: 100%;
+  }
   .hh-email-wrapper {
     flex-direction: column;
   }
@@ -738,10 +918,22 @@
   .hh-email-container-two-wrapper {
     width: 100%;
   }
+  .hh-main-wrapper {
+    flex-direction: column;
+  }
   .deal-rating {
     display: none;
   }
   .deal-pricing {
     flex-wrap: wrap;
+  }
+  .sidebar {
+    width: 100%;
+    padding: 15px;
+    max-width: unset;
+    margin-top: 0;
+  }
+  .hh-email-image {
+    height: 10vh;
   }
 }

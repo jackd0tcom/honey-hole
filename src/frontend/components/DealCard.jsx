@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const DealCard = ({ deal }) => {
   const {
     title,
@@ -11,11 +13,14 @@ const DealCard = ({ deal }) => {
     categories,
     background_image,
     description,
+    badge,
   } = deal;
+  const [hover, setHover] = useState(false);
 
-  const discount_percentage = Math.round(
-    ((original_price - sales_price) / original_price) * 100
-  );
+  const discount_percentage =
+    sales_price && original_price
+      ? Math.round(((original_price - sales_price) / original_price) * 100)
+      : 0;
 
   let USDollar = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -55,15 +60,20 @@ const DealCard = ({ deal }) => {
   if (categories[0].name === "Big Sale") {
     return (
       <div
+        onMouseEnter={() => {
+          setHover(true);
+        }}
+        onMouseLeave={() => {
+          setHover(false);
+        }}
         className="deal-card big-sale"
         style={{ backgroundImage: `url(${background_image})` }}
       >
-        {promo_code ? (
+        {badge && <div className="deal-badge big-sale-badge">{badge}</div>}
+        {hover && promo_code && (
           <div className="hh-promo-code-wrapper">
-            <p>Use Code {promo_code}</p>
+            <p>Use Code: {promo_code}</p>
           </div>
-        ) : (
-          <></>
         )}
         <a
           href={product_url}
@@ -93,13 +103,20 @@ const DealCard = ({ deal }) => {
     );
   }
   return (
-    <div className="deal-card">
-      {promo_code ? (
+    <div
+      onMouseEnter={() => {
+        setHover(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+      }}
+      className="deal-card"
+    >
+      {badge && <div className="deal-badge">{badge}</div>}
+      {hover && promo_code && (
         <div className="hh-promo-code-wrapper">
-          <p>Use Code {promo_code}</p>
+          <p>Use Code: {promo_code}</p>
         </div>
-      ) : (
-        <></>
       )}
       <a
         href={product_url}
@@ -108,11 +125,19 @@ const DealCard = ({ deal }) => {
         rel="noopener noreferrer"
       >
         <div className="deal-o-meter-card">
-          <img
-            className="deal-o-meter-card-img"
-            src={getDealMeter(discount_percentage)}
-            alt=""
-          />
+          {sales_price ? (
+            <img
+              className="deal-o-meter-card-img"
+              src={getDealMeter(discount_percentage)}
+              alt=""
+            />
+          ) : (
+            <img
+              className="deal-o-meter-card-img"
+              src="https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png"
+              alt="Great Price"
+            />
+          )}
         </div>
         <div className="deal-image-wrapper">
           {image_url ? (
@@ -128,22 +153,37 @@ const DealCard = ({ deal }) => {
         <div className="deal-content">
           <h3 className="deal-title">{title}</h3>
           <div className="deal-pricing">
-            <span
-              className={`sales-price ${getPriceClass(discount_percentage)}`}
-            >
-              {USDollar.format(sales_price)}
-            </span>
-            {original_price && (
-              <span className="original-price">
-                {USDollar.format(original_price)}
-              </span>
-            )}
-            {discount_percentage > 0 && (
-              <span
-                className={`discount ${getDiscountClass(discount_percentage)}`}
-              >
-                {discount_percentage}% OFF
-              </span>
+            {sales_price ? (
+              <>
+                <span
+                  className={`sales-price ${getPriceClass(
+                    discount_percentage
+                  )}`}
+                >
+                  {USDollar.format(sales_price)}
+                </span>
+                {original_price && (
+                  <span className="original-price">
+                    {USDollar.format(original_price)}
+                  </span>
+                )}
+                {discount_percentage > 0 && (
+                  <span
+                    className={`discount ${getDiscountClass(
+                      discount_percentage
+                    )}`}
+                  >
+                    {discount_percentage}% OFF
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <span className="sales-price great-price">
+                  {USDollar.format(original_price)}
+                </span>
+                <span className="great-deal-label">Great Price!</span>
+              </>
             )}
           </div>
           <div className="deal-seller">{seller}</div>

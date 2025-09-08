@@ -10,6 +10,8 @@ const DealGrid = ({ deals }) => {
   const [originalArray, setOriginalArray] = useState(deals);
   const [activeCategory, setActiveCategory] = useState(0);
   const [sort, setSort] = useState("newest");
+  const [isMobile, setIsMobile] = useState(false);
+  const [filtering, setFiltering] = useState(false);
 
   useEffect(() => {
     if (categories === "all") {
@@ -21,6 +23,17 @@ const DealGrid = ({ deals }) => {
         })
       );
   }, [categories]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   const getSavings = (a) => {
     if (!a.original_price || a.original_price === 0) return 0;
@@ -80,19 +93,24 @@ const DealGrid = ({ deals }) => {
 
   return (
     <>
+      {isMobile && filtering && (
+        <div className="mobile-filter-overlay">
+          <div className="modal-wrapper">
+            <FilterBar
+              categories={categories}
+              setCategories={setCategories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              isMobile={isMobile}
+              setFiltering={setFiltering}
+            />
+          </div>
+        </div>
+      )}
       <div className="hh-grid-heading-wrapper">
-        <h2 className="hh-heading">Honey Hole Deals</h2>{" "}
-        <Sorter sort={sort} setSort={setSort} />
-      </div>
-      <div className="hh-main-bg">
-        <div className="hh-main-wrapper">
-          <FilterBar
-            categories={categories}
-            setCategories={setCategories}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
-          <div className="hh-deal-grid-wrapper">
+        {isMobile ? (
+          <>
+            {" "}
             <div className="deal-grid-heading">
               <img
                 className="deal-grid-icon"
@@ -102,6 +120,51 @@ const DealGrid = ({ deals }) => {
                 {currentCategory[activeCategory]}
               </h2>
             </div>
+          </>
+        ) : (
+          <>
+            {" "}
+            <h2 className="hh-heading">Honey Hole Deals</h2>{" "}
+          </>
+        )}
+        {!isMobile && <Sorter sort={sort} setSort={setSort} />}
+      </div>
+      <div className="hh-main-bg">
+        <div className="hh-main-wrapper">
+          {isMobile ? (
+            <div className="mobile-filter-buttons">
+              <button
+                id="mobile-filter-button"
+                onClick={() => setFiltering(true)}
+              >
+                Filter
+              </button>
+              <Sorter />
+            </div>
+          ) : (
+            <>
+              {" "}
+              <FilterBar
+                categories={categories}
+                setCategories={setCategories}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                isMobile={isMobile}
+              />
+            </>
+          )}
+          <div className="hh-deal-grid-wrapper">
+            {!isMobile && (
+              <div className="deal-grid-heading">
+                <img
+                  className="deal-grid-icon"
+                  src={categoryIcon[activeCategory]}
+                />
+                <h2 className="deal-grid-title">
+                  {currentCategory[activeCategory]}
+                </h2>
+              </div>
+            )}
             <div className="deals-grid">
               {dealsArray.map((deal) => (
                 <DealCard

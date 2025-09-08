@@ -106,8 +106,8 @@
 }
 
 .honey-hole-form-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 30px;
   margin-bottom: 30px;
 }
@@ -117,6 +117,11 @@
   padding: 20px;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 45%;
+}
+
+.big-sale-section {
+  width: 100%;
 }
 
 .honey-hole-form-section h2 {
@@ -516,6 +521,28 @@
   object-position: center;
 }
 
+.hh-admin-deal-badge {
+  position: absolute;
+  top: 80%;
+  left: 5%;
+  padding: 5px 12px;
+  background-color: #f69f0c;
+  color: white;
+  font-weight: 500;
+}
+.hh-admin-deal-promo-code {
+  position: absolute;
+  top: 89%;
+  left: 3%;
+}
+.hh-admin-deal-promo-code span {
+  margin-left: 10px;
+  padding: 5px 12px;
+  background-color: #f69f0c;
+  color: white;
+  font-weight: 500;
+}
+
 .deal-image .image-overlay {
   position: absolute;
   top: 0;
@@ -812,6 +839,12 @@
   font-size: 14px;
 }
 
+.original-price-only {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e44d26;
+}
+
 .sales-price {
   color: #e44d26;
   font-weight: 600;
@@ -831,23 +864,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 10px;
 }
-
-.rating-stars {
-  color: #ffd700;
-}
-
-.rating-stars .star {
-  font-size: 14px;
-}
-
-.rating-stars .star.filled {
-  color: #ffd700;
-}
-
-.rating-stars .star:not(.filled) {
-  color: #ddd;
+.deal-o-meter-card-img {
+  height: 40px;
 }
 
 .rating-value {

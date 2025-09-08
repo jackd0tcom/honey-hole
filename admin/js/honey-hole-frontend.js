@@ -104,9 +104,7 @@ const App = () => {
     className: "honey-hole-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-header"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hero-header-two"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_HeroEmailSignup_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealOMeterGraphic_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], null)), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-error"
   }, error))), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-loading"
@@ -131,6 +129,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 const DealCard = ({
   deal
 }) => {
@@ -145,9 +144,11 @@ const DealCard = ({
     seller,
     categories,
     background_image,
-    description
+    description,
+    badge
   } = deal;
-  const discount_percentage = Math.round((original_price - sales_price) / original_price * 100);
+  const [hover, setHover] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const discount_percentage = sales_price && original_price ? Math.round((original_price - sales_price) / original_price * 100) : 0;
   let USDollar = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD"
@@ -178,13 +179,21 @@ const DealCard = ({
   }, "\u2605");
   if (categories[0].name === "Big Sale") {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      onMouseEnter: () => {
+        setHover(true);
+      },
+      onMouseLeave: () => {
+        setHover(false);
+      },
       className: "deal-card big-sale",
       style: {
         backgroundImage: `url(${background_image})`
       }
-    }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "deal-badge big-sale-badge"
+    }, badge), hover && promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "hh-promo-code-wrapper"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code ", promo_code)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code: ", promo_code)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: product_url,
       className: "deal-card-link big-sale-card",
       target: "_blank",
@@ -211,20 +220,32 @@ const DealCard = ({
     }, description))));
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    onMouseEnter: () => {
+      setHover(true);
+    },
+    onMouseLeave: () => {
+      setHover(false);
+    },
     className: "deal-card"
-  }, promo_code ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-badge"
+  }, badge), hover && promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-promo-code-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code ", promo_code)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code: ", promo_code)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: product_url,
     className: "deal-card-link",
     target: "_blank",
     rel: "noopener noreferrer"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-o-meter-card"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+  }, sales_price ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
     className: "deal-o-meter-card-img",
     src: getDealMeter(discount_percentage),
     alt: ""
+  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-o-meter-card-img",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png",
+    alt: "Great Price"
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-image-wrapper"
   }, image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -242,13 +263,17 @@ const DealCard = ({
     className: "deal-title"
   }, title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-pricing"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, sales_price ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: `sales-price ${getPriceClass(discount_percentage)}`
   }, USDollar.format(sales_price)), original_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "original-price"
   }, USDollar.format(original_price)), discount_percentage > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: `discount ${getDiscountClass(discount_percentage)}`
-  }, discount_percentage, "% OFF")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, discount_percentage, "% OFF")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "sales-price great-price"
+  }, USDollar.format(original_price)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "great-deal-label"
+  }, "Great Price!"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-seller"
   }, seller))));
 };
@@ -285,6 +310,8 @@ const DealGrid = ({
   const [originalArray, setOriginalArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
   const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
+  const [isMobile, setIsMobile] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [filtering, setFiltering] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (categories === "all") {
       setDealsArray(deals);
@@ -292,6 +319,16 @@ const DealGrid = ({
       return deal.categories[0].slug === categories;
     }));
   }, [categories]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
   const getSavings = a => {
     if (!a.original_price || a.original_price === 0) return 0;
     return (a.original_price - a.sales_price) / a.original_price * 100;
@@ -324,25 +361,49 @@ const DealGrid = ({
       className: "honey-hole-empty"
     }, "No deals found");
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isMobile && filtering && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mobile-filter-overlay"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "modal-wrapper"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    categories: categories,
+    setCategories: setCategories,
+    activeCategory: activeCategory,
+    setActiveCategory: setActiveCategory,
+    isMobile: isMobile,
+    setFiltering: setFiltering
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-grid-heading-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  }, isMobile ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-grid-heading"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "deal-grid-icon",
+    src: categoryIcon[activeCategory]
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "deal-grid-title"
+  }, currentCategory[activeCategory]))) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "hh-heading"
-  }, "Honey Hole Deals"), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, "Honey Hole Deals"), " "), !isMobile && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
     sort: sort,
     setSort: setSort
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-main-bg"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-main-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, isMobile ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mobile-filter-buttons"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    id: "mobile-filter-button",
+    onClick: () => setFiltering(true)
+  }, "Filter"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null)) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     categories: categories,
     setCategories: setCategories,
     activeCategory: activeCategory,
-    setActiveCategory: setActiveCategory
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    setActiveCategory: setActiveCategory,
+    isMobile: isMobile
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-deal-grid-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, !isMobile && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-grid-heading"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
     className: "deal-grid-icon",
@@ -379,10 +440,23 @@ __webpack_require__.r(__webpack_exports__);
 const DealOMeterGraphic = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-o-meter-graphic-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: "https://outdoorempire.com/wp-content/uploads/2025/08/Deal-o-meter-graphic-1-2.jpg",
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "dom-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "dom-top"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Deal-O-Meter")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "dom-middle"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "dom-copy"
+  }, "Keep an eye on your local ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Deal-O-Meter"), " to see how good of a deal you're getting!"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "dom-graphic",
+    src: "https://outdoorempire.com/wp-content/uploads/2025/09/Deal-o-meter-meter-graphic-2.png",
     alt: ""
-  }));
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "dom-graphic-container"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "dom-bottom"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "Only YOU can save on these deals!"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealOMeterGraphic);
 
@@ -579,13 +653,20 @@ const FilterBar = ({
   categories,
   setCategories,
   activeCategory,
-  setActiveCategory
+  setActiveCategory,
+  isMobile,
+  setFiltering
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "sidebar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, isMobile && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mobile-sidebar-header"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Filter"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "mobile-close",
+    onClick: () => setFiltering(false)
+  }, "\xD7")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-filter-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+  }, !isMobile && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
     id: "hh-filter"
   }, "Filter"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-categories"

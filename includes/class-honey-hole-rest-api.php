@@ -107,10 +107,15 @@ class Honey_Hole_REST_API
                     'seller' => $this->clean_html_entities(get_post_meta($post_id, 'deal_seller', true)),
                     'description' => get_post_meta($post_id, 'deal_description', true),
                     'background_image' => get_post_meta($post_id, 'deal_background_image', true),
+                    'badge' => $this->clean_html_entities(get_post_meta($post_id, 'deal_badge', true)),
                     'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'all')),
                     'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
                     'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),
                 );
+                
+                // Debug: Log badge value
+                $badge_value = get_post_meta($post_id, 'deal_badge', true);
+                error_log('Honey Hole REST API - Badge for deal ' . $post_id . ': "' . $badge_value . '"');
 
                 $deals[] = $deal;
             }
@@ -222,4 +227,5 @@ class Honey_Hole_REST_API
             'video_url' => $video_url
         ), 200);
     }
+
 }

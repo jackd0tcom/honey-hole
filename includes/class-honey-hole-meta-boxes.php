@@ -45,6 +45,7 @@ class Honey_Hole_Meta_Boxes
         $seller = get_post_meta($post->ID, 'deal_seller', true);
         $description = get_post_meta($post->ID, 'deal_description', true);
         $background_image = get_post_meta($post->ID, 'deal_background_image', true);
+        $badge = get_post_meta($post->ID, 'deal_badge', true);
 
         // Get the current category to determine which fields to show
         $terms = get_the_terms($post->ID, 'deal_category');
@@ -80,6 +81,7 @@ class Honey_Hole_Meta_Boxes
             <p>
                 <label for="honey_hole_sales_price">Sales Price:</label>
                 <input type="text" id="honey_hole_sales_price" name="honey_hole_sales_price" value="<?php echo esc_attr($sales_price); ?>" class="widefat" />
+                <span class="description">Enter the sales price (optional - leave empty for great deals that aren't on sale)</span>
             </p>
             <p>
                 <label for="honey_hole_rating">Rating:</label>
@@ -98,6 +100,11 @@ class Honey_Hole_Meta_Boxes
                 <input type="text" id="honey_hole_seller" name="honey_hole_seller" value="<?php echo esc_attr($seller); ?>" class="widefat" />
                 <span class="description">Add the seller for the deal</span>
             </p>
+            <p>
+                <label for="honey_hole_badge">Badge:</label>
+                <input type="text" id="honey_hole_badge" name="honey_hole_badge" value="<?php echo esc_attr($badge); ?>" class="widefat" />
+                <span class="description">Add a custom badge or label (e.g., "New", "Limited Time", "Best Seller")</span>
+            </p>
         </div>
 
         <!-- Big Sale Specific Fields (hidden for standard deals) -->
@@ -111,6 +118,11 @@ class Honey_Hole_Meta_Boxes
                 <label for="honey_hole_background_image">Background Image URL:</label>
                 <input type="url" id="honey_hole_background_image" name="honey_hole_background_image" value="<?php echo esc_url($background_image); ?>" class="widefat" />
                 <span class="description">Enter the URL for the background image (optional)</span>
+            </p>
+            <p>
+                <label for="honey_hole_badge">Badge:</label>
+                <input type="text" id="honey_hole_badge_big_sale" name="honey_hole_badge" value="<?php echo esc_attr($badge); ?>" class="widefat" />
+                <span class="description">Add a custom badge or label (e.g., "New", "Limited Time", "Best Seller")</span>
             </p>
         </div>
 
@@ -188,7 +200,8 @@ class Honey_Hole_Meta_Boxes
             'honey_hole_promo_code' => 'deal_promo_code',
             'honey_hole_seller' => 'deal_seller',
             'honey_hole_description' => 'deal_description',
-            'honey_hole_background_image' => 'deal_background_image'
+            'honey_hole_background_image' => 'deal_background_image',
+            'honey_hole_badge' => 'deal_badge'
         );
 
         foreach ($fields as $field => $meta_key) {

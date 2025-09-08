@@ -79,6 +79,18 @@ const DealCard = ({
     }
   };
 
+  const getDealMeter = (percentage) => {
+    if (percentage >= 60)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Red-Deal-O-Meter.png";
+    if (percentage >= 50)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Orange-Deal-O-Meter.png";
+    if (percentage >= 40)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Yellow-Deal-O-Meter.png";
+    if (percentage >= 30)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Blue-Deal-O-Meter.png";
+    return "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png";
+  };
+
   const discount =
     deal.original_price > 0
       ? Math.round(
@@ -101,6 +113,23 @@ const DealCard = ({
             checked={bulkDeals.includes(deal.id)}
             onChange={() => handleBulkToggle(deal.id)}
           />
+        </div>
+        <div className="deal-rating">
+          <div className="deal-o-meter-card">
+            {!deal.rating ? (
+              <img
+                className="deal-o-meter-card-img"
+                src={getDealMeter(deal.discount_percentage)}
+                alt=""
+              />
+            ) : (
+              <img
+                className="deal-o-meter-card-img"
+                src={getDealMeter(deal.rating * 14)}
+                alt="Great Price"
+              />
+            )}
+          </div>
         </div>
         <div className="deal-actions">
           <a
@@ -129,15 +158,34 @@ const DealCard = ({
         ) : (
           <div className="no-image">No Image</div>
         )}
+        {deal.badge && !deal.promo_code && (
+          <p className="hh-admin-deal-badge">{deal.badge}</p>
+        )}
+        {deal.promo_code && !deal.badge && (
+          <p className="hh-admin-deal-badge">{deal.promo_code}</p>
+        )}
+        {deal.promo_code && deal.badge && (
+          <div className="hh-admin-deal-promo-code">
+            <span>{deal.promo_code}</span>
+            <span>{deal.badge}</span>
+          </div>
+        )}
       </div>
 
       <div className="deal-content">
         <h3 className="deal-title">{deal.title}</h3>
 
         <div className="deal-pricing">
-          <span className="sales-price">{formattedPrice}</span>
-          {deal.original_price && (
-            <span className="original-price">
+          {deal.sales_price && (
+            <>
+              <span className="sales-price">{formattedPrice}</span>
+              <span className="original-price">
+                {USDollar.format(deal.original_price)}
+              </span>
+            </>
+          )}
+          {!deal.sales_price && (
+            <span className="original-price-only">
               {USDollar.format(deal.original_price)}
             </span>
           )}
@@ -146,21 +194,9 @@ const DealCard = ({
           )}
         </div>
 
-        <div className="deal-rating">
-          <div className="rating-stars">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                className={`star ${i < deal.rating ? "filled" : ""}`}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-          <span className="rating-count">{deal.rating}</span>
+        <div className="deal-seller">
+          {deal.seller ? deal.seller : "No Seller Saved"}
         </div>
-
-        <div className="deal-seller">{deal.seller}</div>
 
         <div className="deal-tags">{deal.tags && deal.tags.join(", ")}</div>
 

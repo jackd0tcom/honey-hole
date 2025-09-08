@@ -143,6 +143,9 @@ const AdminApp = () => {
         />
         <SearchBar onSearch={handleSearch} />
         <AddDealButton />
+        <a href="/wp-admin/admin.php?page=honey-hole-export" className="button button-secondary">
+          Export Deals
+        </a>
       </div>
       <DealList deals={deals} />
       <DeleteAllButton onRefreshDeals={handleRefreshDeals} />
