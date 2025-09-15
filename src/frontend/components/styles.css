@@ -501,6 +501,7 @@
   padding-top: 10px;
   margin-bottom: 10px;
   font-size: 1rem;
+  font-weight: 500;
 }
 .hh-categories {
   display: flex;
@@ -529,6 +530,7 @@
   margin-bottom: 10px;
   font-size: 0.9rem;
   text-align: left;
+  font-weight: 500;
 }
 .hh-filter-img {
   height: 35px;
@@ -873,6 +875,9 @@
   .hh-filter-heading {
     margin-bottom: 0;
     padding: 10px 0;
+  }
+  .hh-main-wrapper {
+    grid-template-columns: auto;
   }
 }
 

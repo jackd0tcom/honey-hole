@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://fishbones.digital
- * @since             2.1.0
+ * @since             3.0.0
  * @package           Honey_Hole_2
  *
  * @wordpress-plugin
- * Plugin Name:       Honey Hole 2.0
+ * Plugin Name:       Honey Hole 3.0
  * Plugin URI:        https://outdoorempire.com/thehoneyhole
  * Description:       A plugin for managing and displaying deals on the Honey Hole
- * Version:           2.1.0
+ * Version:           3.0.0
  * Author:            Jack Ball
  * Author URI:        https://fishbones.digital/
  * License:           GPL-2.0+
@@ -33,7 +33,7 @@
 if (! defined('WPINC')) {
 	die;
 }
-define('HONEY_HOLE_VERSION', '2.1.0');
+define('HONEY_HOLE_VERSION', '3.0.0');
 
 /**
  * The code that runs during plugin activation.

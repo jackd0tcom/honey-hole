@@ -7,7 +7,6 @@ const Sorter = ({ sort, setSort }) => {
           id="sort"
           onChange={(e) => {
             setSort(e.target.value);
-            console.log(e.target.value);
           }}
         >
           <option value="newest">Newest First</option>

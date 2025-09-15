@@ -4,7 +4,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       https://fishbones.digital
- * @since      .0.0
+ * @since      3.0.0
  *
  * @package    Honey_Hole
  * @subpackage Honey_Hole/admin
@@ -180,7 +180,7 @@ class Honey_Hole_Admin
 	/**
 	 * Register the JavaScript for the admin area.
 	 *
-	 * @since    2.0.0
+	 * @since    3.0.0
 	 */
 	public function enqueue_scripts()
 	{
@@ -266,25 +266,25 @@ class Honey_Hole_Admin
 		if (isset($_POST['action']) && $_POST['action'] === 'add_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_add_deal')) {
 			// Debug: Log the POST data
 			error_log('Honey Hole Add Deal - POST data: ' . print_r($_POST, true));
-			
+
 			// Get category to determine which fields to process
 			$category_id = intval($_POST['deal_category']);
 			$category_term = get_term($category_id, 'deal_category');
 			$is_big_sale = $category_term && $category_term->name === 'Big Sale';
-			
+
 			// Sanitize and validate input based on category
 			if ($is_big_sale) {
 				$title = sanitize_text_field($_POST['deal_title_big_sale']);
 				$description = sanitize_textarea_field($_POST['deal_description']);
 				// Handle background image from dropdown or custom input
-			$background_image = '';
-			if (isset($_POST['deal_background_image'])) {
-				if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
-					$background_image = esc_url_raw($_POST['deal_background_image_custom']);
-				} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
-					$background_image = esc_url_raw($_POST['deal_background_image']);
+				$background_image = '';
+				if (isset($_POST['deal_background_image'])) {
+					if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
+						$background_image = esc_url_raw($_POST['deal_background_image_custom']);
+					} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
+						$background_image = esc_url_raw($_POST['deal_background_image']);
+					}
 				}
-			}
 			} else {
 				$title = sanitize_text_field($_POST['deal_title']);
 				$original_price = floatval($_POST['deal_original_price']);
@@ -292,7 +292,7 @@ class Honey_Hole_Admin
 				$rating = floatval($_POST['deal_rating']);
 				$seller = sanitize_text_field($_POST['deal_seller']);
 			}
-			
+
 			// Common fields
 			$deal_url = esc_url_raw($_POST['deal_url']);
 			$promo_code = sanitize_text_field($_POST['deal_promo_code']);
@@ -331,7 +331,7 @@ class Honey_Hole_Admin
 					update_post_meta($deal_id, 'deal_rating', $rating);
 					update_post_meta($deal_id, 'deal_seller', $seller);
 				}
-				
+
 				// Common meta fields
 				update_post_meta($deal_id, 'deal_url', $deal_url);
 				update_post_meta($deal_id, 'deal_promo_code', $promo_code);
@@ -434,21 +434,21 @@ class Honey_Hole_Admin
 		if (isset($_POST['action']) && $_POST['action'] === 'edit_deal' && isset($_POST['honey_hole_nonce']) && wp_verify_nonce($_POST['honey_hole_nonce'], 'honey_hole_edit_deal')) {
 			// Debug: Log the POST data
 			error_log('Honey Hole Edit Deal - POST data: ' . print_r($_POST, true));
-			
+
 			$deal_id = intval($_POST['deal_id']);
 
 			// Get category to determine which fields to process
 			$category_id = intval($_POST['deal_category']);
 			$category_term = get_term($category_id, 'deal_category');
 			$is_big_sale = $category_term && $category_term->name === 'Big Sale';
-			
+
 			// Update post title based on category
 			if ($is_big_sale) {
 				$title = sanitize_text_field($_POST['deal_title_big_sale']);
 			} else {
 				$title = sanitize_text_field($_POST['deal_title']);
 			}
-			
+
 			wp_update_post(array(
 				'ID' => $deal_id,
 				'post_title' => $title
@@ -458,22 +458,22 @@ class Honey_Hole_Admin
 			if ($is_big_sale) {
 				update_post_meta($deal_id, 'deal_description', sanitize_textarea_field($_POST['deal_description']));
 				// Handle background image from dropdown or custom input
-			$background_image = '';
-			if (isset($_POST['deal_background_image'])) {
-				if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
-					$background_image = esc_url_raw($_POST['deal_background_image_custom']);
-				} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
-					$background_image = esc_url_raw($_POST['deal_background_image']);
+				$background_image = '';
+				if (isset($_POST['deal_background_image'])) {
+					if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
+						$background_image = esc_url_raw($_POST['deal_background_image_custom']);
+					} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
+						$background_image = esc_url_raw($_POST['deal_background_image']);
+					}
 				}
-			}
-			update_post_meta($deal_id, 'deal_background_image', $background_image);
+				update_post_meta($deal_id, 'deal_background_image', $background_image);
 			} else {
 				update_post_meta($deal_id, 'deal_original_price', floatval($_POST['deal_original_price']));
 				update_post_meta($deal_id, 'deal_sales_price', !empty($_POST['deal_sales_price']) ? floatval($_POST['deal_sales_price']) : '');
 				update_post_meta($deal_id, 'deal_rating', floatval($_POST['deal_rating']));
 				update_post_meta($deal_id, 'deal_seller', sanitize_text_field($_POST['deal_seller']));
 			}
-			
+
 			// Common meta fields
 			update_post_meta($deal_id, 'deal_url', esc_url_raw($_POST['deal_url']));
 			update_post_meta($deal_id, 'deal_promo_code', sanitize_text_field($_POST['deal_promo_code']));
@@ -1155,7 +1155,7 @@ class Honey_Hole_Admin
 				</div>
 			</div>
 		</div>
-<?php
+	<?php
 	}
 
 	/**
@@ -1166,15 +1166,15 @@ class Honey_Hole_Admin
 		// Get deal count for display
 		$deal_count = wp_count_posts('honey_hole_deal');
 		$total_deals = $deal_count->publish + $deal_count->draft;
-		?>
+	?>
 		<div class="wrap">
 			<h1>Export Deals</h1>
-			
+
 			<div class="honey-hole-export-container">
 				<div class="export-info">
 					<h2>Export All Deals to CSV</h2>
 					<p>Export all your deals to a CSV file for backup, migration, or analysis purposes.</p>
-					
+
 					<div class="export-stats">
 						<p><strong>Total Deals:</strong> <?php echo $total_deals; ?></p>
 						<p><strong>Published:</strong> <?php echo $deal_count->publish; ?></p>
@@ -1214,7 +1214,7 @@ class Honey_Hole_Admin
 
 						<button type="button" id="export-csv-btn" class="button button-primary">Export to CSV</button>
 					</div>
-					
+
 					<div id="export-progress" style="display: none;">
 						<div class="spinner" style="float: left; margin-right: 10px;"></div>
 						<p>Exporting deals... Please wait.</p>
@@ -1234,220 +1234,234 @@ class Honey_Hole_Admin
 		</div>
 
 		<style>
-		.honey-hole-export-container {
-			max-width: 800px;
-		}
-		.export-info {
-			background: #fff;
-			padding: 20px;
-			border-radius: 5px;
-			margin-bottom: 20px;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-		}
-		.export-stats {
-			background: #f9f9f9;
-			padding: 15px;
-			border-radius: 3px;
-			margin-top: 15px;
-		}
-		.export-stats p {
-			margin: 5px 0;
-		}
-		.export-form {
-			background: #fff;
-			padding: 20px;
-			border-radius: 5px;
-			margin-bottom: 20px;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-		}
-		.export-help {
-			background: #fff;
-			padding: 20px;
-			border-radius: 5px;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-		}
-		.export-help ul {
-			margin-left: 20px;
-		}
-		.export-help li {
-			margin-bottom: 8px;
-		}
-		.spinner {
-			border: 4px solid #f3f3f3;
-			border-top: 4px solid #0073aa;
-			border-radius: 50%;
-			width: 20px;
-			height: 20px;
-			animation: spin 1s linear infinite;
-		}
-		@keyframes spin {
-			0% { transform: rotate(0deg); }
-			100% { transform: rotate(360deg); }
-		}
+			.honey-hole-export-container {
+				max-width: 800px;
+			}
+
+			.export-info {
+				background: #fff;
+				padding: 20px;
+				border-radius: 5px;
+				margin-bottom: 20px;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			}
+
+			.export-stats {
+				background: #f9f9f9;
+				padding: 15px;
+				border-radius: 3px;
+				margin-top: 15px;
+			}
+
+			.export-stats p {
+				margin: 5px 0;
+			}
+
+			.export-form {
+				background: #fff;
+				padding: 20px;
+				border-radius: 5px;
+				margin-bottom: 20px;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			}
+
+			.export-help {
+				background: #fff;
+				padding: 20px;
+				border-radius: 5px;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			}
+
+			.export-help ul {
+				margin-left: 20px;
+			}
+
+			.export-help li {
+				margin-bottom: 8px;
+			}
+
+			.spinner {
+				border: 4px solid #f3f3f3;
+				border-top: 4px solid #0073aa;
+				border-radius: 50%;
+				width: 20px;
+				height: 20px;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
 		</style>
 
 		<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const exportBtn = document.getElementById('export-csv-btn');
-			const exportForm = document.getElementById('export-form-fields');
-			const exportProgress = document.getElementById('export-progress');
-			
-			exportBtn.addEventListener('click', async function() {
-				const exportStatus = document.getElementById('export_status').value;
-				const exportFormat = document.getElementById('export_format').value;
-				
-				// Show progress
-				exportForm.style.display = 'none';
-				exportProgress.style.display = 'block';
-				
-				try {
-					// Fetch deals data
-					const response = await fetch('/wp-json/honey-hole/v1/deals');
-					if (!response.ok) throw new Error('Failed to fetch deals');
-					
-					const deals = await response.json();
-					
-					// Filter deals based on status
-					let filteredDeals = deals;
-					if (exportStatus === 'publish') {
-						filteredDeals = deals.filter(deal => deal.status === 'publish');
-					} else if (exportStatus === 'draft') {
-						filteredDeals = deals.filter(deal => deal.status === 'draft');
-					}
-					
-					// Create CSV content
-					let csvContent = '';
-					
-					// Define headers based on export format
-					let headers;
-					if (exportFormat === 'full') {
-						headers = [
-							'ID', 'Title', 'Status', 'Date Created', 'Date Modified',
-							'Category', 'Original Price', 'Sales Price', 'Discount Percentage',
-							'Rating', 'Seller', 'Badge', 'Deal URL', 'Normal Link', 'Image URL',
-							'Promo Code', 'Tags', 'Big Sale Title', 'Big Sale Description',
-							'Background Image', 'Author', 'Featured Image ID'
-						];
-					} else {
-						headers = [
-							'ID', 'Title', 'Status', 'Date Created', 'Category',
-							'Original Price', 'Sales Price', 'Seller', 'Deal URL', 'Normal Link',
-							'Image URL', 'Promo Code', 'Tags'
-						];
-					}
-					
-					// Add headers
-					csvContent += headers.join(',') + '\n';
-					
-					// Add deal data
-					filteredDeals.forEach(deal => {
-						let row = [];
-						
+			document.addEventListener('DOMContentLoaded', function() {
+				const exportBtn = document.getElementById('export-csv-btn');
+				const exportForm = document.getElementById('export-form-fields');
+				const exportProgress = document.getElementById('export-progress');
+
+				exportBtn.addEventListener('click', async function() {
+					const exportStatus = document.getElementById('export_status').value;
+					const exportFormat = document.getElementById('export_format').value;
+
+					// Show progress
+					exportForm.style.display = 'none';
+					exportProgress.style.display = 'block';
+
+					try {
+						// Fetch deals data
+						const response = await fetch('/wp-json/honey-hole/v1/deals');
+						if (!response.ok) throw new Error('Failed to fetch deals');
+
+						const deals = await response.json();
+
+						// Filter deals based on status
+						let filteredDeals = deals;
+						if (exportStatus === 'publish') {
+							filteredDeals = deals.filter(deal => deal.status === 'publish');
+						} else if (exportStatus === 'draft') {
+							filteredDeals = deals.filter(deal => deal.status === 'draft');
+						}
+
+						// Create CSV content
+						let csvContent = '';
+
+						// Define headers based on export format
+						let headers;
 						if (exportFormat === 'full') {
-							// Calculate discount percentage
-							let discountPercentage = '';
-							if (deal.original_price && deal.sales_price && deal.original_price > 0) {
-								discountPercentage = Math.round(((deal.original_price - deal.sales_price) / deal.original_price) * 100);
-							}
-							
-							// Get category names
-							let categoryNames = '';
-							if (deal.categories && deal.categories.length > 0) {
-								categoryNames = deal.categories.map(cat => cat.name).join(', ');
-							}
-							
-							row = [
-								deal.id || '',
-								(deal.title || '').replace(/"/g, '""'),
-								deal.status || '',
-								deal.date_added || '',
-								deal.date_updated || '',
-								(categoryNames || '').replace(/"/g, '""'),
-								deal.original_price || '',
-								deal.sales_price || '',
-								discountPercentage,
-								deal.rating || '',
-								(deal.seller || '').replace(/"/g, '""'),
-								(deal.badge || '').replace(/"/g, '""'),
-								deal.product_url || '',
-								deal.product_url || '', // Normal Link - same as Deal URL for now
-								deal.image_url || '',
-								(deal.promo_code || '').replace(/"/g, '""'),
-								(deal.tags || '').replace(/"/g, '""'),
-								(deal.big_sale_title || '').replace(/"/g, '""'),
-								(deal.big_sale_description || '').replace(/"/g, '""'),
-								deal.background_image || '',
-								deal.author || '',
-								deal.featured_image_id || ''
+							headers = [
+								'ID', 'Title', 'Status', 'Date Created', 'Date Modified',
+								'Category', 'Original Price', 'Sales Price', 'Discount Percentage',
+								'Rating', 'Seller', 'Badge', 'Deal URL', 'Normal Link', 'Image URL',
+								'Promo Code', 'Tags', 'Big Sale Title', 'Big Sale Description',
+								'Background Image', 'Author', 'Featured Image ID'
 							];
 						} else {
-							// Get category names
-							let categoryNames = '';
-							if (deal.categories && deal.categories.length > 0) {
-								categoryNames = deal.categories.map(cat => cat.name).join(', ');
-							}
-							
-							row = [
-								deal.id || '',
-								(deal.title || '').replace(/"/g, '""'),
-								deal.status || '',
-								deal.date_added || '',
-								(categoryNames || '').replace(/"/g, '""'),
-								deal.original_price || '',
-								deal.sales_price || '',
-								(deal.seller || '').replace(/"/g, '""'),
-								deal.product_url || '',
-								deal.product_url || '', // Normal Link - same as Deal URL for now
-								deal.image_url || '',
-								(deal.promo_code || '').replace(/"/g, '""'),
-								(deal.tags || '').replace(/"/g, '""')
+							headers = [
+								'ID', 'Title', 'Status', 'Date Created', 'Category',
+								'Original Price', 'Sales Price', 'Seller', 'Deal URL', 'Normal Link',
+								'Image URL', 'Promo Code', 'Tags'
 							];
 						}
-						
-						// Properly escape CSV values
-						const escapedRow = row.map(value => {
-							// If value contains comma, newline, or quote, wrap in quotes and escape quotes
-							if (typeof value === 'string' && (value.includes(',') || value.includes('\n') || value.includes('"') || value.includes('\r'))) {
-								return '"' + value.replace(/"/g, '""') + '"';
+
+						// Add headers
+						csvContent += headers.join(',') + '\n';
+
+						// Add deal data
+						filteredDeals.forEach(deal => {
+							let row = [];
+
+							if (exportFormat === 'full') {
+								// Calculate discount percentage
+								let discountPercentage = '';
+								if (deal.original_price && deal.sales_price && deal.original_price > 0) {
+									discountPercentage = Math.round(((deal.original_price - deal.sales_price) / deal.original_price) * 100);
+								}
+
+								// Get category names
+								let categoryNames = '';
+								if (deal.categories && deal.categories.length > 0) {
+									categoryNames = deal.categories.map(cat => cat.name).join(', ');
+								}
+
+								row = [
+									deal.id || '',
+									(deal.title || '').replace(/"/g, '""'),
+									deal.status || '',
+									deal.date_added || '',
+									deal.date_updated || '',
+									(categoryNames || '').replace(/"/g, '""'),
+									deal.original_price || '',
+									deal.sales_price || '',
+									discountPercentage,
+									deal.rating || '',
+									(deal.seller || '').replace(/"/g, '""'),
+									(deal.badge || '').replace(/"/g, '""'),
+									deal.product_url || '',
+									deal.product_url || '', // Normal Link - same as Deal URL for now
+									deal.image_url || '',
+									(deal.promo_code || '').replace(/"/g, '""'),
+									(deal.tags || '').replace(/"/g, '""'),
+									(deal.big_sale_title || '').replace(/"/g, '""'),
+									(deal.big_sale_description || '').replace(/"/g, '""'),
+									deal.background_image || '',
+									deal.author || '',
+									deal.featured_image_id || ''
+								];
+							} else {
+								// Get category names
+								let categoryNames = '';
+								if (deal.categories && deal.categories.length > 0) {
+									categoryNames = deal.categories.map(cat => cat.name).join(', ');
+								}
+
+								row = [
+									deal.id || '',
+									(deal.title || '').replace(/"/g, '""'),
+									deal.status || '',
+									deal.date_added || '',
+									(categoryNames || '').replace(/"/g, '""'),
+									deal.original_price || '',
+									deal.sales_price || '',
+									(deal.seller || '').replace(/"/g, '""'),
+									deal.product_url || '',
+									deal.product_url || '', // Normal Link - same as Deal URL for now
+									deal.image_url || '',
+									(deal.promo_code || '').replace(/"/g, '""'),
+									(deal.tags || '').replace(/"/g, '""')
+								];
 							}
-							return value;
+
+							// Properly escape CSV values
+							const escapedRow = row.map(value => {
+								// If value contains comma, newline, or quote, wrap in quotes and escape quotes
+								if (typeof value === 'string' && (value.includes(',') || value.includes('\n') || value.includes('"') || value.includes('\r'))) {
+									return '"' + value.replace(/"/g, '""') + '"';
+								}
+								return value;
+							});
+
+							csvContent += escapedRow.join(',') + '\n';
 						});
-						
-						csvContent += escapedRow.join(',') + '\n';
-					});
-					
-					// Create and download file
-					const filename = 'honey-hole-deals-export-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.csv';
-					const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-					const link = document.createElement('a');
-					
-					if (link.download !== undefined) {
-						const url = URL.createObjectURL(blob);
-						link.setAttribute('href', url);
-						link.setAttribute('download', filename);
-						link.style.visibility = 'hidden';
-						document.body.appendChild(link);
-						link.click();
-						document.body.removeChild(link);
-					}
-					
-					// Reset form
-					setTimeout(() => {
+
+						// Create and download file
+						const filename = 'honey-hole-deals-export-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.csv';
+						const blob = new Blob([csvContent], {
+							type: 'text/csv;charset=utf-8;'
+						});
+						const link = document.createElement('a');
+
+						if (link.download !== undefined) {
+							const url = URL.createObjectURL(blob);
+							link.setAttribute('href', url);
+							link.setAttribute('download', filename);
+							link.style.visibility = 'hidden';
+							document.body.appendChild(link);
+							link.click();
+							document.body.removeChild(link);
+						}
+
+						// Reset form
+						setTimeout(() => {
+							exportForm.style.display = 'block';
+							exportProgress.style.display = 'none';
+						}, 1000);
+
+					} catch (error) {
+						console.error('Export failed:', error);
+						alert('Export failed: ' + error.message);
 						exportForm.style.display = 'block';
 						exportProgress.style.display = 'none';
-					}, 1000);
-					
-				} catch (error) {
-					console.error('Export failed:', error);
-					alert('Export failed: ' + error.message);
-					exportForm.style.display = 'block';
-					exportProgress.style.display = 'none';
-				}
+					}
+				});
 			});
-		});
 		</script>
 <?php
 	}
-
-
 }

@@ -2,6 +2,17 @@
 
 All notable changes to the Honey Hole plugin will be documented in this file.
 
+## [3.0.0] 2025-09-15
+
+### Added
+- Big Sale Deals use a different deal card format
+- Deal o Meter!
+- Optional deal badges
+- Deal Sorting
+
+### Changed
+- Sales price is no longer required, allowing the user to not have to create a fake sale
+
 ## [2.1.0] 2025-07-01
 
 ### Fixed

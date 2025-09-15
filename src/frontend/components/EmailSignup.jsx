@@ -48,7 +48,6 @@ const EmailSignup = () => {
                           id="awf_field-118013225"
                           type="email"
                           name="email"
-                          value=""
                           tabindex="500"
                           onfocus=" if (this.value == '') { this.value = ''; }"
                           onblur="if (this.value == '') { this.value='';}"

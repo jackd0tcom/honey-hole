@@ -352,7 +352,6 @@ const DealGrid = ({
   const currentCategory = ["All Gear Deals", "Camping Gear", "Fishing Gear", "Hiking Gear", "Hunting Gear", "Outdoor Gear"];
   const categoryIcon = ["https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png"];
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log("sorting");
     let sortedDeals = [...dealsArray];
     if (sort === "newest") {
       sortedDeals.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
@@ -369,9 +368,6 @@ const DealGrid = ({
     }
     setDealsArray(sortedDeals);
   }, [sort]);
-  const test = () => {
-    console.log(deals[0].categories[0].slug);
-  };
   if (!deals || deals.length === 0) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "honey-hole-empty"
@@ -493,18 +489,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const DealsVideo = () => {
-  const [videoUrl, setVideoUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+  const [videoUrl, setVideoUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("https://www.youtube.com/embed/BVzmHPOdVBs?si=YSZ5NaCJ0IjQOFcd");
   const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const fetchVideoSettings = async () => {
       try {
-        const response = await fetch('/wp-json/honey-hole/v1/video-settings');
+        const response = await fetch("/wp-json/honey-hole/v1/video-settings");
         if (response.ok) {
           const data = await response.json();
           setVideoUrl(data.video_url);
         }
       } catch (error) {
-        console.error('Error fetching video settings:', error);
+        console.error("Error fetching video settings:", error);
       } finally {
         setLoading(false);
       }
@@ -610,7 +606,6 @@ const EmailSignup = () => {
     id: "awf_field-118013225",
     type: "email",
     name: "email",
-    value: "",
     tabindex: "500",
     onfocus: " if (this.value == '') { this.value = ''; }",
     onblur: "if (this.value == '') { this.value='';}"
@@ -1044,7 +1039,6 @@ const Sorter = ({
     id: "sort",
     onChange: e => {
       setSort(e.target.value);
-      console.log(e.target.value);
     }
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     value: "newest"

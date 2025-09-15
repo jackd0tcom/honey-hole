@@ -59,7 +59,6 @@ const DealGrid = ({ deals }) => {
   ];
 
   useEffect(() => {
-    console.log("sorting");
     let sortedDeals = [...dealsArray];
 
     if (sort === "newest") {
@@ -81,10 +80,6 @@ const DealGrid = ({ deals }) => {
     }
     setDealsArray(sortedDeals);
   }, [sort]);
-
-  const test = () => {
-    console.log(deals[0].categories[0].slug);
-  };
 
   if (!deals || deals.length === 0) {
     return <div className="honey-hole-empty">No deals found</div>;

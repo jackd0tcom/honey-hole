@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const DealsVideo = () => {
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+  const [videoUrl, setVideoUrl] = useState(
+    "https://www.youtube.com/embed/BVzmHPOdVBs?si=YSZ5NaCJ0IjQOFcd"
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVideoSettings = async () => {
       try {
-        const response = await fetch('/wp-json/honey-hole/v1/video-settings');
+        const response = await fetch("/wp-json/honey-hole/v1/video-settings");
         if (response.ok) {
           const data = await response.json();
           setVideoUrl(data.video_url);
         }
       } catch (error) {
-        console.error('Error fetching video settings:', error);
+        console.error("Error fetching video settings:", error);
       } finally {
         setLoading(false);
       }
