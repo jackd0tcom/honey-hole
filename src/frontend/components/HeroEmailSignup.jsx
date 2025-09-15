@@ -1,10 +1,10 @@
-const EmailSignup = () => {
+const HeroEmailSignup = () => {
   return (
     <>
-      <div id="hh-email-section">
+      <div class="hh-hero-email-section">
         <div class="hh-email-wrapper">
           <div class="hh-email-container-one">
-            <div class="hh-email-image"></div>
+            <div class="hh-hero-email-image"></div>
             <div class="hh-email-content">
               <h2>Get the Best Deals and Win Free Gear!</h2>
               <form
@@ -39,8 +39,8 @@ const EmailSignup = () => {
                   <input type="hidden" name="meta_tooltip" value="" />
                 </div>
                 <div id="af-form-894900673" class="af-form">
-                  <div id="hh-input-wrapper" class="af-body af-standards">
-                    <div class="af-element">
+                  <div id="hh-hero-input-wrapper" class="af-body af-standards">
+                    <div class="af-element hero-email-input">
                       <div class="af-textWrap">
                         <input
                           placeholder="Email"
@@ -56,7 +56,7 @@ const EmailSignup = () => {
                       </div>
                       <div class="af-clear"></div>
                     </div>
-                    <div class="af-element hh-email-submit-wrapper">
+                    <div class="af-element hh-hero-email-submit-wrapper">
                       <input
                         id="hh-email-submit"
                         name="submit"
@@ -112,4 +112,4 @@ const EmailSignup = () => {
   );
 };
 
-export default EmailSignup;
+export default HeroEmailSignup;

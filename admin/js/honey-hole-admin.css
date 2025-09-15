@@ -6,1260 +6,1279 @@
  * included in this file.
  */
 
- .honey-hole-deal-meta {
-    margin: 20px 0;
-    padding: 15px;
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  }
-  
-  .honey-hole-deal-meta h3 {
-    margin-top: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .honey-hole-form-field {
-    margin-bottom: 15px;
-  }
-  
-  .honey-hole-form-field label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-  }
-  
-  .honey-hole-form-field input[type="text"],
-  .honey-hole-form-field input[type="number"],
-  .honey-hole-form-field input[type="url"],
-  .honey-hole-form-field input[type="date"] {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .honey-hole-form-field .description {
-    color: #666;
-    font-style: italic;
-    margin-top: 5px;
+.honey-hole-deal-meta {
+  margin: 20px 0;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.honey-hole-deal-meta h3 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.honey-hole-form-field {
+  margin-bottom: 15px;
+}
+
+.honey-hole-form-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.honey-hole-form-field input[type="text"],
+.honey-hole-form-field input[type="number"],
+.honey-hole-form-field input[type="url"],
+.honey-hole-form-field input[type="date"] {
+  width: 100%;
+  max-width: 400px;
+}
+
+.honey-hole-form-field .description {
+  color: #666;
+  font-style: italic;
+  margin-top: 5px;
   font-size: 13px;
-  }
-  
-  /* Price input styling */
-  .honey-hole-form-field input[type="number"] {
-    -moz-appearance: textfield;
-  }
-  
-  .honey-hole-form-field input[type="number"]::-webkit-outer-spin-button,
-  .honey-hole-form-field input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  /* Date input styling */
-  .honey-hole-form-field input[type="date"] {
-    padding: 5px;
-  }
-  
-  /* URL input styling */
-  .honey-hole-form-field input[type="url"] {
-    padding: 5px;
-  }
-  
-  /* Category selection styling */
-  .honey-hole-form-field select {
-    width: 100%;
-    max-width: 400px;
-    padding: 5px;
-  }
-  
-  .honey-hole-admin {
-    margin-top: 20px;
-    padding-bottom: 80px;
-    margin-right: 20px;
-  }
-  
-  .honey-hole-stats {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .stat-box {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-    padding: 15px;
-    min-width: 150px;
-    text-align: center;
-  }
-  
-  .stat-label {
-    display: block;
-    color: #646970;
-    font-size: 13px;
-    margin-bottom: 5px;
-  }
-  
-  .stat-value {
-    display: block;
-    font-size: 24px;
-    font-weight: 600;
-    color: #1d2327;
-  }
-  
+}
+
+/* Price input styling */
+.honey-hole-form-field input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.honey-hole-form-field input[type="number"]::-webkit-outer-spin-button,
+.honey-hole-form-field input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Date input styling */
+.honey-hole-form-field input[type="date"] {
+  padding: 5px;
+}
+
+/* URL input styling */
+.honey-hole-form-field input[type="url"] {
+  padding: 5px;
+}
+
+/* Category selection styling */
+.honey-hole-form-field select {
+  width: 100%;
+  max-width: 400px;
+  padding: 5px;
+}
+
+.honey-hole-admin {
+  margin-top: 20px;
+  padding-bottom: 80px;
+  margin-right: 20px;
+}
+
+.honey-hole-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-box {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  padding: 15px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: #646970;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1d2327;
+}
+
+.honey-hole-form-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.honey-hole-form-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 45%;
+}
+
+.big-sale-section {
+  width: 100%;
+}
+
+.honey-hole-form-section h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+
+.honey-hole-form-field {
+  margin-bottom: 20px;
+}
+
+.honey-hole-form-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #23282d;
+}
+
+.honey-hole-form-field input[type="text"],
+.honey-hole-form-field input[type="number"],
+.honey-hole-form-field input[type="url"],
+.honey-hole-form-field input[type="date"],
+.honey-hole-form-field textarea,
+.honey-hole-form-field select {
+  width: 100%;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+}
+
+.honey-hole-form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.honey-hole-form-field .description {
+  color: #666;
+  font-style: italic;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.honey-hole-form-actions {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: right;
+}
+
+.honey-hole-form-actions .button {
+  margin-left: 10px;
+}
+
+#image-preview {
+  margin-top: 10px;
+  max-width: 300px;
+}
+
+#image-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
   .honey-hole-form-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr;
+  }
+
+  .honey-hole-stats {
+    flex-direction: column;
+  }
+}
+
+.honey-hole-image-options {
+  margin-top: 10px;
+}
+
+.honey-hole-image-option {
+  margin-bottom: 15px;
+}
+
+.honey-hole-image-option input[type="radio"] {
+  margin-right: 8px;
+}
+
+.honey-hole-image-option input[type="url"] {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 8px;
+}
+
+/* Tags Input Styles */
+.honey-hole-tags-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.honey-hole-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.honey-hole-tag {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.honey-hole-tag .remove-tag {
+  cursor: pointer;
+  color: #666;
+  font-weight: bold;
+}
+
+.honey-hole-tag .remove-tag:hover {
+  color: #dc3545;
+}
+
+/* Categories Management Page */
+.honey-hole-categories-admin {
+  max-width: 1200px;
+  margin: 20px 0;
+}
+
+.honey-hole-categories-admin .honey-hole-form-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.honey-hole-categories-admin h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.honey-hole-categories-admin .wp-list-table {
+  margin-top: 15px;
+}
+
+.honey-hole-categories-admin .wp-list-table th {
+  font-weight: 600;
+}
+
+.honey-hole-categories-admin .button-small {
+  padding: 0 8px;
+  height: 28px;
+  line-height: 26px;
+}
+
+.honey-hole-categories-admin .description {
+  color: #666;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Deals Table Styles */
+.wp-list-table .column-image {
+  width: 70px;
+}
+
+.wp-list-table .column-date {
+  width: 120px;
+}
+
+.wp-list-table .column-url {
+  width: 100px;
+}
+
+.wp-list-table .column-url .button-small {
+  padding: 0 8px;
+  height: 28px;
+  line-height: 26px;
+}
+
+.wp-list-table .column-url .no-url {
+  color: #666;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.deal-thumbnail-image {
+  width: 200px;
+  height: auto;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.no-image {
+  width: 50px;
+  height: 50px;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Price input wrapper */
+.price-input-wrapper {
+  position: relative;
+  display: inline-block;
+  max-width: 400px;
+}
+
+.price-input-wrapper .currency-symbol {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.price-input-wrapper input {
+  padding-left: 20px !important;
+}
+
+/* Discount display */
+.discount-display {
+  background: #f0f0f1;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  font-weight: 600;
+  color: #2271b1;
+}
+
+/* Rating Input Styles */
+.rating-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rating-input input[type="number"] {
+  width: 60px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.rating-stars .star {
+  color: #ffd700;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.rating-stars .star.filled {
+  color: #ffd700;
+}
+
+.rating-stars .star:not(.filled) {
+  color: #d4d4d4;
+}
+
+.rating-stars .star:hover,
+.rating-stars .star:hover ~ .star {
+  color: #d4d4d4;
+}
+
+/* Column Styles */
+.wp-list-table .column-rating {
+  width: 100px;
+}
+
+.wp-list-table .column-rating .rating-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.wp-list-table .column-rating .star {
+  color: #d4d4d4;
+  font-size: 16px;
+}
+
+.wp-list-table .column-rating .star.filled {
+  color: #ffd700;
+}
+
+.wp-list-table .column-rating .rating-value {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Import Page Styles */
+.honey-hole-import-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.honey-hole-import-section h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.honey-hole-import-section ol {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.honey-hole-import-section li {
+  margin-bottom: 8px;
+}
+
+.honey-hole-sample-csv {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.honey-hole-sample-csv h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.honey-hole-sample-csv pre {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Column Styles */
+.wp-list-table .column-actions {
+  width: 200px;
+}
+
+.wp-list-table .column-actions .button {
+  margin: 0 4px;
+}
+
+.wp-list-table .column-actions .button:first-child {
+  margin-left: 0;
+}
+
+.wp-list-table .column-actions .button:last-child {
+  margin-right: 0;
+}
+
+/* Image upload styles */
+.column-image {
+  position: relative;
+  min-width: 100px;
+}
+
+.deal-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deal-image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
+}
+
+.hh-admin-deal-badge {
+  position: absolute;
+  top: 80%;
+  left: 5%;
+  padding: 5px 12px;
+  background-color: #f69f0c;
+  color: white;
+  font-weight: 500;
+}
+.hh-admin-deal-promo-code {
+  position: absolute;
+  top: 89%;
+  left: 3%;
+}
+.hh-admin-deal-promo-code span {
+  margin-left: 10px;
+  padding: 5px 12px;
+  background-color: #f69f0c;
+  color: white;
+  font-weight: 500;
+}
+
+.deal-image .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.deal-image:hover .image-overlay {
+  opacity: 1;
+}
+
+.deal-image .image-overlay .button {
+  background: #fff;
+  color: #2271b1;
+  border-color: #2271b1;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.deal-image .image-overlay .button:hover {
+  background: #2271b1;
+  color: #fff;
+  border-color: #2271b1;
+}
+
+.no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-style: italic;
+  width: 100%;
+  background: #f8f9fa;
+  border: 1px dashed #ddd;
+}
+
+/* Category and Tag Section Styles */
+.category-section {
+  margin: 10px 0 20px;
+  padding: 15px 20px;
+  background: #f0f0f1;
+  border-left: 4px solid #2271b1;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #1d2327;
+}
+
+.tag-section {
+  margin: 20px 0 10px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-left: 4px solid #646970;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+/* Visibility Toggle Styles */
+.column-visibility {
+  width: 100px;
+}
+
+.visibility-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.visibility-toggle input[type="checkbox"] {
+  margin: 0;
+}
+
+.visibility-status {
+  font-size: 13px;
+  color: #666;
+}
+
+.visibility-toggle input[type="checkbox"]:checked + .visibility-status {
+  color: #2271b1;
+}
+
+/* Select All Checkbox Styles */
+.select-all {
+  margin: 0;
+}
+
+/* Bulk Actions Styles */
+.bulkactions {
+  margin-bottom: 15px;
+}
+
+.bulkactions select {
+  margin-right: 8px;
+}
+
+/* Table Spacing */
+.wp-list-table {
+  margin-bottom: 40px;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.wp-list-table th {
+  font-weight: 600;
+  padding: 12px 10px;
+}
+
+.wp-list-table td {
+  padding: 12px 10px;
+  vertical-align: middle;
+}
+
+/* Tags Column Styles */
+.column-tags {
+  width: 150px;
+}
+
+.column-tags {
+  color: #666;
+  font-size: 13px;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 782px) {
+  .category-section {
+    padding: 12px 15px;
+    font-size: 1.1em;
+  }
+
+  .wp-list-table {
     margin-bottom: 30px;
   }
-  
-  .honey-hole-form-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .honey-hole-form-section h2 {
-    margin-top: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 16px;
-  }
-  
-  .honey-hole-form-field {
-    margin-bottom: 20px;
-  }
-  
-  .honey-hole-form-field label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #23282d;
-  }
-  
-  .honey-hole-form-field input[type="text"],
-  .honey-hole-form-field input[type="number"],
-  .honey-hole-form-field input[type="url"],
-  .honey-hole-form-field input[type="date"],
-  .honey-hole-form-field textarea,
-  .honey-hole-form-field select {
-    width: 100%;
-    max-width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
-  }
-  
-  .honey-hole-form-field textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  .honey-hole-form-field .description {
-    color: #666;
-    font-style: italic;
-    margin-top: 5px;
-    font-size: 13px;
-  }
-  
-  .honey-hole-form-actions {
-    margin-top: 30px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    text-align: right;
-  }
-  
-  .honey-hole-form-actions .button {
-    margin-left: 10px;
-  }
-  
-  #image-preview {
-    margin-top: 10px;
-    max-width: 300px;
-  }
-  
-  #image-preview img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  /* Responsive adjustments */
-  @media screen and (max-width: 782px) {
-    .honey-hole-form-container {
-      grid-template-columns: 1fr;
-    }
-  
-    .honey-hole-stats {
-      flex-direction: column;
-    }
-  }
-  
-  .honey-hole-image-options {
-    margin-top: 10px;
-  }
-  
-  .honey-hole-image-option {
-    margin-bottom: 15px;
-  }
-  
-  .honey-hole-image-option input[type="radio"] {
-    margin-right: 8px;
-  }
-  
-  .honey-hole-image-option input[type="url"] {
-    width: 100%;
-    max-width: 400px;
-    margin-top: 8px;
-  }
-  
-  /* Tags Input Styles */
-  .honey-hole-tags-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 5px;
-  }
-  
-  .honey-hole-tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 5px;
-  }
-  
-  .honey-hole-tag {
-    background: #f0f0f0;
-    padding: 4px 8px;
-    border-radius: 3px;
-    font-size: 12px;
-    display: inline-flex;
-    align-items: center;
+
+  .visibility-toggle {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
   }
-  
-  .honey-hole-tag .remove-tag {
-    cursor: pointer;
-    color: #666;
-    font-weight: bold;
-  }
-  
-  .honey-hole-tag .remove-tag:hover {
-    color: #dc3545;
-  }
-  
-  /* Categories Management Page */
-  .honey-hole-categories-admin {
-    max-width: 1200px;
-    margin: 20px 0;
-  }
-  
-  .honey-hole-categories-admin .honey-hole-form-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .honey-hole-categories-admin h2 {
-    margin-top: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .honey-hole-categories-admin .wp-list-table {
-    margin-top: 15px;
-  }
-  
-  .honey-hole-categories-admin .wp-list-table th {
-    font-weight: 600;
-  }
-  
-  .honey-hole-categories-admin .button-small {
-    padding: 0 8px;
-    height: 28px;
-    line-height: 26px;
-  }
-  
-  .honey-hole-categories-admin .description {
-    color: #666;
-    font-style: italic;
-    margin-top: 4px;
-  }
-  
-  /* Deals Table Styles */
-  .wp-list-table .column-image {
-    width: 70px;
-  }
-  
-  .wp-list-table .column-date {
-    width: 120px;
-  }
-  
-  .wp-list-table .column-url {
-    width: 100px;
-  }
-  
-  .wp-list-table .column-url .button-small {
-    padding: 0 8px;
-    height: 28px;
-    line-height: 26px;
-  }
-  
-  .wp-list-table .column-url .no-url {
-    color: #666;
-    font-style: italic;
-    font-size: 13px;
-  }
-  
-  .deal-thumbnail-image {
-    width: 200px;
-    height: auto;
-    -o-object-fit: cover;
-       object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-  
-  .no-image {
-    width: 50px;
-    height: 50px;
-    border: 2px dashed #ddd;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    font-size: 12px;
-    text-align: center;
-  }
-  
-  /* Price input wrapper */
-  .price-input-wrapper {
-    position: relative;
-    display: inline-block;
-    max-width: 400px;
-  }
-  
-  .price-input-wrapper .currency-symbol {
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-  }
-  
-  .price-input-wrapper input {
-    padding-left: 20px !important;
-  }
-  
-  /* Discount display */
-  .discount-display {
-    background: #f0f0f1;
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: inline-block;
-    font-weight: 600;
-    color: #2271b1;
-  }
-  
-  /* Rating Input Styles */
-  .rating-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .rating-input input[type="number"] {
-    width: 60px;
-  }
-  
-  .rating-stars {
-    display: flex;
-    gap: 2px;
-  }
-  
-  .rating-stars .star {
-    color: #ffd700;
-    font-size: 20px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-  
-  .rating-stars .star.filled {
-    color: #ffd700;
-  }
-  
-  .rating-stars .star:not(.filled) {
-    color: #d4d4d4;
-  }
-  
-  .rating-stars .star:hover,
-  .rating-stars .star:hover ~ .star {
-    color: #d4d4d4;
-  }
-  
-  /* Column Styles */
-  .wp-list-table .column-rating {
-    width: 100px;
-  }
-  
-  .wp-list-table .column-rating .rating-stars {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 4px;
-  }
-  
-  .wp-list-table .column-rating .star {
-    color: #d4d4d4;
-    font-size: 16px;
-  }
-  
-  .wp-list-table .column-rating .star.filled {
-    color: #ffd700;
-  }
-  
-  .wp-list-table .column-rating .rating-value {
-    font-size: 12px;
-    color: #666;
-  }
-  
-  /* Import Page Styles */
-  .honey-hole-import-section {
-    background: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-  }
-  
-  .honey-hole-import-section h2 {
-    margin-top: 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .honey-hole-import-section ol {
-    margin: 15px 0;
-    padding-left: 20px;
-  }
-  
-  .honey-hole-import-section li {
-    margin-bottom: 8px;
-  }
-  
-  .honey-hole-sample-csv {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .honey-hole-sample-csv h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-  }
-  
-  .honey-hole-sample-csv pre {
-    background: #fff;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow-x: auto;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-  
-  /* Column Styles */
-  .wp-list-table .column-actions {
-    width: 200px;
-  }
-  
-  .wp-list-table .column-actions .button {
-    margin: 0 4px;
-  }
-  
-  .wp-list-table .column-actions .button:first-child {
-    margin-left: 0;
-  }
-  
-  .wp-list-table .column-actions .button:last-child {
-    margin-right: 0;
-  }
-  
-  /* Image upload styles */
-  .column-image {
-    position: relative;
-    min-width: 100px;
-  }
-  
-  .deal-image {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .deal-image img {
-    width: 100%;
-    height: 100%;
-    -o-object-fit: cover;
-       object-fit: cover;
-    -o-object-position: center;
-       object-position: center;
-  }
-  
-  .deal-image .image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-  
-  .deal-image:hover .image-overlay {
-    opacity: 1;
-  }
-  
-  .deal-image .image-overlay .button {
-    background: #fff;
-    color: #2271b1;
-    border-color: #2271b1;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .deal-image .image-overlay .button:hover {
-    background: #2271b1;
-    color: #fff;
-    border-color: #2271b1;
-  }
-  
-  .no-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    color: #999;
-    font-style: italic;
-    width: 100%;
-    background: #f8f9fa;
-    border: 1px dashed #ddd;
-  }
-  
-  /* Category and Tag Section Styles */
-  .category-section {
-    margin: 10px 0 20px;
-    padding: 15px 20px;
-    background: #f0f0f1;
-    border-left: 4px solid #2271b1;
-    font-size: 1.3em;
-    font-weight: 600;
-    color: #1d2327;
-  }
-  
-  .tag-section {
-    margin: 20px 0 10px;
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-left: 4px solid #646970;
-    font-size: 1.1em;
-    font-weight: 500;
-  }
-  
-  /* Visibility Toggle Styles */
-  .column-visibility {
-    width: 100px;
-  }
-  
-  .visibility-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-  }
-  
-  .visibility-toggle input[type="checkbox"] {
-    margin: 0;
-  }
-  
-  .visibility-status {
-    font-size: 13px;
-    color: #666;
-  }
-  
-  .visibility-toggle input[type="checkbox"]:checked + .visibility-status {
-    color: #2271b1;
-  }
-  
-  /* Select All Checkbox Styles */
-  .select-all {
-    margin: 0;
-  }
-  
-  /* Bulk Actions Styles */
-  .bulkactions {
-    margin-bottom: 15px;
-  }
-  
-  .bulkactions select {
-    margin-right: 8px;
-  }
-  
-  /* Table Spacing */
-  .wp-list-table {
-    margin-bottom: 40px;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  }
-  
-  .wp-list-table th {
-    font-weight: 600;
-    padding: 12px 10px;
-  }
-  
-  .wp-list-table td {
-    padding: 12px 10px;
-    vertical-align: middle;
-  }
-  
-  /* Tags Column Styles */
-  .column-tags {
-    width: 150px;
-  }
-  
-  .column-tags {
-    color: #666;
-    font-size: 13px;
-  }
-  
-  /* Responsive Adjustments */
-  @media screen and (max-width: 782px) {
-    .category-section {
-      padding: 12px 15px;
-      font-size: 1.1em;
-    }
-  
-    .wp-list-table {
-      margin-bottom: 30px;
-    }
-  
-    .visibility-toggle {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-  }
-  
-  /* Card-based Layout Styles */
-  .honey-hole-deals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin: 20px 0;
-  }
-  
-  .honey-hole-deal-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Card-based Layout Styles */
+.honey-hole-deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.honey-hole-deal-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.honey-hole-deal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.deal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  cursor: move;
+  position: relative;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: #666;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.drag-handle:hover {
+  color: #333;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle::before {
+  content: "⋮⋮";
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover::before {
+  opacity: 1;
+}
+
+.deal-checkbox {
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  opacity: 1;
+  margin: 0;
+}
+
+.deal-checkbox + .deal-card-header::before {
+  content: "";
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 2px solid #2271b1;
+  border-radius: 3px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.deal-checkbox:checked + .deal-card-header::before {
+  background: #2271b1;
+  border-color: #2271b1;
+}
+
+.deal-checkbox:checked + .deal-card-header::after {
+  content: "✓";
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.deal-visibility {
+  display: flex;
+  align-items: center;
+}
+
+.visibility-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.visibility-toggle input[type="checkbox"] {
+  margin: 0;
+}
+
+.visibility-status {
+  font-size: 12px;
+  color: #666;
+}
+
+.visibility-toggle input[type="checkbox"]:checked + .visibility-status {
+  color: #2271b1;
+}
+
+.deal-content {
+  padding: 15px;
+}
+
+.deal-title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.deal-pricing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+.original-price-only {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e44d26;
+}
+
+.sales-price {
+  color: #e44d26;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.discount {
+  background: #e44d26;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.deal-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.deal-o-meter-card-img {
+  height: 40px;
+}
+
+.rating-value {
+  color: #666;
+  font-size: 14px;
+}
+
+.deal-tags {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.deal-date {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.deal-url {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.deal-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.deal-actions .button {
+  flex: 1;
+  min-width: 80px;
+  text-align: center;
+}
+
+.deal-actions .button.affiliate-link {
+  background-color: #2271b1;
+  color: white;
+  border-color: #2271b1;
+}
+
+.deal-actions .button.affiliate-link:hover {
+  background-color: #135e96;
+  border-color: #135e96;
+  color: white;
+}
+
+.category-section {
+  margin-bottom: 30px;
+}
+
+.category-section h2 {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+  .honey-hole-deals-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
   }
-  
-  .honey-hole-deal-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+  .deal-image {
+    height: 180px;
   }
-  
-  .deal-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #eee;
-    cursor: move;
-    position: relative;
-  }
-  
-  .drag-handle {
-    cursor: grab;
-    color: #666;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    transition: color 0.2s ease;
-  }
-  
-  .drag-handle:hover {
-    color: #333;
-  }
-  
-  .drag-handle:active {
-    cursor: grabbing;
-  }
-  
-  .drag-handle::before {
-    content: "⋮⋮";
-    font-size: 16px;
-    line-height: 1;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-  }
-  
-  .drag-handle:hover::before {
-    opacity: 1;
-  }
-  
-  .deal-checkbox {
-    z-index: 2;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    opacity: 1;
-    margin: 0;
-  }
-  
-  .deal-checkbox + .deal-card-header::before {
-    content: "";
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border: 2px solid #2271b1;
-    border-radius: 3px;
-    background: #fff;
-    transition: all 0.2s ease;
-  }
-  
-  .deal-checkbox:checked + .deal-card-header::before {
-    background: #2271b1;
-    border-color: #2271b1;
-  }
-  
-  .deal-checkbox:checked + .deal-card-header::after {
-    content: "✓";
-    transform: translateY(-50%);
-    color: #fff;
-    font-size: 14px;
-    z-index: 1;
-  }
-  
-  .deal-visibility {
-    display: flex;
-    align-items: center;
-  }
-  
-  .visibility-toggle {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-  }
-  
-  .visibility-toggle input[type="checkbox"] {
-    margin: 0;
-  }
-  
-  .visibility-status {
-    font-size: 12px;
-    color: #666;
-  }
-  
-  .visibility-toggle input[type="checkbox"]:checked + .visibility-status {
-    color: #2271b1;
-  }
-  
-  .deal-content {
-    padding: 15px;
-  }
-  
-  .deal-title {
-    margin: 0 0 10px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .deal-pricing {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .original-price {
-    text-decoration: line-through;
-    color: #999;
-    font-size: 14px;
-  }
-  
-  .sales-price {
-    color: #e44d26;
-    font-weight: 600;
-    font-size: 18px;
-  }
-  
-  .discount {
-    background: #e44d26;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  
-  .deal-rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .rating-stars {
-    color: #ffd700;
-  }
-  
-  .rating-stars .star {
-    font-size: 14px;
-  }
-  
-  .rating-stars .star.filled {
-    color: #ffd700;
-  }
-  
-  .rating-stars .star:not(.filled) {
-    color: #ddd;
-  }
-  
-  .rating-value {
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .deal-tags {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 10px;
-  }
-  
-  .deal-date {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 5px;
-  }
-  
-  .deal-url {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 15px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-  
-  .deal-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  
+
   .deal-actions .button {
-    flex: 1;
-    min-width: 80px;
-    text-align: center;
+    min-width: 70px;
   }
-  
-  .deal-actions .button.affiliate-link {
-    background-color: #2271b1;
-    color: white;
-    border-color: #2271b1;
+
+  .deal-card-header {
+    padding-left: 35px;
   }
-  
-  .deal-actions .button.affiliate-link:hover {
-    background-color: #135e96;
-    border-color: #135e96;
-    color: white;
+
+  .deal-checkbox {
+    top: 8px;
+    left: 8px;
   }
-  
-  .category-section {
-    margin-bottom: 30px;
+
+  .deal-checkbox + .deal-card-header::before {
+    top: 8px;
+    left: 8px;
   }
-  
-  .category-section h2 {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #eee;
-    color: #333;
+
+  .visibility-toggle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
-  
-  /* Responsive adjustments */
-  @media screen and (max-width: 782px) {
-    .honey-hole-deals-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
-    }
-  
-    .deal-image {
-      height: 180px;
-    }
-  
-    .deal-actions .button {
-      min-width: 70px;
-    }
-  
-    .deal-card-header {
-      padding-left: 35px;
-    }
-  
-    .deal-checkbox {
-      top: 8px;
-      left: 8px;
-    }
-  
-    .deal-checkbox + .deal-card-header::before {
-      top: 8px;
-      left: 8px;
-    }
-  
-    .visibility-toggle {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-    }
-  }
-  
-  /* Floating Bulk Actions UI */
-  .honey-hole-bulk-actions-float {
-    position: fixed;
-    top: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    padding: 12px 24px;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: none;
-    align-items: center;
-    gap: 16px;
-    z-index: 99999;
-    border: 1px solid #ddd;
-    border-top: none;
-  }
-  
-  .honey-hole-bulk-actions-float.visible {
-    display: flex;
-  }
-  
-  .honey-hole-bulk-actions-float .selected-count {
-    font-weight: 500;
-    color: #2271b1;
-  }
-  
-  .honey-hole-bulk-actions-float .button {
-    margin: 0;
-  }
-  
-  .honey-hole-bulk-actions-float .button.delete {
-    color: #d63638;
-    border-color: #d63638;
-  }
-  
-  .honey-hole-bulk-actions-float .button.delete:hover {
-    background: #d63638;
-    color: #fff;
-  }
-  
-  .honey-hole-deal-card.ui-sortable-helper {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
-    cursor: grabbing;
-  }
-  
-  .honey-hole-deal-card.ui-sortable-placeholder {
-    border: 2px dashed #ddd;
-    background: #f8f9fa;
-    visibility: visible !important;
-    margin: 40px 0;
-    height: 0;
-    border-radius: 4px;
-    position: relative;
-  }
-  
-  /* Add a visual indicator when dragging */
-  .honey-hole-deals-grid.ui-sortable-helper {
-    cursor: grabbing;
-  }
-  
-  .honey-hole-deals-grid.ui-sortable-placeholder {
-    border: 2px dashed #ddd;
-    background: #f8f9fa;
-    min-height: 200px;
-    margin: 40px 0;
-    position: relative;
-  }
-  
-  .honey-hole-deals-grid.ui-sortable-placeholder::before {
-    content: "Drop here";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-  
-  /* Notification Message */
+}
+
+/* Floating Bulk Actions UI */
+.honey-hole-bulk-actions-float {
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 12px 24px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+  align-items: center;
+  gap: 16px;
+  z-index: 99999;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.honey-hole-bulk-actions-float.visible {
+  display: flex;
+}
+
+.honey-hole-bulk-actions-float .selected-count {
+  font-weight: 500;
+  color: #2271b1;
+}
+
+.honey-hole-bulk-actions-float .button {
+  margin: 0;
+}
+
+.honey-hole-bulk-actions-float .button.delete {
+  color: #d63638;
+  border-color: #d63638;
+}
+
+.honey-hole-bulk-actions-float .button.delete:hover {
+  background: #d63638;
+  color: #fff;
+}
+
+.honey-hole-deal-card.ui-sortable-helper {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+  cursor: grabbing;
+}
+
+.honey-hole-deal-card.ui-sortable-placeholder {
+  border: 2px dashed #ddd;
+  background: #f8f9fa;
+  visibility: visible !important;
+  margin: 40px 0;
+  height: 0;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Add a visual indicator when dragging */
+.honey-hole-deals-grid.ui-sortable-helper {
+  cursor: grabbing;
+}
+
+.honey-hole-deals-grid.ui-sortable-placeholder {
+  border: 2px dashed #ddd;
+  background: #f8f9fa;
+  min-height: 200px;
+  margin: 40px 0;
+  position: relative;
+}
+
+.honey-hole-deals-grid.ui-sortable-placeholder::before {
+  content: "Drop here";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Notification Message */
+.honey-hole-notification {
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #46b450;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 200px;
+  text-align: center;
+}
+
+.honey-hole-notification.visible {
+  display: block !important;
+  opacity: 1;
+}
+
+/* Mobile admin bar adjustment */
+@media screen and (max-width: 782px) {
   .honey-hole-notification {
-    position: fixed;
-    top: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #46b450;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 999999;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 200px;
-    text-align: center;
+    top: 46px;
   }
-  
-  .honey-hole-notification.visible {
-    display: block !important;
-    opacity: 1;
-  }
-  
-  /* Mobile admin bar adjustment */
-  @media screen and (max-width: 782px) {
-    .honey-hole-notification {
-      top: 46px;
-    }
-  }
-  
-  /* Remove the body padding adjustment since we're using fixed positioning */
-  body.has-sticky-save {
-    padding-top: 0;
-  }
-  
-  /* Save Popup */
+}
+
+/* Remove the body padding adjustment since we're using fixed positioning */
+body.has-sticky-save {
+  padding-top: 0;
+}
+
+/* Save Popup */
+.honey-hole-save-popup {
+  position: fixed;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 12px 24px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.honey-hole-save-popup.visible {
+  display: flex;
+}
+
+.honey-hole-save-popup .save-message {
+  font-weight: 500;
+  color: #1d2327;
+}
+
+.honey-hole-save-popup .button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.honey-hole-save-popup .button-group .button-primary {
+  background: #3fb122;
+  border-color: #3fb122;
+  color: #fff;
+}
+.honey-hole-save-popup .button-group .button-primary:hover {
+  background: #287316;
+  border-color: #287316;
+}
+
+.honey-hole-save-popup .button-group button {
+  border-radius: 3px !important;
+  border: unset;
+}
+
+.honey-hole-save-popup .button {
+  margin: 0;
+}
+
+.honey-hole-save-popup .button.cancel {
+  color: #666;
+}
+
+.honey-hole-save-popup .button.cancel:hover {
+  color: #000;
+}
+
+/* Mobile admin bar adjustment */
+@media screen and (max-width: 782px) {
   .honey-hole-save-popup {
-    position: fixed;
-    top: 4%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #fff;
-    padding: 12px 24px;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100000;
-    display: none;
-    align-items: center;
-    gap: 16px;
-    border: 1px solid #ddd;
-    border-top: none;
+    top: 46px;
   }
-  
-  .honey-hole-save-popup.visible {
-    display: flex;
-  }
-  
-  .honey-hole-save-popup .save-message {
-    font-weight: 500;
-    color: #1d2327;
-  }
-  
-  .honey-hole-save-popup .button-group {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .honey-hole-save-popup .button-group .button-primary {
-    background: #3fb122;
-    border-color: #3fb122;
-    color: #fff;
-  }
-  .honey-hole-save-popup .button-group .button-primary:hover {
-    background: #287316;
-    border-color: #287316;
-  }
-  
-  .honey-hole-save-popup .button-group button {
-    border-radius: 3px !important;
-    border: unset;
-  }
-  
-  .honey-hole-save-popup .button {
-    margin: 0;
-  }
-  
-  .honey-hole-save-popup .button.cancel {
-    color: #666;
-  }
-  
-  .honey-hole-save-popup .button.cancel:hover {
-    color: #000;
-  }
-  
-  /* Mobile admin bar adjustment */
-  @media screen and (max-width: 782px) {
-    .honey-hole-save-popup {
-      top: 46px;
-    }
-  }
-  
-  .honey-hole-menu-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    -moz-column-gap: 20px;
-         column-gap: 20px;
-  }
-  
-  .honey-hole-menu-container .button-hero {
-    margin-right: 10px;
-  }
-  
-  .honey-hole-menu-container .honey-hole-actions {
-    margin-bottom: 0;
-  }
-  .honey-hole-logo img {
-    width: 150px;
-    height: auto;
-  }
-  
-  .honey-hole-search {
-    flex-basis: 19%;
-    max-width: 400px;
-    margin: 0;
-  }
-  
-  .honey-hole-search input {
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 14px;
-    line-height: 2;
-    color: #2c3338;
-    border: 1px solid #8c8f94;
-    border-radius: 4px;
-    box-shadow: 0 0 0 transparent;
-    transition: all 0.2s ease;
-  }
-  
-  .honey-hole-search input:focus {
-    border-color: #2271b1;
-    box-shadow: 0 0 0 1px #2271b1;
-    outline: 2px solid transparent;
-  }
-  
-  .honey-hole-actions {
-    margin-bottom: 20px;
-  }
-  
-  .honey-hole-actions .button-hero {
-    font-size: 16px;
-    height: auto;
-    line-height: 1.4;
-    padding: 8px 16px;
-  }
-  
-  .honey-hole-danger-zone {
-    margin-top: 40px;
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    border-radius: 4px;
-  }
-  
-  .honey-hole-danger-zone h3 {
-    color: #d63638;
-    margin-top: 0;
-    margin-bottom: 15px;
-  }
-  
-  /* Progress Bar Styles */
-  .progress-container {
-      margin: 20px 0;
-      position: relative;
-      height: 30px;
-      background-color: #f1f1f1;
-      border-radius: 4px;
-      overflow: hidden;
-  }
-  
-  .progress-bar {
-      width: 100%;
-      height: 100%;
-      background-color: #f1f1f1;
-      position: relative;
-  }
-  
-  .progress-fill {
-      height: 100%;
-      background-color: #0073aa;
-      width: 0;
-      transition: width 0.3s ease;
-  }
-  
-  .progress-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #000;
-      font-weight: bold;
-      text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
-  }
-  
-  .progress-status {
-      margin: 10px 0;
-      font-weight: bold;
-      color: #0073aa;
-  }
-  
-  .progress-details {
-      margin: 15px 0;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border-left: 4px solid #0073aa;
-  }
-  
-  .progress-details p {
-      margin: 5px 0;
-  }
+}
+
+.honey-hole-menu-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  -moz-column-gap: 20px;
+       column-gap: 20px;
+}
+
+.honey-hole-menu-container .button-hero {
+  margin-right: 10px;
+}
+
+.honey-hole-menu-container .honey-hole-actions {
+  margin-bottom: 0;
+}
+.honey-hole-logo img {
+  width: 150px;
+  height: auto;
+}
+
+.honey-hole-search {
+  flex-basis: 19%;
+  max-width: 400px;
+  margin: 0;
+}
+
+.honey-hole-search input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  border: 1px solid #8c8f94;
+  border-radius: 4px;
+  box-shadow: 0 0 0 transparent;
+  transition: all 0.2s ease;
+}
+
+.honey-hole-search input:focus {
+  border-color: #2271b1;
+  box-shadow: 0 0 0 1px #2271b1;
+  outline: 2px solid transparent;
+}
+
+.honey-hole-actions {
+  margin-bottom: 20px;
+}
+
+.honey-hole-actions .button-hero {
+  font-size: 16px;
+  height: auto;
+  line-height: 1.4;
+  padding: 8px 16px;
+}
+
+.honey-hole-danger-zone {
+  margin-top: 40px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+}
+
+.honey-hole-danger-zone h3 {
+  color: #d63638;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+  margin: 20px 0;
+  position: relative;
+  height: 30px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #f1f1f1;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #0073aa;
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.progress-status {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #0073aa;
+}
+
+.progress-details {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #0073aa;
+}
+
+.progress-details p {
+  margin: 5px 0;
+}
 
 .progress-details #error-summary {
   margin-top: 15px;
@@ -1280,72 +1299,72 @@
   color: #856404;
   line-height: 1.4;
 }
-  
-  #import-progress {
-      margin: 20px 0;
-      padding: 15px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .hh-admin-filter-bar {
-    margin: 20px 0;
-    padding: 10px;
-  }
-  
-  .hh-admin-filter-bar .hh-categories {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
 
-  .honey-hole-actions .button {
-    background-color: #467049;
-    border-color: #06211a;
-    color: white;
-  }
-  .honey-hole-actions .button:hover {
-    background-color: #06211a;
-    border-color: #06211a;
-  }
-  
-  .hh-categories .button {
-    margin: 0;
-    padding: 5px 15px;
-    color: #2c3338;
-    text-decoration: none;
-    border-radius: 3px;
-    border-color: #06211a;
-  }
-  
-  .hh-categories .button:hover {
-    background: #467049;
-    border-color: #467049;
-    color: white;
-  }
-  
-  .hh-categories .button.active {
-    background: #06211a;
-    border-color: #06211a;
-    color: #fff;
-  }
-  .hh-categories .button.active:hover {
-    background: #06211a;
-    border-color: #06211a;
-    color: #fff;
-  }
+#import-progress {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  .hh-add-deal-button {
-    background: #467049;
-    border-color: #467049;
-    color: white;
-    border-radius: 5px;
-    border: none;
-    padding: 5px 16px !important;
-  }
-  .hh-add-deal-button:hover {
+.hh-admin-filter-bar {
+  margin: 20px 0;
+  padding: 10px;
+}
+
+.hh-admin-filter-bar .hh-categories {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.honey-hole-actions .button {
+  background-color: #467049;
+  border-color: #06211a;
+  color: white;
+}
+.honey-hole-actions .button:hover {
+  background-color: #06211a;
+  border-color: #06211a;
+}
+
+.hh-categories .button {
+  margin: 0;
+  padding: 5px 15px;
+  color: #2c3338;
+  text-decoration: none;
+  border-radius: 3px;
+  border-color: #06211a;
+}
+
+.hh-categories .button:hover {
+  background: #467049;
+  border-color: #467049;
+  color: white;
+}
+
+.hh-categories .button.active {
+  background: #06211a;
+  border-color: #06211a;
+  color: #fff;
+}
+.hh-categories .button.active:hover {
+  background: #06211a;
+  border-color: #06211a;
+  color: #fff;
+}
+
+.hh-add-deal-button {
+  background: #467049;
+  border-color: #467049;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 16px !important;
+}
+.hh-add-deal-button:hover {
   background-color: #005a87;
 }
 
@@ -1418,12 +1437,43 @@
 .honey-hole-delete-all-container .button.disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  }
+}
 
 .wp-menu-image.dashicons-before > img {
   width: 20px;
   height: 20px;
 }
-  
+
+.deal-seller {
+  color: grey;
+}
+
+/* Background image preview styling */
+.background-image-preview {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.background-image-preview img {
+  max-width: 300px;
+  max-height: 200px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.background-image-preview .preview-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 
 /*# sourceMappingURL=honey-hole-admin.css.map*/

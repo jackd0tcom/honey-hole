@@ -6,6 +6,8 @@ import EmailSignup from "./EmailSignup.jsx";
 import LatestDeals from "./LatestDeals.jsx";
 import Hero from "./Hero.jsx";
 import DealsVideo from "./DealsVideo.jsx";
+import DealOMeterGraphic from "./DealOMeterGraphic.jsx";
+import HeroEmailSignup from "./HeroEmailSignup.jsx";
 
 const App = () => {
   const [deals, setDeals] = useState([]);
@@ -44,13 +46,15 @@ const App = () => {
   };
 
   return (
-    <div className="honey-hole-deals">
-      <Hero />
-      <LatestDeals deals={deals} />
-      <DealsVideo />
-      <EmailSignup />
-
-      {error && <div className="honey-hole-error">{error}</div>}
+    <div className="honey-hole-wrapper">
+      <div className="honey-hole-header">
+        <Hero />
+        {/* <div className="hero-header-two"> */}
+        {/* <DealOMeterGraphic /> */}
+        {/* <HeroEmailSignup /> */}
+        {/* </div> */}
+        {error && <div className="honey-hole-error">{error}</div>}
+      </div>
       {loading ? (
         <div className="honey-hole-loading">Loading deals...</div>
       ) : (

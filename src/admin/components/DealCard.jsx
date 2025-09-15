@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const DealCard = ({
   deal,
@@ -79,6 +79,18 @@ const DealCard = ({
     }
   };
 
+  const getDealMeter = (percentage) => {
+    if (percentage >= 60)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Red-Deal-O-Meter.png";
+    if (percentage >= 50)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Orange-Deal-O-Meter.png";
+    if (percentage >= 40)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Yellow-Deal-O-Meter.png";
+    if (percentage >= 30)
+      return "https://outdoorempire.com/wp-content/uploads/2025/07/Blue-Deal-O-Meter.png";
+    return "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png";
+  };
+
   const discount =
     deal.original_price > 0
       ? Math.round(
@@ -89,12 +101,6 @@ const DealCard = ({
   return (
     <div className="honey-hole-deal-card">
       <div className="deal-card-header">
-        {/* <div className="visibility-toggle" onClick={handleVisibilityToggle}>
-                    <span className={`dashicons dashicons-${deal.is_visible ? 'visibility' : 'hidden'}`}></span>
-                    <span className="visibility-status">
-                        {deal.is_visible ? 'Visible' : 'Hidden'}
-                    </span>
-                </div> */}
         <div className="hh-bulk-toggle">
           <input
             type="checkbox"
@@ -102,6 +108,25 @@ const DealCard = ({
             onChange={() => handleBulkToggle(deal.id)}
           />
         </div>
+        {deal.categories[0].name !== "Big Sale" && (
+          <div className="deal-rating">
+            <div className="deal-o-meter-card">
+              {!deal.rating ? (
+                <img
+                  className="deal-o-meter-card-img"
+                  src={getDealMeter(deal.discount_percentage)}
+                  alt=""
+                />
+              ) : (
+                <img
+                  className="deal-o-meter-card-img"
+                  src={getDealMeter(deal.rating * 14)}
+                  alt="Great Price"
+                />
+              )}
+            </div>
+          </div>
+        )}
         <div className="deal-actions">
           <a
             href={`/wp-admin/admin.php?page=honey-hole-edit-deal&id=${deal.id}`}
@@ -129,36 +154,51 @@ const DealCard = ({
         ) : (
           <div className="no-image">No Image</div>
         )}
+        {deal.badge && !deal.promo_code && (
+          <p className="hh-admin-deal-badge">{deal.badge}</p>
+        )}
+        {deal.promo_code && !deal.badge && (
+          <p className="hh-admin-deal-badge">{deal.promo_code}</p>
+        )}
+        {deal.promo_code && deal.badge && (
+          <div className="hh-admin-deal-promo-code">
+            <span>{deal.promo_code}</span>
+            <span>{deal.badge}</span>
+          </div>
+        )}
       </div>
 
       <div className="deal-content">
         <h3 className="deal-title">{deal.title}</h3>
 
-        <div className="deal-pricing">
-          <span className="sales-price">{formattedPrice}</span>
-          {deal.original_price && (
-            <span className="original-price">
-              {USDollar.format(deal.original_price)}
-            </span>
-          )}
-          {deal.discount_percentage && (
-            <span className="discount">{deal.discount_percentage}% OFF</span>
-          )}
-        </div>
+        {deal.categories[0].name !== "Big Sale" && (
+          <>
+            <div className="deal-pricing">
+              {deal.sales_price && (
+                <>
+                  <span className="sales-price">{formattedPrice}</span>
+                  <span className="original-price">
+                    {USDollar.format(deal.original_price)}
+                  </span>
+                </>
+              )}
+              {!deal.sales_price && (
+                <span className="original-price-only">
+                  {USDollar.format(deal.original_price)}
+                </span>
+              )}
+              {deal.discount_percentage && (
+                <span className="discount">
+                  {deal.discount_percentage}% OFF
+                </span>
+              )}
+            </div>
 
-        <div className="deal-rating">
-          <div className="rating-stars">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                className={`star ${i < deal.rating ? "filled" : ""}`}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-          <span className="rating-count">{deal.rating}</span>
-        </div>
+            <div className="deal-seller">
+              {deal.seller ? deal.seller : "No Seller Saved"}
+            </div>
+          </>
+        )}
 
         <div className="deal-tags">{deal.tags && deal.tags.join(", ")}</div>
 

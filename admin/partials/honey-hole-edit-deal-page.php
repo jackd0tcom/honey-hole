@@ -34,8 +34,16 @@ function honey_hole_edit_deal_page()
     $image_url = get_post_meta($deal_id, 'deal_image_url', true);
     $rating = get_post_meta($deal_id, 'deal_rating', true);
     $promo_code = get_post_meta($deal_id, 'deal_promo_code', true);
+    $seller = get_post_meta($deal_id, 'deal_seller', true);
+    $description = get_post_meta($deal_id, 'deal_description', true);
+    $background_image = get_post_meta($deal_id, 'deal_background_image', true);
+    $badge = get_post_meta($deal_id, 'deal_badge', true);
     $category = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'ids'));
     $category = !empty($category) ? $category[0] : '';
+
+    // Get category name for field toggling
+    $category_term = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'names'));
+    $category_name = !empty($category_term) ? $category_term[0] : '';
 ?>
     <div class="wrap">
         <h1>Edit Deal</h1>
@@ -44,8 +52,31 @@ function honey_hole_edit_deal_page()
             <input type="hidden" name="action" value="edit_deal">
             <input type="hidden" name="deal_id" value="<?php echo esc_attr($deal_id); ?>">
             <div class="honey-hole-form-container">
-                <div class="honey-hole-form-section">
-                    <h2>Deal Information</h2>
+
+                <!-- Category Selection (First) -->
+                <div class="honey-hole-form-section big-sale-section">
+                    <h2>Deal Category</h2>
+                    <div class="honey-hole-form-field">
+                        <select id="deal-category" name="deal_category" required onchange="honeyHoleToggleEditDealFields()">
+                            <option value="">Select a category</option>
+                            <?php
+                            $categories = get_terms(array(
+                                'taxonomy' => 'deal_category',
+                                'hide_empty' => false,
+                            ));
+                            foreach ($categories as $cat) {
+                                $selected = $cat->term_id == $category ? 'selected' : '';
+                                echo '<option value="' . esc_attr($cat->term_id) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <p class="description">Select the category for this deal. Big Sale deals have a different structure.</p>
+                    </div>
+                </div>
+
+                <!-- Standard Deal Fields (hidden for Big Sale) -->
+                <div id="honey-hole-standard-deal-fields" class="honey-hole-form-section" style="<?php echo ($category_name === 'Big Sale') ? 'display: none;' : ''; ?>">
+                    <h2>Standard Deal Information</h2>
                     <div class="honey-hole-form-field">
                         <label for="deal-title">Title *</label>
                         <input type="text" id="deal-title" name="deal_title" value="<?php echo esc_attr($deal->post_title); ?>" required>
@@ -58,11 +89,12 @@ function honey_hole_edit_deal_page()
                         </div>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-sales-price">Sales Price *</label>
+                        <label for="deal-sales-price">Sales Price</label>
                         <div class="price-input-wrapper">
                             <span class="currency-symbol">$</span>
-                            <input type="number" id="deal-sales-price" name="deal_sales_price" step="0.01" min="0" value="<?php echo esc_attr($sales_price); ?>" required>
+                            <input type="number" id="deal-sales-price" name="deal_sales_price" step="0.01" min="0" value="<?php echo esc_attr($sales_price); ?>">
                         </div>
+                        <p class="description">Enter the sales price (optional - leave empty for great deals that aren't on sale)</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label>Discount</label>
@@ -82,36 +114,69 @@ function honey_hole_edit_deal_page()
                                 <span class="star" data-value="5">★</span>
                             </div>
                         </div>
-                        <p class="description">Rate the deal from 0 to 5 stars</p>
+                        <p class="description">Rate the deal from 0 to 5 stars if there is no sales price!</p>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-seller">Seller *</label>
+                        <input type="text" id="deal-seller" name="deal_seller" value="<?php echo esc_attr($seller); ?>" placeholder="Enter seller" required>
+                        <p class="description">Enter the seller for this deal</p>
+                    </div>
+                </div>
+
+                <!-- Big Sale Specific Fields (hidden for standard deals) -->
+                <div id="honey-hole-big-sale-fields" class="honey-hole-form-section" style="<?php echo ($category_name === 'Big Sale') ? '' : 'display: none;'; ?>">
+                    <h2>Big Sale Deal Information</h2>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-title-big-sale">Title *</label>
+                        <input type="text" id="deal-title-big-sale" name="deal_title_big_sale" value="<?php echo esc_attr($deal->post_title); ?>" required>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-description">Description *</label>
+                        <textarea id="deal-description" name="deal_description" rows="4" required placeholder="Enter a detailed description for the big sale deal"><?php echo esc_textarea($description); ?></textarea>
+                        <p class="description">Provide a compelling description for the big sale deal</p>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-background-image">Background Image</label>
+                        <select id="deal-background-image" name="deal_background_image">
+                            <option value="">Select a background image (optional)</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg'); ?>>Blue</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg'); ?>>Green</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'); ?>>Red</option>
+                            <option value="custom" <?php selected($background_image && !in_array($background_image, [
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'
+                        ]), true); ?>>Custom URL...</option>
+                        </select>
+                        <input type="url" id="deal-background-image-custom" name="deal_background_image_custom" value="<?php echo esc_url($background_image && !in_array($background_image, [
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'
+                        ]) ? $background_image : ''); ?>" placeholder="Enter custom background image URL" style="display: none; margin-top: 10px;">
+                        <div id="background-image-preview" class="background-image-preview" style="display: none;">
+                            <span class="preview-label">Preview</span>
+                            <img src="" alt="Background Preview">
+                        </div>
+                        <p class="description">Choose a background image for your Big Sale deal (optional)</p>
+                    </div>
+                </div>
+
+                <!-- Common Fields (shown for all deals) -->
+                <div class="honey-hole-form-section">
+                    <h2>Common Deal Details</h2>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-badge">Badge</label>
+                        <input type="text" id="deal-badge-common" name="deal_badge" value="<?php echo esc_attr($badge); ?>" placeholder="Enter badge text (optional)">
+                        <p class="description">Add a custom badge or label to this deal (e.g., "New", "Limited Time", "Best Seller")</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-url">Deal URL *</label>
                         <input type="url" id="deal-url" name="deal_url" value="<?php echo esc_attr($deal_url); ?>" required>
                     </div>
-                </div>
-
-                <div class="honey-hole-form-section">
-                    <h2>Deal Details</h2>
                     <div class="honey-hole-form-field">
                         <label for="deal-promo-code">Promo Code (Optional)</label>
                         <input type="text" id="deal-promo-code" name="deal_promo_code" value="<?php echo esc_attr($promo_code); ?>" placeholder="Enter promotional code">
                         <p class="description">Enter any promotional code for this deal</p>
-                    </div>
-                    <div class="honey-hole-form-field">
-                        <label for="deal-category">Category *</label>
-                        <select id="deal-category" name="deal_category" required>
-                            <option value="">Select a category</option>
-                            <?php
-                            $categories = get_terms(array(
-                                'taxonomy' => 'deal_category',
-                                'hide_empty' => false,
-                            ));
-                            foreach ($categories as $cat) {
-                                $selected = $cat->term_id == $category ? 'selected' : '';
-                                echo '<option value="' . esc_attr($cat->term_id) . '" ' . $selected . '>' . esc_html($cat->name) . '</option>';
-                            }
-                            ?>
-                        </select>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-tags">Tags</label>
@@ -126,7 +191,7 @@ function honey_hole_edit_deal_page()
                     <div class="honey-hole-form-field">
                         <label for="deal-image">Deal Image *</label>
                         <div class="image-upload-container">
-                        <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
+                            <input type="url" id="deal-image-url" name="deal_image_url" value="<?php echo esc_attr($image_url); ?>" required>
                             <input type="file" id="deal-image-upload" accept="image/*" style="display: none;">
                             <button type="button" class="button" id="upload-image-button">Upload Image</button>
                         </div>
@@ -149,6 +214,55 @@ function honey_hole_edit_deal_page()
     </div>
 
     <script>
+        function honeyHoleToggleEditDealFields() {
+            const categorySelect = document.getElementById('deal-category');
+            const standardFields = document.getElementById('honey-hole-standard-deal-fields');
+            const bigSaleFields = document.getElementById('honey-hole-big-sale-fields');
+
+            // Hide both sections initially
+            standardFields.style.display = 'none';
+            bigSaleFields.style.display = 'none';
+
+            // Get the selected category name
+            const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+            const categoryName = selectedOption.text;
+
+            if (categoryName === 'Big Sale') {
+                bigSaleFields.style.display = 'block';
+
+                // Disable required attributes for standard deal fields
+                const standardRequiredFields = standardFields.querySelectorAll('[required]');
+                standardRequiredFields.forEach(field => {
+                    field.required = false;
+                    field.disabled = true; // Disable to prevent form submission
+                });
+
+                // Enable required attributes for Big Sale fields
+                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+                bigSaleRequiredFields.forEach(field => {
+                    field.required = true;
+                    field.disabled = false;
+                });
+
+            } else if (categoryName !== '') {
+                standardFields.style.display = 'block';
+
+                // Enable required attributes for standard deal fields
+                const standardRequiredFields = standardFields.querySelectorAll('[required]');
+                standardRequiredFields.forEach(field => {
+                    field.required = true;
+                    field.disabled = false;
+                });
+
+                // Disable required attributes for Big Sale fields
+                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
+                bigSaleRequiredFields.forEach(field => {
+                    field.required = false;
+                    field.disabled = true; // Disable to prevent form submission
+                });
+            }
+        }
+
         jQuery(document).ready(function($) {
             // Image upload functionality
             $('#upload-image-button').on('click', function() {
@@ -189,7 +303,7 @@ function honey_hole_edit_deal_page()
             function calculateDiscount() {
                 var originalPrice = parseFloat($('#deal-original-price').val()) || 0;
                 var salesPrice = parseFloat($('#deal-sales-price').val()) || 0;
-                
+
                 if (originalPrice > 0 && salesPrice > 0) {
                     var discount = Math.round((originalPrice - salesPrice) / originalPrice * 100);
                     $('#discount-percentage').text(discount);
@@ -220,6 +334,273 @@ function honey_hole_edit_deal_page()
             // Initialize stars on page load
             updateStars(parseFloat($('#deal-rating').val()) || 0);
         });
+
+        // Initialize fields on page load
+        // Only run the toggle function if a category is already selected
+        const categorySelect = document.getElementById('deal-category');
+        if (categorySelect && categorySelect.value !== '') {
+            honeyHoleToggleEditDealFields();
+        }
+
+        // Initialize background image preview on page load
+        const backgroundImageSelect = document.getElementById('deal-background-image');
+        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
+        const backgroundImagePreview = document.getElementById('background-image-preview');
+        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
+
+        if (backgroundImageSelect && backgroundImageCustom && backgroundImagePreview) {
+            const selectedValue = backgroundImageSelect.value;
+            const customValue = backgroundImageCustom.value;
+
+            // If we have a custom value and it's not one of the predefined options
+            if (customValue && selectedValue === 'custom') {
+                backgroundImageCustom.style.display = 'block';
+                if (backgroundImagePreviewImg) {
+                    backgroundImagePreviewImg.src = customValue;
+                    backgroundImagePreview.style.display = 'block';
+                }
+            } else if (selectedValue && selectedValue !== '' && selectedValue !== 'custom') {
+                if (backgroundImagePreviewImg) {
+                    backgroundImagePreviewImg.src = selectedValue;
+                    backgroundImagePreview.style.display = 'block';
+                }
+            }
+        }
+
+        // Add form validation debugging
+        const form = document.getElementById('honey-hole-deal-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form submission - validating fields...');
+
+                // Check which category is selected
+                const categorySelect = document.getElementById('deal-category');
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                const categoryName = selectedOption.text;
+
+                console.log('Selected category:', categoryName);
+
+                if (categoryName === 'Big Sale') {
+                    // Validate Big Sale fields
+                    const bigSaleTitle = document.getElementById('deal-title-big-sale');
+                    const description = document.getElementById('deal-description');
+
+                    if (!bigSaleTitle.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the Big Sale deal.');
+                        bigSaleTitle.focus();
+                        return false;
+                    }
+
+                    if (!description.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a description for the Big Sale deal.');
+                        description.focus();
+                        return false;
+                    }
+                } else if (categoryName !== '') {
+                    // Validate standard deal fields
+                    const title = document.getElementById('deal-title');
+                    const originalPrice = document.getElementById('deal-original-price');
+                    const salesPrice = document.getElementById('deal-sales-price');
+                    const seller = document.getElementById('deal-seller');
+
+                    if (!title.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a title for the deal.');
+                        title.focus();
+                        return false;
+                    }
+
+                    if (!originalPrice.value || parseFloat(originalPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid original price.');
+                        originalPrice.focus();
+                        return false;
+                    }
+
+                    // Sales price is now optional
+                    if (salesPrice.value && parseFloat(salesPrice.value) <= 0) {
+                        e.preventDefault();
+                        alert('Please enter a valid sales price or leave it empty.');
+                        salesPrice.focus();
+                        return false;
+                    }
+
+                    if (!seller.value.trim()) {
+                        e.preventDefault();
+                        alert('Please enter a seller for the deal.');
+                        seller.focus();
+                        return false;
+                    }
+                } else {
+                    e.preventDefault();
+                    alert('Please select a category for the deal.');
+                    categorySelect.focus();
+                    return false;
+                }
+
+                // Validate common fields
+                const dealUrl = document.getElementById('deal-url');
+                const imageUrl = document.getElementById('deal-image-url');
+
+                if (!dealUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter a deal URL.');
+                    dealUrl.focus();
+                    return false;
+                }
+
+                if (!imageUrl.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter an image URL.');
+                    imageUrl.focus();
+                    return false;
+                }
+
+                console.log('Form validation passed!');
+            });
+        }
+
+        // Image upload functionality
+        const uploadButton = document.getElementById('upload-image-button');
+        const fileInput = document.getElementById('deal-image-upload');
+        const imageUrlInput = document.getElementById('deal-image-url');
+        const imagePreviewContainer = document.querySelector('.image-preview-container');
+
+        if (uploadButton && fileInput) {
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    // Validate file type
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select an image file.');
+                        return;
+                    }
+
+                    // Validate file size (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('Image file size must be less than 5MB.');
+                        return;
+                    }
+
+                    // Create a temporary URL for preview
+                    const tempUrl = URL.createObjectURL(file);
+
+                    // Update the image URL input
+                    imageUrlInput.value = tempUrl;
+
+                    // Update the preview
+                    if (imagePreviewContainer) {
+                        imagePreviewContainer.innerHTML = `
+                            <img src="${tempUrl}" alt="Preview" style="max-width: 200px; max-height: 200px; margin-top: 10px;">
+                            <button type="button" class="button" id="clear-image" style="margin-top: 10px;">Clear Image</button>
+                        `;
+
+                        // Add clear image functionality
+                        const clearButton = document.getElementById('clear-image');
+                        if (clearButton) {
+                            clearButton.addEventListener('click', function() {
+                                imageUrlInput.value = '';
+                                imagePreviewContainer.innerHTML = '<div class="no-image">No image selected</div>';
+                                fileInput.value = '';
+                            });
+                        }
+                    }
+
+                    console.log('Image selected:', file.name);
+                }
+            });
+        }
+
+        // Handle image URL input changes
+        if (imageUrlInput) {
+            imageUrlInput.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && imagePreviewContainer) {
+                    // Validate URL format
+                    if (url.match(/^https?:\/\/.+/)) {
+                        imagePreviewContainer.innerHTML = `
+                            <img src="${url}" alt="Preview" style="max-width: 200px; max-height: 200px; margin-top: 10px;" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>Invalid image URL</div>'">
+                            <button type="button" class="button" id="clear-image" style="margin-top: 10px;">Clear Image</button>
+                        `;
+
+                        // Add clear image functionality
+                        const clearButton = document.getElementById('clear-image');
+                        if (clearButton) {
+                            clearButton.addEventListener('click', function() {
+                                imageUrlInput.value = '';
+                                imagePreviewContainer.innerHTML = '<div class="no-image">No image selected</div>';
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // Background image dropdown functionality
+        const backgroundImageSelect = document.getElementById('deal-background-image');
+        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
+        const backgroundImagePreview = document.getElementById('background-image-preview');
+        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
+
+        if (backgroundImageSelect) {
+            backgroundImageSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                
+                // Show/hide custom input based on selection
+                if (selectedValue === 'custom') {
+                    if (backgroundImageCustom) {
+                        backgroundImageCustom.style.display = 'block';
+                        backgroundImageCustom.focus();
+                    }
+                    if (backgroundImagePreview) {
+                        backgroundImagePreview.style.display = 'none';
+                    }
+                } else {
+                    if (backgroundImageCustom) {
+                        backgroundImageCustom.style.display = 'none';
+                    }
+                    
+                    // Show preview for predefined images
+                    if (selectedValue && selectedValue !== '') {
+                        if (backgroundImagePreview && backgroundImagePreviewImg) {
+                            backgroundImagePreviewImg.src = selectedValue;
+                            backgroundImagePreview.style.display = 'block';
+                        }
+                    } else {
+                        if (backgroundImagePreview) {
+                            backgroundImagePreview.style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Handle custom background image URL input
+        if (backgroundImageCustom) {
+            backgroundImageCustom.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && backgroundImagePreview && backgroundImagePreviewImg) {
+                    // Validate URL format
+                    if (url.match(/^https?:\/\/.+/)) {
+                        backgroundImagePreviewImg.src = url;
+                        backgroundImagePreview.style.display = 'block';
+                        backgroundImagePreviewImg.onerror = function() {
+                            backgroundImagePreview.innerHTML = '<div style="color: red; padding: 10px;">Invalid image URL</div>';
+                        };
+                    } else {
+                        backgroundImagePreview.style.display = 'none';
+                    }
+                } else if (backgroundImagePreview) {
+                    backgroundImagePreview.style.display = 'none';
+                }
+            });
+        }
     </script>
 <?php
 }

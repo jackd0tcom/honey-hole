@@ -6,7 +6,13 @@ const LatestDeals = ({ deals }) => {
   const [sortedDeals, setSortedDeals] = useState([]);
 
   useEffect(() => {
-    setSortedDeals(deals.slice(0, 4));
+    setSortedDeals(
+      deals
+        .filter((deal) => {
+          return deal.categories[0].name !== "Big Sale";
+        })
+        .slice(0, 4)
+    );
   }, [deals]);
 
   return (

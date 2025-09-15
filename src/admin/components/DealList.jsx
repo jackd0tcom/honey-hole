@@ -7,6 +7,7 @@ const DealList = ({ deals: initialDeals }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const [bulkDeals, setBulkDeals] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [sort, setSort] = useState("newest");
 
   // Update local state when initialDeals changes
   useEffect(() => {
