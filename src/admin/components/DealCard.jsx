@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const DealCard = ({
   deal,
@@ -101,12 +101,6 @@ const DealCard = ({
   return (
     <div className="honey-hole-deal-card">
       <div className="deal-card-header">
-        {/* <div className="visibility-toggle" onClick={handleVisibilityToggle}>
-                    <span className={`dashicons dashicons-${deal.is_visible ? 'visibility' : 'hidden'}`}></span>
-                    <span className="visibility-status">
-                        {deal.is_visible ? 'Visible' : 'Hidden'}
-                    </span>
-                </div> */}
         <div className="hh-bulk-toggle">
           <input
             type="checkbox"
@@ -114,23 +108,25 @@ const DealCard = ({
             onChange={() => handleBulkToggle(deal.id)}
           />
         </div>
-        <div className="deal-rating">
-          <div className="deal-o-meter-card">
-            {!deal.rating ? (
-              <img
-                className="deal-o-meter-card-img"
-                src={getDealMeter(deal.discount_percentage)}
-                alt=""
-              />
-            ) : (
-              <img
-                className="deal-o-meter-card-img"
-                src={getDealMeter(deal.rating * 14)}
-                alt="Great Price"
-              />
-            )}
+        {deal.categories[0].name !== "Big Sale" && (
+          <div className="deal-rating">
+            <div className="deal-o-meter-card">
+              {!deal.rating ? (
+                <img
+                  className="deal-o-meter-card-img"
+                  src={getDealMeter(deal.discount_percentage)}
+                  alt=""
+                />
+              ) : (
+                <img
+                  className="deal-o-meter-card-img"
+                  src={getDealMeter(deal.rating * 14)}
+                  alt="Great Price"
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div className="deal-actions">
           <a
             href={`/wp-admin/admin.php?page=honey-hole-edit-deal&id=${deal.id}`}
@@ -175,28 +171,34 @@ const DealCard = ({
       <div className="deal-content">
         <h3 className="deal-title">{deal.title}</h3>
 
-        <div className="deal-pricing">
-          {deal.sales_price && (
-            <>
-              <span className="sales-price">{formattedPrice}</span>
-              <span className="original-price">
-                {USDollar.format(deal.original_price)}
-              </span>
-            </>
-          )}
-          {!deal.sales_price && (
-            <span className="original-price-only">
-              {USDollar.format(deal.original_price)}
-            </span>
-          )}
-          {deal.discount_percentage && (
-            <span className="discount">{deal.discount_percentage}% OFF</span>
-          )}
-        </div>
+        {deal.categories[0].name !== "Big Sale" && (
+          <>
+            <div className="deal-pricing">
+              {deal.sales_price && (
+                <>
+                  <span className="sales-price">{formattedPrice}</span>
+                  <span className="original-price">
+                    {USDollar.format(deal.original_price)}
+                  </span>
+                </>
+              )}
+              {!deal.sales_price && (
+                <span className="original-price-only">
+                  {USDollar.format(deal.original_price)}
+                </span>
+              )}
+              {deal.discount_percentage && (
+                <span className="discount">
+                  {deal.discount_percentage}% OFF
+                </span>
+              )}
+            </div>
 
-        <div className="deal-seller">
-          {deal.seller ? deal.seller : "No Seller Saved"}
-        </div>
+            <div className="deal-seller">
+              {deal.seller ? deal.seller : "No Seller Saved"}
+            </div>
+          </>
+        )}
 
         <div className="deal-tags">{deal.tags && deal.tags.join(", ")}</div>
 

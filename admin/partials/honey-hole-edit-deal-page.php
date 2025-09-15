@@ -136,9 +136,28 @@ function honey_hole_edit_deal_page()
                         <p class="description">Provide a compelling description for the big sale deal</p>
                     </div>
                     <div class="honey-hole-form-field">
-                        <label for="deal-background-image">Background Image URL</label>
-                        <input type="url" id="deal-background-image" name="deal_background_image" value="<?php echo esc_url($background_image); ?>" placeholder="Enter background image URL (optional)">
-                        <p class="description">Enter the URL for a background image (optional)</p>
+                        <label for="deal-background-image">Background Image</label>
+                        <select id="deal-background-image" name="deal_background_image">
+                            <option value="">Select a background image (optional)</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg'); ?>>Blue</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg'); ?>>Green</option>
+                            <option value="https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg" <?php selected($background_image, 'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'); ?>>Red</option>
+                            <option value="custom" <?php selected($background_image && !in_array($background_image, [
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'
+                        ]), true); ?>>Custom URL...</option>
+                        </select>
+                        <input type="url" id="deal-background-image-custom" name="deal_background_image_custom" value="<?php echo esc_url($background_image && !in_array($background_image, [
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-blue-bg-1.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-green-bg.jpg',
+                            'https://outdoorempire.com/wp-content/uploads/2025/08/honey-hole-bigsale-red-bg.jpg'
+                        ]) ? $background_image : ''); ?>" placeholder="Enter custom background image URL" style="display: none; margin-top: 10px;">
+                        <div id="background-image-preview" class="background-image-preview" style="display: none;">
+                            <span class="preview-label">Preview</span>
+                            <img src="" alt="Background Preview">
+                        </div>
+                        <p class="description">Choose a background image for your Big Sale deal (optional)</p>
                     </div>
                 </div>
 
@@ -323,6 +342,31 @@ function honey_hole_edit_deal_page()
             honeyHoleToggleEditDealFields();
         }
 
+        // Initialize background image preview on page load
+        const backgroundImageSelect = document.getElementById('deal-background-image');
+        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
+        const backgroundImagePreview = document.getElementById('background-image-preview');
+        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
+
+        if (backgroundImageSelect && backgroundImageCustom && backgroundImagePreview) {
+            const selectedValue = backgroundImageSelect.value;
+            const customValue = backgroundImageCustom.value;
+
+            // If we have a custom value and it's not one of the predefined options
+            if (customValue && selectedValue === 'custom') {
+                backgroundImageCustom.style.display = 'block';
+                if (backgroundImagePreviewImg) {
+                    backgroundImagePreviewImg.src = customValue;
+                    backgroundImagePreview.style.display = 'block';
+                }
+            } else if (selectedValue && selectedValue !== '' && selectedValue !== 'custom') {
+                if (backgroundImagePreviewImg) {
+                    backgroundImagePreviewImg.src = selectedValue;
+                    backgroundImagePreview.style.display = 'block';
+                }
+            }
+        }
+
         // Add form validation debugging
         const form = document.getElementById('honey-hole-deal-form');
         if (form) {
@@ -494,6 +538,66 @@ function honey_hole_edit_deal_page()
                             });
                         }
                     }
+                }
+            });
+        }
+
+        // Background image dropdown functionality
+        const backgroundImageSelect = document.getElementById('deal-background-image');
+        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
+        const backgroundImagePreview = document.getElementById('background-image-preview');
+        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
+
+        if (backgroundImageSelect) {
+            backgroundImageSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                
+                // Show/hide custom input based on selection
+                if (selectedValue === 'custom') {
+                    if (backgroundImageCustom) {
+                        backgroundImageCustom.style.display = 'block';
+                        backgroundImageCustom.focus();
+                    }
+                    if (backgroundImagePreview) {
+                        backgroundImagePreview.style.display = 'none';
+                    }
+                } else {
+                    if (backgroundImageCustom) {
+                        backgroundImageCustom.style.display = 'none';
+                    }
+                    
+                    // Show preview for predefined images
+                    if (selectedValue && selectedValue !== '') {
+                        if (backgroundImagePreview && backgroundImagePreviewImg) {
+                            backgroundImagePreviewImg.src = selectedValue;
+                            backgroundImagePreview.style.display = 'block';
+                        }
+                    } else {
+                        if (backgroundImagePreview) {
+                            backgroundImagePreview.style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Handle custom background image URL input
+        if (backgroundImageCustom) {
+            backgroundImageCustom.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url && backgroundImagePreview && backgroundImagePreviewImg) {
+                    // Validate URL format
+                    if (url.match(/^https?:\/\/.+/)) {
+                        backgroundImagePreviewImg.src = url;
+                        backgroundImagePreview.style.display = 'block';
+                        backgroundImagePreviewImg.onerror = function() {
+                            backgroundImagePreview.innerHTML = '<div style="color: red; padding: 10px;">Invalid image URL</div>';
+                        };
+                    } else {
+                        backgroundImagePreview.style.display = 'none';
+                    }
+                } else if (backgroundImagePreview) {
+                    backgroundImagePreview.style.display = 'none';
                 }
             });
         }

@@ -425,7 +425,7 @@ const DealCard = ({
     type: "checkbox",
     checked: bulkDeals.includes(deal.id),
     onChange: () => handleBulkToggle(deal.id)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  })), deal.categories[0].name !== "Big Sale" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-rating"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-o-meter-card"
@@ -464,7 +464,7 @@ const DealCard = ({
     className: "deal-content"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
     className: "deal-title"
-  }, deal.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, deal.title), deal.categories[0].name !== "Big Sale" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-pricing"
   }, deal.sales_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "sales-price"
@@ -476,7 +476,7 @@ const DealCard = ({
     className: "discount"
   }, deal.discount_percentage, "% OFF")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-seller"
-  }, deal.seller ? deal.seller : "No Seller Saved"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, deal.seller ? deal.seller : "No Seller Saved")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-tags"
   }, deal.tags && deal.tags.join(", ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-date"

@@ -79,7 +79,6 @@ const DealGrid = ({ deals }) => {
     } else if (sort === "rating") {
       sortedDeals.sort((a, b) => b.rating - a.rating);
     }
-
     setDealsArray(sortedDeals);
   }, [sort]);
 

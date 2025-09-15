@@ -276,7 +276,15 @@ class Honey_Hole_Admin
 			if ($is_big_sale) {
 				$title = sanitize_text_field($_POST['deal_title_big_sale']);
 				$description = sanitize_textarea_field($_POST['deal_description']);
-				$background_image = esc_url_raw($_POST['deal_background_image']);
+				// Handle background image from dropdown or custom input
+			$background_image = '';
+			if (isset($_POST['deal_background_image'])) {
+				if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
+					$background_image = esc_url_raw($_POST['deal_background_image_custom']);
+				} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
+					$background_image = esc_url_raw($_POST['deal_background_image']);
+				}
+			}
 			} else {
 				$title = sanitize_text_field($_POST['deal_title']);
 				$original_price = floatval($_POST['deal_original_price']);
@@ -449,7 +457,16 @@ class Honey_Hole_Admin
 			// Update meta based on category
 			if ($is_big_sale) {
 				update_post_meta($deal_id, 'deal_description', sanitize_textarea_field($_POST['deal_description']));
-				update_post_meta($deal_id, 'deal_background_image', esc_url_raw($_POST['deal_background_image']));
+				// Handle background image from dropdown or custom input
+			$background_image = '';
+			if (isset($_POST['deal_background_image'])) {
+				if ($_POST['deal_background_image'] === 'custom' && isset($_POST['deal_background_image_custom'])) {
+					$background_image = esc_url_raw($_POST['deal_background_image_custom']);
+				} elseif ($_POST['deal_background_image'] !== '' && $_POST['deal_background_image'] !== 'custom') {
+					$background_image = esc_url_raw($_POST['deal_background_image']);
+				}
+			}
+			update_post_meta($deal_id, 'deal_background_image', $background_image);
 			} else {
 				update_post_meta($deal_id, 'deal_original_price', floatval($_POST['deal_original_price']));
 				update_post_meta($deal_id, 'deal_sales_price', !empty($_POST['deal_sales_price']) ? floatval($_POST['deal_sales_price']) : '');

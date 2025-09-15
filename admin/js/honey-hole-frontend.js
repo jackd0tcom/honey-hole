@@ -104,9 +104,9 @@ const App = () => {
     className: "honey-hole-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-header"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], null), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-error"
-  }, error))), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, error)), loading ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "honey-hole-loading"
   }, "Loading deals...") : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealGrid_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
     deals: deals
@@ -145,9 +145,23 @@ const DealCard = ({
     categories,
     background_image,
     description,
-    badge
+    badge,
+    date_added
   } = deal;
   const [hover, setHover] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [newDeal, setNewDeal] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const isNewDeal = () => {
+      const now = new Date();
+      const added = new Date(date_added);
+      const diffInMs = now - added;
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      if (diffInHours <= 36) {
+        setNewDeal(true);
+      }
+    };
+    isNewDeal();
+  }, []);
   const discount_percentage = sales_price && original_price ? Math.round((original_price - sales_price) / original_price * 100) : 0;
   let USDollar = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -229,7 +243,9 @@ const DealCard = ({
     className: "deal-card"
   }, badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "deal-badge"
-  }, badge), hover && promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, badge), newDeal && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "deal-badge"
+  }, "New!"), hover && promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "hh-promo-code-wrapper"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Use Code: ", promo_code)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: product_url,

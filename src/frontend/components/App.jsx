@@ -48,14 +48,12 @@ const App = () => {
   return (
     <div className="honey-hole-wrapper">
       <div className="honey-hole-header">
-        <div>
-          <Hero />
-          {/* <div className="hero-header-two"> */}
-          {/* <DealOMeterGraphic /> */}
-          {/* <HeroEmailSignup /> */}
-          {/* </div> */}
-          {error && <div className="honey-hole-error">{error}</div>}
-        </div>
+        <Hero />
+        {/* <div className="hero-header-two"> */}
+        {/* <DealOMeterGraphic /> */}
+        {/* <HeroEmailSignup /> */}
+        {/* </div> */}
+        {error && <div className="honey-hole-error">{error}</div>}
       </div>
       {loading ? (
         <div className="honey-hole-loading">Loading deals...</div>

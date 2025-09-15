@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const DealCard = ({ deal }) => {
   const {
@@ -14,8 +14,23 @@ const DealCard = ({ deal }) => {
     background_image,
     description,
     badge,
+    date_added,
   } = deal;
   const [hover, setHover] = useState(false);
+  const [newDeal, setNewDeal] = useState(false);
+
+  useEffect(() => {
+    const isNewDeal = () => {
+      const now = new Date();
+      const added = new Date(date_added);
+      const diffInMs = now - added;
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      if (diffInHours <= 36) {
+        setNewDeal(true);
+      }
+    };
+    isNewDeal();
+  }, []);
 
   const discount_percentage =
     sales_price && original_price
@@ -113,6 +128,7 @@ const DealCard = ({ deal }) => {
       className="deal-card"
     >
       {badge && <div className="deal-badge">{badge}</div>}
+      {newDeal && <div className="deal-badge">New!</div>}
       {hover && promo_code && (
         <div className="hh-promo-code-wrapper">
           <p>Use Code: {promo_code}</p>
