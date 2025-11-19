@@ -47,18 +47,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const AddDealButton = () => {
   const handleClick = () => {
     window.location.href = '/wp-admin/admin.php?page=honey-hole-add-deal';
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-actions"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "hh-add-deal-button button button-primary",
-    onClick: handleClick
-  }, "Add Deal"));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: "honey-hole-actions",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+      className: "hh-add-deal-button button button-primary",
+      onClick: handleClick,
+      children: "Add Deal"
+    })
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddDealButton);
 
@@ -81,6 +85,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddDealButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AddDealButton */ "./src/admin/components/AddDealButton.jsx");
 /* harmony import */ var _CategoryFilter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CategoryFilter */ "./src/admin/components/CategoryFilter.jsx");
 /* harmony import */ var _DeleteAllButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./DeleteAllButton */ "./src/admin/components/DeleteAllButton.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -185,38 +191,45 @@ const AdminApp = () => {
   //     setError(err.message);
   //   }
   // };
-  if (loading) return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-loading"
-  }, "Loading deals...");
-  if (error) return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-error"
-  }, "Error: ", error);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-admin"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-menu-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://outdoorempire.com/thehoneyhole/",
-    target: "_blank"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-logo"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: "https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png",
-    alt: "Honey Hole"
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CategoryFilter__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    categories: categories,
-    selectedCategory: selectedCategory,
-    onCategoryChange: handleCategoryChange
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SearchBar__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    onSearch: handleSearch
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_AddDealButton__WEBPACK_IMPORTED_MODULE_3__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "/wp-admin/admin.php?page=honey-hole-export",
-    className: "button button-secondary"
-  }, "Export Deals")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealList__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    deals: deals
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DeleteAllButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    onRefreshDeals: handleRefreshDeals
-  }));
+  if (loading) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+    className: "honey-hole-loading",
+    children: "Loading deals..."
+  });
+  if (error) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    className: "honey-hole-error",
+    children: ["Error: ", error]
+  });
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    className: "honey-hole-admin",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+      className: "honey-hole-menu-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("a", {
+        href: "https://outdoorempire.com/thehoneyhole/",
+        target: "_blank",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+          className: "honey-hole-logo",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("img", {
+            src: "https://outdoorempire.com/wp-content/uploads/2025/06/the-honey-hole-font-logo.png",
+            alt: "Honey Hole"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_CategoryFilter__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        categories: categories,
+        selectedCategory: selectedCategory,
+        onCategoryChange: handleCategoryChange
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SearchBar__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        onSearch: handleSearch
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_AddDealButton__WEBPACK_IMPORTED_MODULE_3__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("a", {
+        href: "/wp-admin/admin.php?page=honey-hole-export",
+        className: "button button-secondary",
+        children: "Export Deals"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_DealList__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      deals: deals
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_DeleteAllButton__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      onRefreshDeals: handleRefreshDeals
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AdminApp);
 
@@ -234,6 +247,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const CategoryFilter = ({
@@ -241,18 +256,21 @@ const CategoryFilter = ({
   selectedCategory,
   onCategoryChange
 }) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-admin-filter-bar"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-categories"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: `button ${selectedCategory === 'all-deals' ? 'active' : ''}`,
-    onClick: () => onCategoryChange('all-deals')
-  }, "All Deals"), categories.map(category => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    key: category.id,
-    className: `button ${selectedCategory === category.slug ? 'active' : ''}`,
-    onClick: () => onCategoryChange(category.slug)
-  }, category.name))));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: "hh-admin-filter-bar",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "hh-categories",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        className: `button ${selectedCategory === 'all-deals' ? 'active' : ''}`,
+        onClick: () => onCategoryChange('all-deals'),
+        children: "All Deals"
+      }), categories.map(category => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        className: `button ${selectedCategory === category.slug ? 'active' : ''}`,
+        onClick: () => onCategoryChange(category.slug),
+        children: category.name
+      }, category.id))]
+    })
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryFilter);
 
@@ -270,6 +288,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const ConfirmButton = ({
@@ -313,17 +333,26 @@ const ConfirmButton = ({
       onCancel();
     }
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isDeleting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-deleting-overlay"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-deleting-spinner"
-  }, "Deleting...")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-confirm-wrapper"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Are you sure you want to delete?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: handleBulkDelete
-  }, "Delete Selected"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: handleCancel
-  }, "Cancel")));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+    children: [isDeleting && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "hh-deleting-overlay",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "hh-deleting-spinner",
+        children: "Deleting..."
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "hh-confirm-wrapper",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+        children: "Are you sure you want to delete?"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        onClick: handleBulkDelete,
+        children: "Delete Selected"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        onClick: handleCancel,
+        children: "Cancel"
+      })]
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ConfirmButton);
 
@@ -341,6 +370,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const DealCard = ({
@@ -415,77 +446,109 @@ const DealCard = ({
     return "https://outdoorempire.com/wp-content/uploads/2025/07/Green-Deal-O-Meter.png";
   };
   const discount = deal.original_price > 0 ? Math.round((deal.original_price - deal.sales_price) / deal.original_price * 100) : 0;
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-deal-card"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-card-header"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-bulk-toggle"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "checkbox",
-    checked: bulkDeals.includes(deal.id),
-    onChange: () => handleBulkToggle(deal.id)
-  })), deal.categories[0].name !== "Big Sale" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-rating"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-o-meter-card"
-  }, !deal.rating ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "deal-o-meter-card-img",
-    src: getDealMeter(deal.discount_percentage),
-    alt: ""
-  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    className: "deal-o-meter-card-img",
-    src: getDealMeter(deal.rating * 14),
-    alt: "Great Price"
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-actions"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: `/wp-admin/admin.php?page=honey-hole-edit-deal&id=${deal.id}`,
-    className: "button"
-  }, "Edit"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button",
-    onClick: handleDelete,
-    disabled: isUpdating
-  }, "Delete"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-image"
-  }, deal.image_url ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: deal.image_url,
-    alt: deal.title,
-    className: "deal-thumbnail-image"
-  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "no-image"
-  }, "No Image"), deal.badge && !deal.promo_code && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "hh-admin-deal-badge"
-  }, deal.badge), deal.promo_code && !deal.badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "hh-admin-deal-badge"
-  }, deal.promo_code), deal.promo_code && deal.badge && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "hh-admin-deal-promo-code"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, deal.promo_code), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, deal.badge))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-content"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-    className: "deal-title"
-  }, deal.title), deal.categories[0].name !== "Big Sale" && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-pricing"
-  }, deal.sales_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "sales-price"
-  }, formattedPrice), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "original-price"
-  }, USDollar.format(deal.original_price))), !deal.sales_price && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "original-price-only"
-  }, USDollar.format(deal.original_price)), deal.discount_percentage && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "discount"
-  }, deal.discount_percentage, "% OFF")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-seller"
-  }, deal.seller ? deal.seller : "No Seller Saved")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-tags"
-  }, deal.tags && deal.tags.join(", ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "deal-date"
-  }, "Added: ", new Date(deal.date_added).toLocaleDateString()), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: deal.product_url,
-    target: "_blank",
-    rel: "noopener noreferrer",
-    className: "button affiliate-link"
-  }, "View Deal")));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "honey-hole-deal-card",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "deal-card-header",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "hh-bulk-toggle",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "checkbox",
+          checked: bulkDeals.includes(deal.id),
+          onChange: () => handleBulkToggle(deal.id)
+        })
+      }), deal.categories[0].name !== "Big Sale" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "deal-rating",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+          className: "deal-o-meter-card",
+          children: !deal.rating ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+            className: "deal-o-meter-card-img",
+            src: getDealMeter(deal.discount_percentage),
+            alt: ""
+          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+            className: "deal-o-meter-card-img",
+            src: getDealMeter(deal.rating * 14),
+            alt: "Great Price"
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "deal-actions",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("a", {
+          href: `/wp-admin/admin.php?page=honey-hole-edit-deal&id=${deal.id}`,
+          className: "button",
+          children: "Edit"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+          className: "button",
+          onClick: handleDelete,
+          disabled: isUpdating,
+          children: "Delete"
+        })]
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "deal-image",
+      children: [deal.image_url ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+        src: deal.image_url,
+        alt: deal.title,
+        className: "deal-thumbnail-image"
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "no-image",
+        children: "No Image"
+      }), deal.badge && !deal.promo_code && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+        className: "hh-admin-deal-badge",
+        children: deal.badge
+      }), deal.promo_code && !deal.badge && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+        className: "hh-admin-deal-badge",
+        children: deal.promo_code
+      }), deal.promo_code && deal.badge && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "hh-admin-deal-promo-code",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+          children: deal.promo_code
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+          children: deal.badge
+        })]
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "deal-content",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
+        className: "deal-title",
+        children: deal.title
+      }), deal.categories[0].name !== "Big Sale" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+          className: "deal-pricing",
+          children: [deal.sales_price && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+              className: "sales-price",
+              children: formattedPrice
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+              className: "original-price",
+              children: USDollar.format(deal.original_price)
+            })]
+          }), !deal.sales_price && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+            className: "original-price-only",
+            children: USDollar.format(deal.original_price)
+          }), deal.discount_percentage && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("span", {
+            className: "discount",
+            children: [deal.discount_percentage, "% OFF"]
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+          className: "deal-seller",
+          children: deal.seller ? deal.seller : "No Seller Saved"
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "deal-tags",
+        children: deal.tags && deal.tags.join(", ")
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "deal-date",
+        children: ["Added: ", new Date(deal.date_added).toLocaleDateString()]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("a", {
+        href: deal.product_url,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "button affiliate-link",
+        children: "View Deal"
+      })]
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealCard);
 
@@ -505,6 +568,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _DealCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealCard */ "./src/admin/components/DealCard.jsx");
 /* harmony import */ var _ConfirmButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ConfirmButton */ "./src/admin/components/ConfirmButton.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
@@ -560,38 +625,42 @@ const DealList = ({
     acc[category].push(deal);
     return acc;
   }, {});
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, isConfirming ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ConfirmButton__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    isConfirming: isConfirming,
-    setIsConfirming: setIsConfirming,
-    bulkDeals: bulkDeals,
-    setBulkDeals: setBulkDeals,
-    isDeleting: isDeleting,
-    setIsDeleting: setIsDeleting,
-    onCancel: () => {
-      setBulkDeals([]);
-      setIsConfirming(false);
-    }
-  }) : "", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-deals-container"
-  }, Object.entries(groupedDeals).map(([category, categoryDeals]) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    key: category,
-    className: "honey-hole-category-section"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-    className: "honey-hole-category-title"
-  }, category), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-deals-grid"
-  }, categoryDeals.map(deal => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DealCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    key: deal.id,
-    deal: deal,
-    onUpdate: refreshDeals,
-    bulkDeals: bulkDeals,
-    setBulkDeals: setBulkDeals,
-    isConfirming: isConfirming,
-    setIsConfirming: setIsConfirming,
-    handleBulkToggle: () => handleBulkToggle(deal),
-    isDeleting: isDeleting,
-    setIsDeleting: setIsDeleting
-  })))))));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    children: [isConfirming ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_ConfirmButton__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      isConfirming: isConfirming,
+      setIsConfirming: setIsConfirming,
+      bulkDeals: bulkDeals,
+      setBulkDeals: setBulkDeals,
+      isDeleting: isDeleting,
+      setIsDeleting: setIsDeleting,
+      onCancel: () => {
+        setBulkDeals([]);
+        setIsConfirming(false);
+      }
+    }) : "", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+      className: "honey-hole-deals-container",
+      children: Object.entries(groupedDeals).map(([category, categoryDeals]) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        className: "honey-hole-category-section",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h2", {
+          className: "honey-hole-category-title",
+          children: category
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          className: "honey-hole-deals-grid",
+          children: categoryDeals.map(deal => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_DealCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
+            deal: deal,
+            onUpdate: refreshDeals,
+            bulkDeals: bulkDeals,
+            setBulkDeals: setBulkDeals,
+            isConfirming: isConfirming,
+            setIsConfirming: setIsConfirming,
+            handleBulkToggle: () => handleBulkToggle(deal),
+            isDeleting: isDeleting,
+            setIsDeleting: setIsDeleting
+          }, deal.id))
+        })]
+      }, category))
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DealList);
 
@@ -609,6 +678,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const DeleteAllButton = ({
@@ -656,21 +727,29 @@ const DeleteAllButton = ({
       setIsConfirming(false);
     }
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-delete-all-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-delete-all-warning"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "\u26A0\uFE0F Danger Zone"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "This action will permanently delete ALL deals from your database. This cannot be undone.")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: `button ${isConfirming ? 'button-primary' : 'button-secondary'} ${isDeleting ? 'disabled' : ''}`,
-    onClick: handleDeleteAll,
-    disabled: isDeleting
-  }, isDeleting ? "Deleting..." : isConfirming ? "Click again to confirm" : "Delete All Deals"), isConfirming && !isDeleting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button",
-    onClick: () => setIsConfirming(false),
-    style: {
-      marginLeft: "10px"
-    }
-  }, "Cancel"));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "honey-hole-delete-all-container",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "honey-hole-delete-all-warning",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
+        children: "\u26A0\uFE0F Danger Zone"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+        children: "This action will permanently delete ALL deals from your database. This cannot be undone."
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+      className: `button ${isConfirming ? 'button-primary' : 'button-secondary'} ${isDeleting ? 'disabled' : ''}`,
+      onClick: handleDeleteAll,
+      disabled: isDeleting,
+      children: isDeleting ? "Deleting..." : isConfirming ? "Click again to confirm" : "Delete All Deals"
+    }), isConfirming && !isDeleting && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+      className: "button",
+      onClick: () => setIsConfirming(false),
+      style: {
+        marginLeft: "10px"
+      },
+      children: "Cancel"
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DeleteAllButton);
 
@@ -690,6 +769,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
@@ -707,15 +788,16 @@ const SearchBar = ({
     setSearchValue(value);
     debouncedSearch(value);
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "honey-hole-search"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    className: "honey-hole-search-input",
-    placeholder: "Search deals...",
-    value: searchValue,
-    onChange: handleChange
-  }));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    className: "honey-hole-search",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+      type: "text",
+      className: "honey-hole-search-input",
+      placeholder: "Search deals...",
+      value: searchValue,
+      onChange: handleChange
+    })
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchBar);
 
@@ -760,6 +842,16 @@ module.exports = window["React"];
 /***/ ((module) => {
 
 module.exports = window["ReactDOM"];
+
+/***/ }),
+
+/***/ "react/jsx-runtime":
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+/***/ ((module) => {
+
+module.exports = window["ReactJSXRuntime"];
 
 /***/ })
 
@@ -843,18 +935,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _components_AdminApp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/AdminApp */ "./src/admin/components/AdminApp.jsx");
 /* harmony import */ var _styles_admin_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./styles/admin.css */ "./src/admin/styles/admin.css");
-
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
 
 
 // Wait for DOM to be ready
+
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('honey-hole-admin-root');
   if (container) {
     const root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);
-    root.render((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_AdminApp__WEBPACK_IMPORTED_MODULE_2__["default"], null)));
+    root.render(/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_components_AdminApp__WEBPACK_IMPORTED_MODULE_2__["default"], {})
+    }));
   }
 });
 })();

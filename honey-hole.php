@@ -24,6 +24,7 @@
  * Text Domain:       honey-hole
  * Domain Path:       /languages
  * Update URI:        https://github.com/jackd0tcom/honey-hole
+ * GitHub Plugin URI: jackd0tcom/honey-hole
  * Tested up to:      6.6.1
  * Requires at least: 6.0
  * Requires PHP:      8.0

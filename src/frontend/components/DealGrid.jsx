@@ -3,42 +3,15 @@ import { useEffect } from "react";
 import DealCard from "./DealCard.jsx";
 import FilterBar from "./FilterBar.jsx";
 import Sorter from "./Sorter.jsx";
+import InfiniteGrid from "./InfiniteGrid.jsx";
 
 const DealGrid = ({ deals }) => {
   const [categories, setCategories] = useState("all");
   const [dealsArray, setDealsArray] = useState(deals);
-  const [originalArray, setOriginalArray] = useState(deals);
   const [activeCategory, setActiveCategory] = useState(0);
   const [sort, setSort] = useState("newest");
   const [isMobile, setIsMobile] = useState(false);
   const [filtering, setFiltering] = useState(false);
-
-  useEffect(() => {
-    if (categories === "all") {
-      setDealsArray(deals);
-    } else
-      setDealsArray(
-        deals.filter((deal) => {
-          return deal.categories[0].slug === categories;
-        })
-      );
-  }, [categories]);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, []);
-
-  const getSavings = (a) => {
-    if (!a.original_price || a.original_price === 0) return 0;
-    return ((a.original_price - a.sales_price) / a.original_price) * 100;
-  };
 
   const currentCategory = [
     "All Gear Deals",
@@ -58,8 +31,37 @@ const DealGrid = ({ deals }) => {
     "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png",
   ];
 
+  const getSavings = (a) => {
+    if (!a.original_price || a.original_price === 0) return 0;
+    return ((a.original_price - a.sales_price) / a.original_price) * 100;
+  };
+
+  // Category sorting
   useEffect(() => {
-    console.log("sorting");
+    if (categories === "all") {
+      setDealsArray(deals);
+    } else
+      setDealsArray(
+        deals.filter((deal) => {
+          return deal.categories[0].slug === categories;
+        })
+      );
+  }, [categories]);
+
+  // Mobile checking
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  // Parameter Filtering
+  useEffect(() => {
     let sortedDeals = [...dealsArray];
 
     if (sort === "newest") {
@@ -82,10 +84,7 @@ const DealGrid = ({ deals }) => {
     setDealsArray(sortedDeals);
   }, [sort]);
 
-  const test = () => {
-    console.log(deals[0].categories[0].slug);
-  };
-
+  // Error handling
   if (!deals || deals.length === 0) {
     return <div className="honey-hole-empty">No deals found</div>;
   }
@@ -164,17 +163,7 @@ const DealGrid = ({ deals }) => {
                 </h2>
               </div>
             )}
-            <div className="deals-grid">
-              {dealsArray.map((deal) => (
-                <DealCard
-                  promo={deal.promo_code}
-                  key={deal.id}
-                  deal={deal}
-                  categories={categories}
-                  seller={deal.seller}
-                />
-              ))}
-            </div>
+            <InfiniteGrid dealsArray={dealsArray} categories={categories} />
           </div>
         </div>
       </div>

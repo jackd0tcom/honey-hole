@@ -102,12 +102,9 @@ const App = () => {
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
     className: "honey-hole-wrapper",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
-      className: "honey-hole-header",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {}), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
-        className: "honey-hole-error",
-        children: error
-      })]
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_Hero_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {}), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
+      className: "honey-hole-error",
+      children: error
     }), loading ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
       className: "honey-hole-loading",
       children: "Loading deals..."
@@ -356,8 +353,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DealCard.jsx */ "./src/frontend/components/DealCard.jsx");
 /* harmony import */ var _FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FilterBar.jsx */ "./src/frontend/components/FilterBar.jsx");
 /* harmony import */ var _Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Sorter.jsx */ "./src/frontend/components/Sorter.jsx");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _InfiniteGrid_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./InfiniteGrid.jsx */ "./src/frontend/components/InfiniteGrid.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -369,11 +368,18 @@ const DealGrid = ({
 }) => {
   const [categories, setCategories] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("all");
   const [dealsArray, setDealsArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
-  const [originalArray, setOriginalArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
   const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
   const [isMobile, setIsMobile] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [filtering, setFiltering] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const currentCategory = ["All Gear Deals", "Camping Gear", "Fishing Gear", "Hiking Gear", "Hunting Gear", "Outdoor Gear"];
+  const categoryIcon = ["https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png"];
+  const getSavings = a => {
+    if (!a.original_price || a.original_price === 0) return 0;
+    return (a.original_price - a.sales_price) / a.original_price * 100;
+  };
+
+  // Category sorting
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (categories === "all") {
       setDealsArray(deals);
@@ -381,6 +387,8 @@ const DealGrid = ({
       return deal.categories[0].slug === categories;
     }));
   }, [categories]);
+
+  // Mobile checking
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -391,14 +399,9 @@ const DealGrid = ({
       window.removeEventListener("resize", checkMobile);
     };
   }, []);
-  const getSavings = a => {
-    if (!a.original_price || a.original_price === 0) return 0;
-    return (a.original_price - a.sales_price) / a.original_price * 100;
-  };
-  const currentCategory = ["All Gear Deals", "Camping Gear", "Fishing Gear", "Hiking Gear", "Hunting Gear", "Outdoor Gear"];
-  const categoryIcon = ["https://outdoorempire.com/wp-content/uploads/2025/06/campfire-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tent-17-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Fish-10-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_GearRating-38-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Antler-03-white.png", "https://outdoorempire.com/wp-content/uploads/2025/06/OutdoorEmpire_Icons2021_Tree_Water-31-white.png"];
+
+  // Parameter Filtering
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log("sorting");
     let sortedDeals = [...dealsArray];
     if (sort === "newest") {
       sortedDeals.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
@@ -415,21 +418,20 @@ const DealGrid = ({
     }
     setDealsArray(sortedDeals);
   }, [sort]);
-  const test = () => {
-    console.log(deals[0].categories[0].slug);
-  };
+
+  // Error handling
   if (!deals || deals.length === 0) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "honey-hole-empty",
       children: "No deals found"
     });
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-    children: [isMobile && filtering && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+    children: [isMobile && filtering && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "mobile-filter-overlay",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
         className: "modal-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
           categories: categories,
           setCategories: setCategories,
           activeCategory: activeCategory,
@@ -438,66 +440,61 @@ const DealGrid = ({
           setFiltering: setFiltering
         })
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
       className: "hh-grid-heading-wrapper",
-      children: [isMobile ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-        children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      children: [isMobile ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+        children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
           className: "deal-grid-heading",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("img", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("img", {
             className: "deal-grid-icon",
             src: categoryIcon[activeCategory]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h2", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
             className: "deal-grid-title",
             children: currentCategory[activeCategory]
           })]
         })]
-      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-        children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h2", {
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+        children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
           className: "hh-heading",
           children: "Honey Hole Deals"
         }), " "]
-      }), !isMobile && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }), !isMobile && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         sort: sort,
         setSort: setSort
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "hh-main-bg",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
         className: "hh-main-wrapper",
-        children: [isMobile ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        children: [isMobile ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
           className: "mobile-filter-buttons",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
             id: "mobile-filter-button",
             onClick: () => setFiltering(true),
             children: "Filter"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {})]
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-          children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_Sorter_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {})]
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+          children: [" ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_FilterBar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
             categories: categories,
             setCategories: setCategories,
             activeCategory: activeCategory,
             setActiveCategory: setActiveCategory,
             isMobile: isMobile
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
           className: "hh-deal-grid-wrapper",
-          children: [!isMobile && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+          children: [!isMobile && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
             className: "deal-grid-heading",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("img", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("img", {
               className: "deal-grid-icon",
               src: categoryIcon[activeCategory]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h2", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
               className: "deal-grid-title",
               children: currentCategory[activeCategory]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-            className: "deals-grid",
-            children: dealsArray.map(deal => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_DealCard_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-              promo: deal.promo_code,
-              deal: deal,
-              categories: categories,
-              seller: deal.seller
-            }, deal.id))
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_InfiniteGrid_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            dealsArray: dealsArray,
+            categories: categories
           })]
         })]
       })
@@ -914,8 +911,9 @@ const Hero = () => {
     month: "long",
     day: "numeric"
   });
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "honey-hole-hero-wrapper",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       class: "honey-hole-hero",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         class: "honey-hole-hero-content",
@@ -941,7 +939,16 @@ const Hero = () => {
           })]
         })]
       })
-    })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "hh-banner",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+        href: "https://outdoorempire.com/100k-giveaway-signup/",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+          src: "https://outdoorempire.com/wp-content/uploads/2025/11/100k-giveaway-homepage-banner-1.png",
+          alt: "outdoor empire 100k giveaway banner"
+        })
+      })
+    })]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
@@ -1081,6 +1088,39 @@ const HeroEmailSignup = () => {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HeroEmailSignup);
+
+/***/ }),
+
+/***/ "./src/frontend/components/InfiniteGrid.jsx":
+/*!**************************************************!*\
+  !*** ./src/frontend/components/InfiniteGrid.jsx ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DealCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DealCard */ "./src/frontend/components/DealCard.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const InfiniteGrid = ({
+  dealsArray,
+  categories
+}) => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: "deals-grid",
+    children: dealsArray.map(deal => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_DealCard__WEBPACK_IMPORTED_MODULE_0__["default"], {
+      promo: deal.promo_code,
+      deal: deal,
+      categories: categories,
+      seller: deal.seller
+    }, deal.id))
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InfiniteGrid);
 
 /***/ }),
 

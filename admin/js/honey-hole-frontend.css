@@ -22,6 +22,18 @@
   align-items: center;
   max-width: 1260px;
 }
+.honey-hole-hero-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.hh-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
 .honey-hole-hero {
   background: url("https://outdoorempire.com/wp-content/uploads/2025/02/dirk-von-loen-wagner-Hrmayke-v8g-unsplash.webp");
   background-size: cover;
@@ -64,6 +76,11 @@
   padding: 0 20px;
 }
 
+.hh-hero-banner img {
+  height: 10vh;
+  width: auto;
+}
+
 /* Sidebar */
 
 .sidebar {
@@ -100,6 +117,7 @@
   gap: 0.5rem;
   margin: 20px 0;
   grid-template-columns: repeat(4, 1fr);
+  content-visibility: auto;
 }
 .deal-grid-heading {
   display: flex;
