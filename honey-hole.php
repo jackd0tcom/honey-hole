@@ -16,7 +16,7 @@
  * Plugin Name:       Honey Hole 3.0
  * Plugin URI:        https://outdoorempire.com/thehoneyhole
  * Description:       A plugin for managing and displaying deals on the Honey Hole
- * Version:           3.0.1
+ * Version:           3.0.2
  * Author:            Jack Ball
  * Author URI:        https://fishbones.digital/
  * License:           GPL-2.0+
