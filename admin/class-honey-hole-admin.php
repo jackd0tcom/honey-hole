@@ -583,10 +583,10 @@ class Honey_Hole_Admin
 				);
 
 				// Handle date added if present
-				if (isset($field_map['Date Added']) && isset($data[$field_map['Date Added']]) && trim($data[$field_map['Date Added']]) !== '') {
-					$date_added = $this->clean_imported_value($data[$field_map['Date Added']]);
+				if (isset($field_map['Date Created']) && isset($data[$field_map['Date Created']]) && trim($data[$field_map['Date Created']]) !== '') {
+					$date_added = $this->clean_imported_value($data[$field_map['Date Created']]);
 					// Try to parse the date
-					$parsed_date = $this->parse_date_added($date_added);
+					$parsed_date = $this->parse_date_created($date_created);
 					if ($parsed_date) {
 						$post_data['post_date'] = $parsed_date;
 						$post_data['post_date_gmt'] = get_gmt_from_date($parsed_date);
@@ -704,7 +704,7 @@ class Honey_Hole_Admin
 		// Promo Code and Date Added are optional
 		$optional_fields = array(
 			'Promo Code' => 'deal_promo_code',
-			'Date Added' => 'post_date'
+			'Date Created' => 'post_date'
 		);
 
 		// Map CSV headers to required and optional fields (case-insensitive)
