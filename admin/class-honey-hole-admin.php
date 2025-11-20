@@ -570,14 +570,29 @@ class Honey_Hole_Admin
 		foreach ($batch as $row) {
 			$data = $row['data'];
 			$field_map = $row['field_map'];
+			$is_big_sale = isset($row['is_big_sale']) ? $row['is_big_sale'] : false;
 
 			// Start transaction
 			$wpdb->query('START TRANSACTION');
 
 			try {
+				// Determine the title - Big Sale deals can use "Big Sale Title" or "Title"
+				$title = '';
+				if ($is_big_sale) {
+					if (isset($field_map['Big Sale Title']) && isset($data[$field_map['Big Sale Title']]) && trim($data[$field_map['Big Sale Title']]) !== '') {
+						$title = sanitize_text_field($this->clean_imported_value($data[$field_map['Big Sale Title']]));
+					} elseif (isset($field_map['Title']) && isset($data[$field_map['Title']]) && trim($data[$field_map['Title']]) !== '') {
+						$title = sanitize_text_field($this->clean_imported_value($data[$field_map['Title']]));
+					}
+				} else {
+					if (isset($field_map['Title']) && isset($data[$field_map['Title']])) {
+						$title = sanitize_text_field($this->clean_imported_value($data[$field_map['Title']]));
+					}
+				}
+
 				// Prepare post data
 				$post_data = array(
-					'post_title' => sanitize_text_field($this->clean_imported_value($data[$field_map['Title']])),
+					'post_title' => $title,
 					'post_status' => 'publish',
 					'post_type' => 'honey_hole_deal'
 				);
@@ -604,23 +619,47 @@ class Honey_Hole_Admin
 				}
 
 				// Add meta data using direct SQL to avoid large queries
-				$meta_updates = array(
-					'deal_original_price' => sanitize_text_field($this->clean_imported_value($data[$field_map['Original Price']])),
-					'deal_sales_price' => sanitize_text_field($this->clean_imported_value($data[$field_map['Sales Price']])),
-					'deal_rating' => sanitize_text_field($this->clean_imported_value($data[$field_map['Rating']])),
-					'deal_url' => esc_url_raw($this->clean_imported_value($data[$field_map['Deal URL']])),
-					'deal_normal_link' => esc_url_raw($this->clean_imported_value($data[$field_map['Normal Link']])),
-					'deal_image_url' => esc_url_raw($this->clean_imported_value($data[$field_map['Image URL']]))
-				);
-				// Only set promo code if present
+				$meta_updates = array();
+
+				if ($is_big_sale) {
+					// Big Sale deals - different fields
+					$meta_updates['deal_url'] = esc_url_raw($this->clean_imported_value($data[$field_map['Deal URL']]));
+					$meta_updates['deal_image_url'] = esc_url_raw($this->clean_imported_value($data[$field_map['Image URL']]));
+					
+					// Big Sale Description
+					if (isset($field_map['Big Sale Description']) && isset($data[$field_map['Big Sale Description']]) && trim($data[$field_map['Big Sale Description']]) !== '') {
+						$meta_updates['deal_description'] = sanitize_textarea_field($this->clean_imported_value($data[$field_map['Big Sale Description']]));
+					}
+					
+					// Background Image
+					if (isset($field_map['Background Image']) && isset($data[$field_map['Background Image']]) && trim($data[$field_map['Background Image']]) !== '') {
+						$meta_updates['deal_background_image'] = esc_url_raw($this->clean_imported_value($data[$field_map['Background Image']]));
+					}
+				} else {
+					// Standard deals - original fields
+					$meta_updates['deal_original_price'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Original Price']]));
+					$meta_updates['deal_sales_price'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Sales Price']]));
+					$meta_updates['deal_rating'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Rating']]));
+					$meta_updates['deal_url'] = esc_url_raw($this->clean_imported_value($data[$field_map['Deal URL']]));
+					$meta_updates['deal_image_url'] = esc_url_raw($this->clean_imported_value($data[$field_map['Image URL']]));
+				}
+				
+				// Seller (only for standard deals - but we check in common section)
+				if (!$is_big_sale && isset($field_map['Seller']) && isset($data[$field_map['Seller']]) && trim($data[$field_map['Seller']]) !== '') {
+					$meta_updates['deal_seller'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Seller']]));
+				}
+
+				// Common fields for both deal types
+				if (isset($field_map['Normal Link']) && isset($data[$field_map['Normal Link']]) && trim($data[$field_map['Normal Link']]) !== '') {
+					$meta_updates['deal_normal_link'] = esc_url_raw($this->clean_imported_value($data[$field_map['Normal Link']]));
+				}
+				
+				// Promo Code (common)
 				if (isset($field_map['Promo Code']) && isset($data[$field_map['Promo Code']]) && trim($data[$field_map['Promo Code']]) !== '') {
 					$meta_updates['deal_promo_code'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Promo Code']]));
 				}
-				// Only set seller if present
-				if (isset($field_map['Seller']) && isset($data[$field_map['Seller']]) && trim($data[$field_map['Seller']]) !== '') {
-					$meta_updates['deal_seller'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Seller']]));
-				}
-				// Only set badge if present
+				
+				// Badge (common)
 				if (isset($field_map['Badge']) && isset($data[$field_map['Badge']]) && trim($data[$field_map['Badge']]) !== '') {
 					$meta_updates['deal_badge'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Badge']]));
 				}
@@ -640,6 +679,14 @@ class Honey_Hole_Admin
 				// Set category
 				$category = sanitize_text_field($this->clean_imported_value($data[$field_map['Category']]));
 				wp_set_object_terms($post_id, $category, 'deal_category');
+
+				// Set tags if present
+				if (isset($field_map['Tags']) && isset($data[$field_map['Tags']]) && trim($data[$field_map['Tags']]) !== '') {
+					$tags = array_map('trim', explode(',', $this->clean_imported_value($data[$field_map['Tags']])));
+					if (!empty($tags)) {
+						wp_set_object_terms($post_id, $tags, 'post_tag');
+					}
+				}
 
 				// Commit transaction
 				$wpdb->query('COMMIT');
@@ -701,7 +748,7 @@ class Honey_Hole_Admin
 			wp_send_json_error('Error reading CSV headers. Please check the file format.');
 		}
 
-		// Define required fields and their corresponding meta keys
+		// Define required fields and their corresponding meta keys (for standard deals)
 		$required_fields = array(
 			'Title' => 'post_title',
 			'Original Price' => 'deal_original_price',
@@ -712,19 +759,34 @@ class Honey_Hole_Admin
 			'Image URL' => 'deal_image_url',
 			'Category' => 'deal_category'
 		);
-		// Promo Code, Date Created, Seller, and Badge are optional
+		
+		// Required fields for Big Sale deals (different from standard deals)
+		$required_fields_big_sale = array(
+			'Category' => 'deal_category',
+			'Deal URL' => 'deal_url',
+			'Image URL' => 'deal_image_url'
+		);
+		
+		// Optional fields (work for both standard and Big Sale deals)
 		$optional_fields = array(
 			'Promo Code' => 'deal_promo_code',
 			'Date Created' => 'post_date',
 			'Seller' => 'deal_seller',
-			'Badge' => 'deal_badge'
+			'Badge' => 'deal_badge',
+			'Tags' => 'post_tag',
+			// Big Sale specific fields
+			'Big Sale Title' => 'post_title_big_sale',
+			'Big Sale Description' => 'deal_description',
+			'Background Image' => 'deal_background_image',
+			'Normal Link' => 'deal_normal_link' // Can be optional
 		);
 
 		// Map CSV headers to required and optional fields (case-insensitive)
 		$field_map = array();
 		foreach ($headers as $index => $header) {
 			$header = trim($header);
-			foreach (array_merge($required_fields, $optional_fields) as $field => $meta_key) {
+			$all_fields = array_merge($required_fields, $required_fields_big_sale, $optional_fields);
+			foreach ($all_fields as $field => $meta_key) {
 				if (strcasecmp($header, $field) === 0) {
 					$field_map[$field] = $index;
 					break;
@@ -732,18 +794,14 @@ class Honey_Hole_Admin
 			}
 		}
 
-		// Verify all required fields are present
-		$missing_fields = array();
-		foreach ($required_fields as $field => $meta_key) {
-			if (!isset($field_map[$field])) {
-				$missing_fields[] = $field;
-			}
+		// Check if Category field exists - we need it to determine deal type
+		if (!isset($field_map['Category'])) {
+			fclose($handle);
+			wp_send_json_error('Missing required field: Category (needed to determine deal type)');
 		}
 
-		if (!empty($missing_fields)) {
-			fclose($handle);
-			wp_send_json_error('Missing required fields: ' . implode(', ', $missing_fields));
-		}
+		// Note: We'll validate required fields per row based on Category
+		// This allows mixing Big Sale and standard deals in the same import
 
 		// Count total rows for progress calculation
 		$total_rows = 0;
@@ -767,18 +825,47 @@ class Honey_Hole_Admin
 		while (($data = fgetcsv($handle)) !== false) {
 			$row_number++;
 
-			// Check for missing required fields and track specific issues
+			// Determine if this is a Big Sale deal based on Category
+			$category = '';
+			$is_big_sale = false;
+			if (isset($field_map['Category']) && isset($data[$field_map['Category']])) {
+				$category = trim($this->clean_imported_value($data[$field_map['Category']]));
+				$is_big_sale = (strcasecmp($category, 'Big Sale') === 0);
+			}
+
+			// Check for missing required fields based on deal type
 			$missing_fields = array();
-			foreach ($required_fields as $field => $meta_key) {
+			$required_fields_to_check = $is_big_sale ? $required_fields_big_sale : $required_fields;
+			
+			foreach ($required_fields_to_check as $field => $meta_key) {
 				if (!isset($field_map[$field]) || !isset($data[$field_map[$field]]) || trim($data[$field_map[$field]]) === '') {
 					$missing_fields[] = $field;
+				}
+			}
+
+			// For Big Sale deals, check for title (either Title or Big Sale Title)
+			if ($is_big_sale) {
+				$has_title = false;
+				if (isset($field_map['Title']) && isset($data[$field_map['Title']]) && trim($data[$field_map['Title']]) !== '') {
+					$has_title = true;
+				}
+				if (isset($field_map['Big Sale Title']) && isset($data[$field_map['Big Sale Title']]) && trim($data[$field_map['Big Sale Title']]) !== '') {
+					$has_title = true;
+				}
+				if (!$has_title) {
+					$missing_fields[] = 'Title or Big Sale Title';
 				}
 			}
 
 			if (!empty($missing_fields)) {
 				$skipped++;
 				// Get the title for tracking (if available)
-				$title = isset($field_map['Title']) && isset($data[$field_map['Title']]) ? trim($data[$field_map['Title']]) : "Row {$row_number}";
+				$title = 'Row ' . $row_number;
+				if (isset($field_map['Title']) && isset($data[$field_map['Title']])) {
+					$title = trim($data[$field_map['Title']]);
+				} elseif (isset($field_map['Big Sale Title']) && isset($data[$field_map['Big Sale Title']])) {
+					$title = trim($data[$field_map['Big Sale Title']]);
+				}
 				$error_key = 'missing_fields: ' . implode(', ', $missing_fields);
 				if (!isset($error_counts[$error_key])) {
 					$error_counts[$error_key] = 0;
@@ -789,40 +876,61 @@ class Honey_Hole_Admin
 				continue;
 			}
 
-			// Validate data types
+			// Validate data types (only for standard deals)
 			$validation_errors = array();
 
-			// Check if prices are numeric
-			if (!is_numeric($data[$field_map['Original Price']])) {
-				$validation_errors[] = 'invalid_original_price';
-			}
-			if (!is_numeric($data[$field_map['Sales Price']])) {
-				$validation_errors[] = 'invalid_sales_price';
+			if (!$is_big_sale) {
+				// Check if prices are numeric (only for standard deals)
+				if (isset($field_map['Original Price']) && isset($data[$field_map['Original Price']]) && trim($data[$field_map['Original Price']]) !== '') {
+					if (!is_numeric($data[$field_map['Original Price']])) {
+						$validation_errors[] = 'invalid_original_price';
+					}
+				}
+				if (isset($field_map['Sales Price']) && isset($data[$field_map['Sales Price']]) && trim($data[$field_map['Sales Price']]) !== '') {
+					if (!is_numeric($data[$field_map['Sales Price']])) {
+						$validation_errors[] = 'invalid_sales_price';
+					}
+				}
+
+				// Check if rating is numeric and between 0-5 (only for standard deals)
+				if (isset($field_map['Rating']) && isset($data[$field_map['Rating']])) {
+					if (
+						trim($data[$field_map['Rating']]) !== '' && (
+							!is_numeric($data[$field_map['Rating']]) ||
+							floatval($data[$field_map['Rating']]) < 0 ||
+							floatval($data[$field_map['Rating']]) > 5
+						)
+					) {
+						$validation_errors[] = 'invalid_rating';
+					}
+				}
 			}
 
-			// Check if rating is numeric and between 0-5
-			if (
-				!is_numeric($data[$field_map['Rating']]) ||
-				floatval($data[$field_map['Rating']]) < 0 ||
-				floatval($data[$field_map['Rating']]) > 5
-			) {
-				$validation_errors[] = 'invalid_rating';
+			// Check if URLs are valid (for both deal types)
+			if (isset($field_map['Deal URL']) && isset($data[$field_map['Deal URL']])) {
+				if (!filter_var($data[$field_map['Deal URL']], FILTER_VALIDATE_URL)) {
+					$validation_errors[] = 'invalid_deal_url';
+				}
 			}
-
-			// Check if URLs are valid
-			if (!filter_var($data[$field_map['Deal URL']], FILTER_VALIDATE_URL)) {
-				$validation_errors[] = 'invalid_deal_url';
+			if (isset($field_map['Normal Link']) && isset($data[$field_map['Normal Link']]) && trim($data[$field_map['Normal Link']]) !== '') {
+				if (!filter_var($data[$field_map['Normal Link']], FILTER_VALIDATE_URL)) {
+					$validation_errors[] = 'invalid_normal_link';
+				}
 			}
-			if (!filter_var($data[$field_map['Normal Link']], FILTER_VALIDATE_URL)) {
-				$validation_errors[] = 'invalid_normal_link';
-			}
-			if (!filter_var($data[$field_map['Image URL']], FILTER_VALIDATE_URL)) {
-				$validation_errors[] = 'invalid_image_url';
+			if (isset($field_map['Image URL']) && isset($data[$field_map['Image URL']])) {
+				if (!filter_var($data[$field_map['Image URL']], FILTER_VALIDATE_URL)) {
+					$validation_errors[] = 'invalid_image_url';
+				}
 			}
 
 			if (!empty($validation_errors)) {
 				$skipped++;
-				$title = isset($field_map['Title']) && isset($data[$field_map['Title']]) ? trim($data[$field_map['Title']]) : "Row {$row_number}";
+				$title = 'Row ' . $row_number;
+				if (isset($field_map['Title']) && isset($data[$field_map['Title']])) {
+					$title = trim($data[$field_map['Title']]);
+				} elseif (isset($field_map['Big Sale Title']) && isset($data[$field_map['Big Sale Title']])) {
+					$title = trim($data[$field_map['Big Sale Title']]);
+				}
 				$error_key = 'validation_errors: ' . implode(', ', $validation_errors);
 				if (!isset($error_counts[$error_key])) {
 					$error_counts[$error_key] = 0;
@@ -833,11 +941,15 @@ class Honey_Hole_Admin
 				continue;
 			}
 
-			// Add row to batch
-			$batch[] = array(
+			// Add deal type info to row data
+			$row_data = array(
 				'data' => $data,
-				'field_map' => $field_map
+				'field_map' => $field_map,
+				'is_big_sale' => $is_big_sale
 			);
+
+			// Add row to batch
+			$batch[] = $row_data;
 
 			// Process batch when it reaches the batch size
 			if (count($batch) >= $batch_size) {
