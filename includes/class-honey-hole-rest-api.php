@@ -79,10 +79,19 @@ class Honey_Hole_REST_API
      */
     public function get_deals($request)
     {
+        // Get status parameter (default to 'any' to include all statuses for export)
+        $status = $request->get_param('status');
+        if (!in_array($status, array('publish', 'draft', 'any'))) {
+            $status = 'any'; // Default to 'any' for admin/exports
+        }
+        
+        // If status is 'any', we need to get all statuses
+        $post_status = ($status === 'any') ? array('publish', 'draft', 'pending', 'private') : $status;
+        
         $args = array(
             'post_type' => 'honey_hole_deal',
             'posts_per_page' => -1,
-            'post_status' => 'publish',
+            'post_status' => $post_status,
             'orderby' => 'date',
             'order' => 'DESC',
         );
@@ -98,6 +107,7 @@ class Honey_Hole_REST_API
                 $deal = array(
                     'id' => $post_id,
                     'title' => $this->clean_html_entities(get_the_title($post_id)),
+                    'status' => get_post_status($post_id),
                     'sales_price' => get_post_meta($post_id, 'deal_sales_price', true),
                     'original_price' => get_post_meta($post_id, 'deal_original_price', true),
                     'rating' => get_post_meta($post_id, 'deal_rating', true),

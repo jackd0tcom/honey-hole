@@ -14,29 +14,73 @@ class Honey_Hole_Activator {
      * - Creating custom tables
      * - Setting up default options
      * - Flushing rewrite rules
+     * 
+     * IMPORTANT: This checks if the plugin is already installed to prevent
+     * data loss during updates. On updates, only non-destructive tasks run.
      */
     public static function activate() {
-        // Flush rewrite rules to ensure our custom post type works
+        // Check if this is a fresh install or an update
+        $installed_version = get_option('honey_hole_version');
+        $current_version = defined('HONEY_HOLE_VERSION') ? HONEY_HOLE_VERSION : '3.0.0';
+        $is_fresh_install = !$installed_version;
+        $is_update = $installed_version && version_compare($installed_version, $current_version, '<');
+        
+        // On fresh install, set up everything
+        if ($is_fresh_install) {
+            // Set default options if they don't exist
+            if (!get_option('honey_hole_settings')) {
+                update_option('honey_hole_settings', array(
+                    'items_per_page' => 12,
+                    'show_ratings' => true,
+                    'show_categories' => true,
+                    'default_sort' => 'date',
+                    'default_order' => 'desc'
+                ));
+            }
+            
+            // Set default video URL if it doesn't exist
+            if (!get_option('honey_hole_video_url')) {
+                update_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
+            }
+            
+            // Create necessary database tables
+            self::create_tables();
+            
+            // Mark as installed
+            update_option('honey_hole_version', $current_version);
+            update_option('honey_hole_installed', current_time('mysql'));
+        }
+        
+        // On update, run upgrade tasks
+        if ($is_update) {
+            self::upgrade($installed_version, $current_version);
+        }
+        
+        // Always flush rewrite rules (safe on both install and update)
+        // This ensures custom post type URLs work correctly
         flush_rewrite_rules();
         
-        // Set default options if they don't exist
-        if (!get_option('honey_hole_settings')) {
-            update_option('honey_hole_settings', array(
-                'items_per_page' => 12,
-                'show_ratings' => true,
-                'show_categories' => true,
-                'default_sort' => 'date',
-                'default_order' => 'desc'
-            ));
-        }
-        
-        // Set default video URL if it doesn't exist
-        if (!get_option('honey_hole_video_url')) {
-            update_option('honey_hole_video_url', 'https://www.youtube.com/embed/SMiEJ0qDJ8I?si=y-zCwgrDLO7z7NUO');
-        }
-        
-        // Create necessary database tables if needed
+        // Store the current version
+        update_option('honey_hole_version', $current_version);
+    }
+    
+    /**
+     * Handle plugin upgrades.
+     * 
+     * @param string $old_version The previous version
+     * @param string $new_version The new version
+     */
+    private static function upgrade($old_version, $new_version) {
+        // Ensure tables exist (in case new tables were added)
         self::create_tables();
+        
+        // Run version-specific upgrade tasks
+        // Example: if (version_compare($old_version, '2.0.0', '<')) {
+        //     // Migrate data from version 1.x to 2.x
+        // }
+        
+        // Log the upgrade for debugging
+        error_log("Honey Hole: Upgraded from {$old_version} to {$new_version}");
     }
     
     /**

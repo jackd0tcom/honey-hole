@@ -586,10 +586,13 @@ class Honey_Hole_Admin
 				if (isset($field_map['Date Created']) && isset($data[$field_map['Date Created']]) && trim($data[$field_map['Date Created']]) !== '') {
 					$date_added = $this->clean_imported_value($data[$field_map['Date Created']]);
 					// Try to parse the date
-					$parsed_date = $this->parse_date_created($date_created);
+					$parsed_date = $this->parse_date_added($date_added);
 					if ($parsed_date) {
 						$post_data['post_date'] = $parsed_date;
 						$post_data['post_date_gmt'] = get_gmt_from_date($parsed_date);
+						error_log('Honey Hole Import - Parsed date "' . $date_added . '" to "' . $parsed_date . '"');
+					} else {
+						error_log('Honey Hole Import - Failed to parse date: "' . $date_added . '"');
 					}
 				}
 
@@ -612,6 +615,14 @@ class Honey_Hole_Admin
 				// Only set promo code if present
 				if (isset($field_map['Promo Code']) && isset($data[$field_map['Promo Code']]) && trim($data[$field_map['Promo Code']]) !== '') {
 					$meta_updates['deal_promo_code'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Promo Code']]));
+				}
+				// Only set seller if present
+				if (isset($field_map['Seller']) && isset($data[$field_map['Seller']]) && trim($data[$field_map['Seller']]) !== '') {
+					$meta_updates['deal_seller'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Seller']]));
+				}
+				// Only set badge if present
+				if (isset($field_map['Badge']) && isset($data[$field_map['Badge']]) && trim($data[$field_map['Badge']]) !== '') {
+					$meta_updates['deal_badge'] = sanitize_text_field($this->clean_imported_value($data[$field_map['Badge']]));
 				}
 
 				foreach ($meta_updates as $meta_key => $meta_value) {
@@ -701,10 +712,12 @@ class Honey_Hole_Admin
 			'Image URL' => 'deal_image_url',
 			'Category' => 'deal_category'
 		);
-		// Promo Code and Date Added are optional
+		// Promo Code, Date Created, Seller, and Badge are optional
 		$optional_fields = array(
 			'Promo Code' => 'deal_promo_code',
-			'Date Created' => 'post_date'
+			'Date Created' => 'post_date',
+			'Seller' => 'deal_seller',
+			'Badge' => 'deal_badge'
 		);
 
 		// Map CSV headers to required and optional fields (case-insensitive)
@@ -1029,11 +1042,24 @@ class Honey_Hole_Admin
 	 */
 	private function parse_date_added($date_string)
 	{
-		// Remove any extra whitespace
+		// Remove any extra whitespace and quotes (from CSV escaping)
+		$date_string = trim($date_string);
+		$date_string = trim($date_string, '"\'');
+		
+		// Remove any leading/trailing whitespace after removing quotes
 		$date_string = trim($date_string);
 
 		if (empty($date_string)) {
 			return false;
+		}
+
+		// First, try the exact format that WordPress exports (Y-m-d H:i:s)
+		// This is the most common format from exports
+		if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $date_string)) {
+			$date = DateTime::createFromFormat('Y-m-d H:i:s', $date_string);
+			if ($date !== false) {
+				return $date->format('Y-m-d H:i:s');
+			}
 		}
 
 		// Try common date formats
@@ -1063,7 +1089,7 @@ class Honey_Hole_Admin
 			}
 		}
 
-		// Try strtotime as a fallback
+		// Try strtotime as a fallback (handles many natural language formats)
 		$timestamp = strtotime($date_string);
 		if ($timestamp !== false) {
 			return date('Y-m-d H:i:s', $timestamp);
@@ -1301,8 +1327,8 @@ class Honey_Hole_Admin
 				exportProgress.style.display = 'block';
 				
 				try {
-					// Fetch deals data
-					const response = await fetch('/wp-json/honey-hole/v1/deals');
+					// Fetch deals data - use 'any' status to get all posts
+					const response = await fetch('/wp-json/honey-hole/v1/deals?status=any');
 					if (!response.ok) throw new Error('Failed to fetch deals');
 					
 					const deals = await response.json();
