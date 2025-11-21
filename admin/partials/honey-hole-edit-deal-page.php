@@ -132,7 +132,7 @@ function honey_hole_edit_deal_page()
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-description">Description *</label>
-                        <textarea id="deal-description" name="deal_description" rows="4" required placeholder="Enter a detailed description for the big sale deal"><?php echo esc_textarea($description); ?></textarea>
+                        <textarea id="deal-description" name="deal_description" rows="4" placeholder="Enter a detailed description for the big sale deal"><?php echo esc_textarea($description); ?></textarea>
                         <p class="description">Provide a compelling description for the big sale deal</p>
                     </div>
                     <div class="honey-hole-form-field">
@@ -238,11 +238,16 @@ function honey_hole_edit_deal_page()
                 });
 
                 // Enable required attributes for Big Sale fields
-                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
-                bigSaleRequiredFields.forEach(field => {
-                    field.required = true;
-                    field.disabled = false;
-                });
+                const bigSaleTitle = document.getElementById('deal-title-big-sale');
+                const description = document.getElementById('deal-description');
+                if (bigSaleTitle) {
+                    bigSaleTitle.required = true;
+                    bigSaleTitle.disabled = false;
+                }
+                if (description) {
+                    description.required = true;
+                    description.disabled = false;
+                }
 
             } else if (categoryName !== '') {
                 standardFields.style.display = 'block';
@@ -255,11 +260,16 @@ function honey_hole_edit_deal_page()
                 });
 
                 // Disable required attributes for Big Sale fields
-                const bigSaleRequiredFields = bigSaleFields.querySelectorAll('[required]');
-                bigSaleRequiredFields.forEach(field => {
-                    field.required = false;
-                    field.disabled = true; // Disable to prevent form submission
-                });
+                const bigSaleTitle = document.getElementById('deal-title-big-sale');
+                const description = document.getElementById('deal-description');
+                if (bigSaleTitle) {
+                    bigSaleTitle.required = false;
+                    bigSaleTitle.disabled = true; // Disable to prevent form submission
+                }
+                if (description) {
+                    description.required = false;
+                    description.disabled = true; // Disable to prevent form submission
+                }
             }
         }
 
@@ -340,31 +350,6 @@ function honey_hole_edit_deal_page()
         const categorySelect = document.getElementById('deal-category');
         if (categorySelect && categorySelect.value !== '') {
             honeyHoleToggleEditDealFields();
-        }
-
-        // Initialize background image preview on page load
-        const backgroundImageSelect = document.getElementById('deal-background-image');
-        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
-        const backgroundImagePreview = document.getElementById('background-image-preview');
-        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
-
-        if (backgroundImageSelect && backgroundImageCustom && backgroundImagePreview) {
-            const selectedValue = backgroundImageSelect.value;
-            const customValue = backgroundImageCustom.value;
-
-            // If we have a custom value and it's not one of the predefined options
-            if (customValue && selectedValue === 'custom') {
-                backgroundImageCustom.style.display = 'block';
-                if (backgroundImagePreviewImg) {
-                    backgroundImagePreviewImg.src = customValue;
-                    backgroundImagePreview.style.display = 'block';
-                }
-            } else if (selectedValue && selectedValue !== '' && selectedValue !== 'custom') {
-                if (backgroundImagePreviewImg) {
-                    backgroundImagePreviewImg.src = selectedValue;
-                    backgroundImagePreview.style.display = 'block';
-                }
-            }
         }
 
         // Add form validation debugging
@@ -543,64 +528,86 @@ function honey_hole_edit_deal_page()
         }
 
         // Background image dropdown functionality
-        const backgroundImageSelect = document.getElementById('deal-background-image');
-        const backgroundImageCustom = document.getElementById('deal-background-image-custom');
-        const backgroundImagePreview = document.getElementById('background-image-preview');
-        const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
+        (function() {
+            const backgroundImageSelect = document.getElementById('deal-background-image');
+            const backgroundImageCustom = document.getElementById('deal-background-image-custom');
+            const backgroundImagePreview = document.getElementById('background-image-preview');
+            const backgroundImagePreviewImg = backgroundImagePreview ? backgroundImagePreview.querySelector('img') : null;
 
-        if (backgroundImageSelect) {
-            backgroundImageSelect.addEventListener('change', function() {
-                const selectedValue = this.value;
-                
-                // Show/hide custom input based on selection
-                if (selectedValue === 'custom') {
-                    if (backgroundImageCustom) {
-                        backgroundImageCustom.style.display = 'block';
-                        backgroundImageCustom.focus();
+            // Initialize background image preview on page load
+            if (backgroundImageSelect && backgroundImageCustom && backgroundImagePreview) {
+                const selectedValue = backgroundImageSelect.value;
+                const customValue = backgroundImageCustom.value;
+
+                // If we have a custom value and it's not one of the predefined options
+                if (customValue && selectedValue === 'custom') {
+                    backgroundImageCustom.style.display = 'block';
+                    if (backgroundImagePreviewImg) {
+                        backgroundImagePreviewImg.src = customValue;
+                        backgroundImagePreview.style.display = 'block';
                     }
-                    if (backgroundImagePreview) {
-                        backgroundImagePreview.style.display = 'none';
+                } else if (selectedValue && selectedValue !== '' && selectedValue !== 'custom') {
+                    if (backgroundImagePreviewImg) {
+                        backgroundImagePreviewImg.src = selectedValue;
+                        backgroundImagePreview.style.display = 'block';
                     }
-                } else {
-                    if (backgroundImageCustom) {
-                        backgroundImageCustom.style.display = 'none';
-                    }
+                }
+            }
+
+            if (backgroundImageSelect) {
+                backgroundImageSelect.addEventListener('change', function() {
+                    const selectedValue = this.value;
                     
-                    // Show preview for predefined images
-                    if (selectedValue && selectedValue !== '') {
-                        if (backgroundImagePreview && backgroundImagePreviewImg) {
-                            backgroundImagePreviewImg.src = selectedValue;
-                            backgroundImagePreview.style.display = 'block';
+                    // Show/hide custom input based on selection
+                    if (selectedValue === 'custom') {
+                        if (backgroundImageCustom) {
+                            backgroundImageCustom.style.display = 'block';
+                            backgroundImageCustom.focus();
                         }
-                    } else {
                         if (backgroundImagePreview) {
                             backgroundImagePreview.style.display = 'none';
                         }
-                    }
-                }
-            });
-        }
-
-        // Handle custom background image URL input
-        if (backgroundImageCustom) {
-            backgroundImageCustom.addEventListener('input', function() {
-                const url = this.value.trim();
-                if (url && backgroundImagePreview && backgroundImagePreviewImg) {
-                    // Validate URL format
-                    if (url.match(/^https?:\/\/.+/)) {
-                        backgroundImagePreviewImg.src = url;
-                        backgroundImagePreview.style.display = 'block';
-                        backgroundImagePreviewImg.onerror = function() {
-                            backgroundImagePreview.innerHTML = '<div style="color: red; padding: 10px;">Invalid image URL</div>';
-                        };
                     } else {
+                        if (backgroundImageCustom) {
+                            backgroundImageCustom.style.display = 'none';
+                        }
+                        
+                        // Show preview for predefined images
+                        if (selectedValue && selectedValue !== '') {
+                            if (backgroundImagePreview && backgroundImagePreviewImg) {
+                                backgroundImagePreviewImg.src = selectedValue;
+                                backgroundImagePreview.style.display = 'block';
+                            }
+                        } else {
+                            if (backgroundImagePreview) {
+                                backgroundImagePreview.style.display = 'none';
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Handle custom background image URL input
+            if (backgroundImageCustom) {
+                backgroundImageCustom.addEventListener('input', function() {
+                    const url = this.value.trim();
+                    if (url && backgroundImagePreview && backgroundImagePreviewImg) {
+                        // Validate URL format
+                        if (url.match(/^https?:\/\/.+/)) {
+                            backgroundImagePreviewImg.src = url;
+                            backgroundImagePreview.style.display = 'block';
+                            backgroundImagePreviewImg.onerror = function() {
+                                backgroundImagePreview.innerHTML = '<div style="color: red; padding: 10px;">Invalid image URL</div>';
+                            };
+                        } else {
+                            backgroundImagePreview.style.display = 'none';
+                        }
+                    } else if (backgroundImagePreview) {
                         backgroundImagePreview.style.display = 'none';
                     }
-                } else if (backgroundImagePreview) {
-                    backgroundImagePreview.style.display = 'none';
-                }
-            });
-        }
+                });
+            }
+        })();
     </script>
 <?php
 }
