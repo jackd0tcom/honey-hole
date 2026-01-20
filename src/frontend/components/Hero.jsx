@@ -34,14 +34,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="hh-banner">
-        <a href="https://outdoorempire.com/100k-giveaway-signup/">
-          <img
-            src="https://outdoorempire.com/wp-content/uploads/2025/11/100k-giveaway-homepage-banner-1.png"
-            alt="outdoor empire 100k giveaway banner"
-          />
-        </a>
-      </div>
     </div>
   );
 };
