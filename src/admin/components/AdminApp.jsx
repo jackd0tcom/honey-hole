@@ -98,7 +98,7 @@ const AdminApp = () => {
       setDeals(
         deals.filter((deal) => {
           return deal.title.toLowerCase().includes(query.toLowerCase());
-        })
+        }),
       );
     } else setDeals(originalDeals);
   };
@@ -143,7 +143,10 @@ const AdminApp = () => {
         />
         <SearchBar onSearch={handleSearch} />
         <AddDealButton />
-        <a href="/wp-admin/admin.php?page=honey-hole-export" className="button button-secondary">
+        <a
+          href="/wp-admin/admin.php?page=honey-hole-export"
+          className="button button-secondary"
+        >
           Export Deals
         </a>
       </div>

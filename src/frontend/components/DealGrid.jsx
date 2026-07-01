@@ -1,13 +1,71 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useEffect } from "react";
 import DealCard from "./DealCard.jsx";
 import FilterBar from "./FilterBar.jsx";
 import Sorter from "./Sorter.jsx";
 import InfiniteGrid from "./InfiniteGrid.jsx";
 
+const isFeatured = (deal) =>
+  deal.categories?.[0]?.name?.toLowerCase() === "featured";
+
+/**
+ * Reorders deals so featured cards:
+ * - only appear in the upper half
+ * - at most one per row (columnsPerRow)
+ * - are spread across rows/columns
+ */
+export function distributeFeaturedDeals(deals, columnsPerRow = 4) {
+  if (!deals?.length) return deals;
+
+  const featured = [];
+  const regular = [];
+
+  for (const deal of deals) {
+    (isFeatured(deal) ? featured : regular).push(deal);
+  }
+
+  if (featured.length === 0) return deals;
+
+  const total = deals.length;
+  const upperHalfEnd = Math.ceil(total / 2);
+
+  // One slot per row in the upper half (enforces max 1 featured per row)
+  const columnPattern = [0, 2, 1, 3]; // rotate columns for visual spacing
+  const targetIndices = [];
+
+  for (let row = 0; row * columnsPerRow < upperHalfEnd; row++) {
+    const index =
+      row * columnsPerRow + columnPattern[row % columnPattern.length];
+    if (index < upperHalfEnd) {
+      targetIndices.push(index);
+    }
+  }
+
+  // Cap featured count to available upper-half row slots
+  const featuredToPlace = featured.slice(0, targetIndices.length);
+  const overflowFeatured = featured.slice(targetIndices.length);
+
+  const result = new Array(total).fill(null);
+
+  featuredToPlace.forEach((deal, i) => {
+    result[targetIndices[i]] = deal;
+  });
+
+  // Fill empty slots with regular deals, then any overflow featured at the end
+  const fillQueue = [...regular, ...overflowFeatured];
+  let fillIndex = 0;
+
+  for (let i = 0; i < total; i++) {
+    if (result[i] === null) {
+      result[i] = fillQueue[fillIndex++];
+    }
+  }
+
+  return result;
+}
+
 const DealGrid = ({ deals }) => {
   const [categories, setCategories] = useState("all");
-  const [dealsArray, setDealsArray] = useState(deals);
   const [activeCategory, setActiveCategory] = useState(0);
   const [sort, setSort] = useState("newest");
   const [isMobile, setIsMobile] = useState(false);
@@ -36,17 +94,29 @@ const DealGrid = ({ deals }) => {
     return ((a.original_price - a.sales_price) / a.original_price) * 100;
   };
 
-  // Category sorting
-  useEffect(() => {
-    if (categories === "all") {
-      setDealsArray(deals);
-    } else
-      setDealsArray(
-        deals.filter((deal) => {
-          return deal.categories[0].slug === categories;
-        })
-      );
-  }, [categories]);
+  const dealsArray = useMemo(() => {
+    let result =
+      categories === "all"
+        ? [...deals]
+        : deals.filter((deal) => deal.categories[0].slug === categories);
+
+    if (sort === "newest") {
+      result.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+    } else if (sort === "oldest") {
+      result.sort((a, b) => new Date(a.date_added) - new Date(b.date_added));
+    } else if (sort === "low") {
+      result.sort((a, b) => a.sales_price - b.sales_price);
+    } else if (sort === "high") {
+      result.sort((a, b) => b.sales_price - a.sales_price);
+    } else if (sort === "savings") {
+      result.sort((a, b) => getSavings(b) - getSavings(a));
+    } else if (sort === "rating") {
+      result.sort((a, b) => b.rating - a.rating);
+    }
+
+    const columnsPerRow = isMobile ? (window.innerWidth < 480 ? 2 : 3) : 4;
+    return distributeFeaturedDeals(result, columnsPerRow);
+  }, [deals, categories, sort, isMobile]);
 
   // Mobile checking
   useEffect(() => {
@@ -59,30 +129,6 @@ const DealGrid = ({ deals }) => {
       window.removeEventListener("resize", checkMobile);
     };
   }, []);
-
-  // Parameter Filtering
-  useEffect(() => {
-    let sortedDeals = [...dealsArray];
-
-    if (sort === "newest") {
-      sortedDeals.sort(
-        (a, b) => new Date(b.date_added) - new Date(a.date_added)
-      );
-    } else if (sort === "oldest") {
-      sortedDeals.sort(
-        (a, b) => new Date(a.date_added) - new Date(b.date_added)
-      );
-    } else if (sort === "low") {
-      sortedDeals.sort((a, b) => a.sales_price - b.sales_price);
-    } else if (sort === "high") {
-      sortedDeals.sort((a, b) => b.sales_price - a.sales_price);
-    } else if (sort === "savings") {
-      sortedDeals.sort((a, b) => getSavings(b) - getSavings(a));
-    } else if (sort === "rating") {
-      sortedDeals.sort((a, b) => b.rating - a.rating);
-    }
-    setDealsArray(sortedDeals);
-  }, [sort]);
 
   // Error handling
   if (!deals || deals.length === 0) {

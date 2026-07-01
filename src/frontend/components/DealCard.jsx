@@ -125,10 +125,20 @@ const DealCard = ({ deal }) => {
       onMouseLeave={() => {
         setHover(false);
       }}
-      className="deal-card"
+      className={
+        categories[0].name.toLowerCase() === "featured"
+          ? "deal-card featured-card"
+          : "deal-card"
+      }
     >
-      {badge && <div className="deal-badge">{badge}</div>}
-      {newDeal && <div className="deal-badge">New!</div>}
+      {categories[0].name.toLowerCase() === "featured" ? (
+        <div className="deal-badge featured-badge">Featured!</div>
+      ) : (
+        badge && <div className="deal-badge">{badge}</div>
+      )}
+      {categories[0].name.toLowerCase() !== "featured" && newDeal && (
+        <div className="deal-badge">New!</div>
+      )}
       {hover && promo_code && (
         <div className="hh-promo-code-wrapper">
           <p>Use Code: {promo_code}</p>
@@ -173,7 +183,7 @@ const DealCard = ({ deal }) => {
               <>
                 <span
                   className={`sales-price ${getPriceClass(
-                    discount_percentage
+                    discount_percentage,
                   )}`}
                 >
                   {USDollar.format(sales_price)}
@@ -186,7 +196,7 @@ const DealCard = ({ deal }) => {
                 {discount_percentage > 0 && (
                   <span
                     className={`discount ${getDiscountClass(
-                      discount_percentage
+                      discount_percentage,
                     )}`}
                   >
                     {discount_percentage}% OFF

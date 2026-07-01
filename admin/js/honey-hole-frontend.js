@@ -257,11 +257,14 @@ const DealCard = ({
     onMouseLeave: () => {
       setHover(false);
     },
-    className: "deal-card",
-    children: [badge && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: categories[0].name.toLowerCase() === "featured" ? "deal-card featured-card" : "deal-card",
+    children: [categories[0].name.toLowerCase() === "featured" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "deal-badge featured-badge",
+      children: "Featured!"
+    }) : badge && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "deal-badge",
       children: badge
-    }), newDeal && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    }), categories[0].name.toLowerCase() !== "featured" && newDeal && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "deal-badge",
       children: "New!"
     }), hover && promo_code && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
@@ -346,7 +349,8 @@ const DealCard = ({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   distributeFeaturedDeals: () => (/* binding */ distributeFeaturedDeals)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -363,11 +367,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const isFeatured = deal => deal.categories?.[0]?.name?.toLowerCase() === "featured";
+
+/**
+ * Reorders deals so featured cards:
+ * - only appear in the upper half
+ * - at most one per row (columnsPerRow)
+ * - are spread across rows/columns
+ */
+function distributeFeaturedDeals(deals, columnsPerRow = 4) {
+  if (!deals?.length) return deals;
+  const featured = [];
+  const regular = [];
+  for (const deal of deals) {
+    (isFeatured(deal) ? featured : regular).push(deal);
+  }
+  if (featured.length === 0) return deals;
+  const total = deals.length;
+  const upperHalfEnd = Math.ceil(total / 2);
+
+  // One slot per row in the upper half (enforces max 1 featured per row)
+  const columnPattern = [0, 2, 1, 3]; // rotate columns for visual spacing
+  const targetIndices = [];
+  for (let row = 0; row * columnsPerRow < upperHalfEnd; row++) {
+    const index = row * columnsPerRow + columnPattern[row % columnPattern.length];
+    if (index < upperHalfEnd) {
+      targetIndices.push(index);
+    }
+  }
+
+  // Cap featured count to available upper-half row slots
+  const featuredToPlace = featured.slice(0, targetIndices.length);
+  const overflowFeatured = featured.slice(targetIndices.length);
+  const result = new Array(total).fill(null);
+  featuredToPlace.forEach((deal, i) => {
+    result[targetIndices[i]] = deal;
+  });
+
+  // Fill empty slots with regular deals, then any overflow featured at the end
+  const fillQueue = [...regular, ...overflowFeatured];
+  let fillIndex = 0;
+  for (let i = 0; i < total; i++) {
+    if (result[i] === null) {
+      result[i] = fillQueue[fillIndex++];
+    }
+  }
+  return result;
+}
 const DealGrid = ({
   deals
 }) => {
   const [categories, setCategories] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("all");
-  const [dealsArray, setDealsArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(deals);
   const [activeCategory, setActiveCategory] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [sort, setSort] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("newest");
   const [isMobile, setIsMobile] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -378,15 +428,24 @@ const DealGrid = ({
     if (!a.original_price || a.original_price === 0) return 0;
     return (a.original_price - a.sales_price) / a.original_price * 100;
   };
-
-  // Category sorting
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (categories === "all") {
-      setDealsArray(deals);
-    } else setDealsArray(deals.filter(deal => {
-      return deal.categories[0].slug === categories;
-    }));
-  }, [categories]);
+  const dealsArray = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => {
+    let result = categories === "all" ? [...deals] : deals.filter(deal => deal.categories[0].slug === categories);
+    if (sort === "newest") {
+      result.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+    } else if (sort === "oldest") {
+      result.sort((a, b) => new Date(a.date_added) - new Date(b.date_added));
+    } else if (sort === "low") {
+      result.sort((a, b) => a.sales_price - b.sales_price);
+    } else if (sort === "high") {
+      result.sort((a, b) => b.sales_price - a.sales_price);
+    } else if (sort === "savings") {
+      result.sort((a, b) => getSavings(b) - getSavings(a));
+    } else if (sort === "rating") {
+      result.sort((a, b) => b.rating - a.rating);
+    }
+    const columnsPerRow = isMobile ? window.innerWidth < 480 ? 2 : 3 : 4;
+    return distributeFeaturedDeals(result, columnsPerRow);
+  }, [deals, categories, sort, isMobile]);
 
   // Mobile checking
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -399,25 +458,6 @@ const DealGrid = ({
       window.removeEventListener("resize", checkMobile);
     };
   }, []);
-
-  // Parameter Filtering
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    let sortedDeals = [...dealsArray];
-    if (sort === "newest") {
-      sortedDeals.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
-    } else if (sort === "oldest") {
-      sortedDeals.sort((a, b) => new Date(a.date_added) - new Date(b.date_added));
-    } else if (sort === "low") {
-      sortedDeals.sort((a, b) => a.sales_price - b.sales_price);
-    } else if (sort === "high") {
-      sortedDeals.sort((a, b) => b.sales_price - a.sales_price);
-    } else if (sort === "savings") {
-      sortedDeals.sort((a, b) => getSavings(b) - getSavings(a));
-    } else if (sort === "rating") {
-      sortedDeals.sort((a, b) => b.rating - a.rating);
-    }
-    setDealsArray(sortedDeals);
-  }, [sort]);
 
   // Error handling
   if (!deals || deals.length === 0) {
@@ -911,9 +951,9 @@ const Hero = () => {
     month: "long",
     day: "numeric"
   });
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
     className: "honey-hole-hero-wrapper",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       class: "honey-hole-hero",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         class: "honey-hole-hero-content",
@@ -939,16 +979,7 @@ const Hero = () => {
           })]
         })]
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "hh-banner",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
-        href: "https://outdoorempire.com/100k-giveaway-signup/",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
-          src: "https://outdoorempire.com/wp-content/uploads/2025/11/100k-giveaway-homepage-banner-1.png",
-          alt: "outdoor empire 100k giveaway banner"
-        })
-      })
-    })]
+    })
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hero);
