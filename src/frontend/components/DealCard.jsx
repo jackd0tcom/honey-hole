@@ -126,19 +126,18 @@ const DealCard = ({ deal }) => {
         setHover(false);
       }}
       className={
-        categories[0].name.toLowerCase() === "featured"
+        deal.categories?.some((c) => c.name?.toLowerCase() === "featured")
           ? "deal-card featured-card"
           : "deal-card"
       }
     >
-      {categories[0].name.toLowerCase() === "featured" ? (
+      {deal.categories?.some((c) => c.name?.toLowerCase() === "featured") ? (
         <div className="deal-badge featured-badge">Featured!</div>
       ) : (
         badge && <div className="deal-badge">{badge}</div>
       )}
-      {categories[0].name.toLowerCase() !== "featured" && newDeal && (
-        <div className="deal-badge">New!</div>
-      )}
+      {deal.categories?.some((c) => c.name?.toLowerCase() === "featured") &&
+        newDeal && <div className="deal-badge">New!</div>}
       {hover && promo_code && (
         <div className="hh-promo-code-wrapper">
           <p>Use Code: {promo_code}</p>
