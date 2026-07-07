@@ -299,6 +299,7 @@ class Honey_Hole_Admin
 			$image_url = esc_url_raw($_POST['deal_image_url']);
 			$tags = sanitize_text_field($_POST['deal_tags']);
 			$badge = sanitize_text_field($_POST['deal_badge']);
+			$featured = isset($_POST['deal_featured']) ? '1' : '0';
 			error_log('Honey Hole Common - Badge value: ' . $badge);
 
 			// Create the deal post
@@ -337,6 +338,7 @@ class Honey_Hole_Admin
 				update_post_meta($deal_id, 'deal_promo_code', $promo_code);
 				update_post_meta($deal_id, 'deal_image_url', $image_url);
 				update_post_meta($deal_id, 'deal_badge', $badge);
+				update_post_meta($deal_id, 'deal_featured', $featured);
 				error_log('Honey Hole Common - Saved badge: ' . $badge . ' for deal ID: ' . $deal_id);
 
 				// Set transient for success message
@@ -479,6 +481,7 @@ class Honey_Hole_Admin
 			update_post_meta($deal_id, 'deal_promo_code', sanitize_text_field($_POST['deal_promo_code']));
 			update_post_meta($deal_id, 'deal_image_url', esc_url_raw($_POST['deal_image_url']));
 			update_post_meta($deal_id, 'deal_badge', sanitize_text_field($_POST['deal_badge']));
+			update_post_meta($deal_id, 'deal_featured', isset($_POST['deal_featured']) ? '1' : '0');
 			error_log('Honey Hole Edit Common - Saved badge: ' . sanitize_text_field($_POST['deal_badge']) . ' for deal ID: ' . $deal_id);
 
 			// Update category

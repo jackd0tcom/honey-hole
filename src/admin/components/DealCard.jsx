@@ -108,7 +108,7 @@ const DealCard = ({
             onChange={() => handleBulkToggle(deal.id)}
           />
         </div>
-        {deal.categories[0].name !== "Big Sale" && (
+        {deal.categories?.[0]?.name !== "Big Sale" && (
           <div className="deal-rating">
             <div className="deal-o-meter-card">
               {!deal.rating ? (
@@ -171,7 +171,7 @@ const DealCard = ({
       <div className="deal-content">
         <h3 className="deal-title">{deal.title}</h3>
 
-        {deal.categories[0].name !== "Big Sale" && (
+        {deal.categories?.[0]?.name !== "Big Sale" && (
           <>
             <div className="deal-pricing">
               {deal.sales_price && (

@@ -118,6 +118,7 @@ class Honey_Hole_REST_API
                     'description' => get_post_meta($post_id, 'deal_description', true),
                     'background_image' => get_post_meta($post_id, 'deal_background_image', true),
                     'badge' => $this->clean_html_entities(get_post_meta($post_id, 'deal_badge', true)),
+                    'featured' => get_post_meta($post_id, 'deal_featured', true) === '1',
                     'categories' => wp_get_post_terms($post_id, 'deal_category', array('fields' => 'all')),
                     'date_added' => get_the_date('Y-m-d H:i:s', $post_id),
                     'date_updated' => get_the_modified_date('Y-m-d H:i:s', $post_id),

@@ -126,6 +126,13 @@ function honey_hole_add_deal_page()
                         <p class="description">Add a custom badge or label to this deal (e.g., "New", "Limited Time", "Best Seller")</p>
                     </div>
                     <div class="honey-hole-form-field">
+                        <label for="deal-featured">
+                            <input type="checkbox" id="deal-featured" name="deal_featured" value="1">
+                            Feature this deal
+                        </label>
+                        <p class="description">Featured deals get special styling and priority placement on the frontend grid.</p>
+                    </div>
+                    <div class="honey-hole-form-field">
                         <label for="deal-url">Deal URL *</label>
                         <input type="url" id="deal-url" name="deal_url" required>
                     </div>

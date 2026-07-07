@@ -15,6 +15,7 @@ const DealCard = ({ deal }) => {
     description,
     badge,
     date_added,
+    featured,
   } = deal;
   const [hover, setHover] = useState(false);
   const [newDeal, setNewDeal] = useState(false);
@@ -72,7 +73,7 @@ const DealCard = ({ deal }) => {
 
   const star = <span className="star">★</span>;
 
-  if (categories[0].name === "Big Sale") {
+  if (categories?.[0]?.name === "Big Sale") {
     return (
       <div
         onMouseEnter={() => {
@@ -126,18 +127,18 @@ const DealCard = ({ deal }) => {
         setHover(false);
       }}
       className={
-        deal.categories?.some((c) => c.name?.toLowerCase() === "featured")
+        featured
           ? "deal-card featured-card"
           : "deal-card"
       }
     >
-      {deal.categories?.some((c) => c.name?.toLowerCase() === "featured") ? (
+      {featured ? (
         <div className="deal-badge featured-badge">Featured!</div>
-      ) : (
-        badge && <div className="deal-badge">{badge}</div>
-      )}
-      {deal.categories?.some((c) => c.name?.toLowerCase() === "featured") &&
-        newDeal && <div className="deal-badge">New!</div>}
+      ) : newDeal ? (
+        <div className="deal-badge">New!</div>
+      ) : badge ? (
+        <div className="deal-badge">{badge}</div>
+      ) : null}
       {hover && promo_code && (
         <div className="hh-promo-code-wrapper">
           <p>Use Code: {promo_code}</p>

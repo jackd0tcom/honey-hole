@@ -9,7 +9,7 @@ const LatestDeals = ({ deals }) => {
     setSortedDeals(
       deals
         .filter((deal) => {
-          return deal.categories[0].name !== "Big Sale";
+          return deal.categories?.[0]?.name !== "Big Sale";
         })
         .slice(0, 4)
     );

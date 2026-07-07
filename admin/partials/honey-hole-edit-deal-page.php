@@ -38,6 +38,7 @@ function honey_hole_edit_deal_page()
     $description = get_post_meta($deal_id, 'deal_description', true);
     $background_image = get_post_meta($deal_id, 'deal_background_image', true);
     $badge = get_post_meta($deal_id, 'deal_badge', true);
+    $featured = get_post_meta($deal_id, 'deal_featured', true) === '1';
     $category = wp_get_post_terms($deal_id, 'deal_category', array('fields' => 'ids'));
     $category = !empty($category) ? $category[0] : '';
 
@@ -168,6 +169,13 @@ function honey_hole_edit_deal_page()
                         <label for="deal-badge">Badge</label>
                         <input type="text" id="deal-badge-common" name="deal_badge" value="<?php echo esc_attr($badge); ?>" placeholder="Enter badge text (optional)">
                         <p class="description">Add a custom badge or label to this deal (e.g., "New", "Limited Time", "Best Seller")</p>
+                    </div>
+                    <div class="honey-hole-form-field">
+                        <label for="deal-featured">
+                            <input type="checkbox" id="deal-featured" name="deal_featured" value="1" <?php checked($featured); ?>>
+                            Feature this deal
+                        </label>
+                        <p class="description">Featured deals get special styling and priority placement on the frontend grid.</p>
                     </div>
                     <div class="honey-hole-form-field">
                         <label for="deal-url">Deal URL *</label>

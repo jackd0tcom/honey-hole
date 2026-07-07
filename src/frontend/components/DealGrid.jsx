@@ -5,9 +5,6 @@ import FilterBar from "./FilterBar.jsx";
 import Sorter from "./Sorter.jsx";
 import InfiniteGrid from "./InfiniteGrid.jsx";
 
-const isFeatured = (deal) =>
-  deal.categories?.[0]?.name?.toLowerCase() === "featured";
-
 /**
  * Reorders deals so featured cards:
  * - only appear in the upper half
@@ -21,7 +18,7 @@ export function distributeFeaturedDeals(deals, columnsPerRow = 4) {
   const regular = [];
 
   for (const deal of deals) {
-    (isFeatured(deal) ? featured : regular).push(deal);
+    (deal.featured ? featured : regular).push(deal);
   }
 
   if (featured.length === 0) return deals;

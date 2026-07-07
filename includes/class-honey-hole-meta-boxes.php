@@ -46,6 +46,7 @@ class Honey_Hole_Meta_Boxes
         $description = get_post_meta($post->ID, 'deal_description', true);
         $background_image = get_post_meta($post->ID, 'deal_background_image', true);
         $badge = get_post_meta($post->ID, 'deal_badge', true);
+        $featured = get_post_meta($post->ID, 'deal_featured', true) === '1';
 
         // Get the current category to determine which fields to show
         $terms = get_the_terms($post->ID, 'deal_category');
@@ -129,6 +130,13 @@ class Honey_Hole_Meta_Boxes
         <!-- Common Fields (shown for all deals) -->
         <div id="honey-hole-common-fields">
             <p>
+                <label for="honey_hole_featured">
+                    <input type="checkbox" id="honey_hole_featured" name="honey_hole_featured" value="1" <?php checked($featured); ?>>
+                    Feature this deal
+                </label>
+                <span class="description">Featured deals get special styling and priority placement on the frontend grid.</span>
+            </p>
+            <p>
                 <label for="honey_hole_deal_url">Deal URL:</label>
                 <input type="url" id="honey_hole_deal_url" name="honey_hole_deal_url" value="<?php echo esc_url($deal_url); ?>" class="widefat" />
             </p>
@@ -210,6 +218,8 @@ class Honey_Hole_Meta_Boxes
                 update_post_meta($post_id, $meta_key, $value);
             }
         }
+
+        update_post_meta($post_id, 'deal_featured', isset($_POST['honey_hole_featured']) ? '1' : '0');
 
         // Save the category if it was changed
         if (isset($_POST['honey_hole_deal_category'])) {

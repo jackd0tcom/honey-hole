@@ -149,7 +149,8 @@ const DealCard = ({
     background_image,
     description,
     badge,
-    date_added
+    date_added,
+    featured
   } = deal;
   const [hover, setHover] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [newDeal, setNewDeal] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -195,7 +196,7 @@ const DealCard = ({
     className: "star",
     children: "\u2605"
   });
-  if (categories[0].name === "Big Sale") {
+  if (categories?.[0]?.name === "Big Sale") {
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
       onMouseEnter: () => {
         setHover(true);
@@ -257,17 +258,17 @@ const DealCard = ({
     onMouseLeave: () => {
       setHover(false);
     },
-    className: categories[0].name.toLowerCase() === "featured" ? "deal-card featured-card" : "deal-card",
-    children: [categories[0].name.toLowerCase() === "featured" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    className: featured ? "deal-card featured-card" : "deal-card",
+    children: [featured ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "deal-badge featured-badge",
       children: "Featured!"
-    }) : badge && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-      className: "deal-badge",
-      children: badge
-    }), categories[0].name.toLowerCase() !== "featured" && newDeal && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    }) : newDeal ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "deal-badge",
       children: "New!"
-    }), hover && promo_code && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    }) : badge ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "deal-badge",
+      children: badge
+    }) : null, hover && promo_code && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "hh-promo-code-wrapper",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
         children: ["Use Code: ", promo_code]
@@ -367,20 +368,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const isFeatured = deal => deal.categories?.[0]?.name?.toLowerCase() === "featured";
-
 /**
  * Reorders deals so featured cards:
  * - only appear in the upper half
  * - at most one per row (columnsPerRow)
  * - are spread across rows/columns
  */
+
 function distributeFeaturedDeals(deals, columnsPerRow = 4) {
   if (!deals?.length) return deals;
   const featured = [];
   const regular = [];
   for (const deal of deals) {
-    (isFeatured(deal) ? featured : regular).push(deal);
+    (deal.featured ? featured : regular).push(deal);
   }
   if (featured.length === 0) return deals;
   const total = deals.length;
@@ -1180,7 +1180,7 @@ const LatestDeals = ({
   const [sortedDeals, setSortedDeals] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setSortedDeals(deals.filter(deal => {
-      return deal.categories[0].name !== "Big Sale";
+      return deal.categories?.[0]?.name !== "Big Sale";
     }).slice(0, 4));
   }, [deals]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
